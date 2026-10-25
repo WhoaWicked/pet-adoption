@@ -1,18 +1,13 @@
 # Spec for <feature-name>
 
 branch: claude/feature/<feature-name>
-figma_component (if used): <figma-component-name>
+ownership: 🤖 AI may implement | ✍️ developer implements (AI gives hints/review only)
 
 ## Summary
 - ...
 
 ## Functional Requirements
 - ...
-
-## Figma Design Reference (only if referenced)
-- File: ...
-- Component name: ...
-- Key visual constraints: ...
 
 ## Possible Edge Cases
 - ...
@@ -24,5 +19,7 @@ figma_component (if used): <figma-component-name>
 - ...
 
 ## Testing Guidelines
-Create a test file(s) in the ./tests folder for the new feature, and create meaningful tests for the following cases, without going too heavy:
+List the test cases only.
+- Do NOT write test code for api/src/auth/, api/src/applications/, api/src/worker/ — the developer writes those.
+- Test files live next to the file they test (xxx.spec.ts), not in a tests/ folder.
 - ...
