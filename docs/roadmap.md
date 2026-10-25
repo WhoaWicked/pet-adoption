@@ -2,7 +2,7 @@
 🤖 = AI เขียนได้ | ✍️ = เขียนเอง (AI ให้แค่ hint/รีวิว)
 
 ## สัปดาห์ 1 — Backend
-- [ ] 1. 🤖 Setup: docker-compose (Postgres), config, src/database, /health
+- [x] 1. 🤖 Setup: docker-compose (Postgres), config, src/database, /health
 - [ ] 2. 🤖 Migration 6 ตาราง (รีวิว constraint เอง)
 - [ ] 3. ✍️ Error response กลาง (exception filter + รูปแบบ error เดียวทั้งระบบ)
 - [ ] 4. ✍️ Auth: register, login, JWT guard

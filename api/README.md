@@ -25,6 +25,19 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Local development
+
+```bash
+cp .env.example .env          # then edit the values (keep DB_PASSWORD in single quotes)
+docker compose up -d --wait   # Postgres 17 only; data persists in the pgdata volume
+npm install
+npm run start:dev             # API on http://localhost:3000
+curl -i localhost:3000/health # 200 {"status":"ok","database":"up"} / 503 when the DB is down
+```
+
+If port 5432 is already used by another Postgres on your machine, set a different `DB_PORT` in `.env`.
+Tests: `npm test` (unit) and `npm run test:e2e`. The scripts run Jest with `--experimental-vm-modules` because NestJS 12 ships as ESM.
+
 ## Project setup
 
 ```bash
