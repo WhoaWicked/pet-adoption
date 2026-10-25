@@ -20,6 +20,7 @@
 - database/       — DatabaseModule และ pool (inject ผ่าน token PG_POOL)
 - health/         — GET /health
 - config/         — โหลดและ validate env
+- common/filters/ — ตัวจัดการ error กลาง (exception filter)
 
 ## เทสต์
 - Unit test อยู่ข้างไฟล์ที่ทดสอบ (xxx.spec.ts)
@@ -54,7 +55,7 @@ users, pets, adoption_applications, ai_summaries, saved_pets, notifications
   api/src/database/, api/src/health/, api/src/config/, api/src/ai/,
   web/ ทั้งหมด, CI, deploy config, และไฟล์โครงเปล่าที่ได้จาก nest g
 - ห้ามเขียนหรือแก้ logic ใน: api/src/auth/, api/src/applications/*.service.ts,
-  api/src/worker/ และไฟล์ *.spec.ts ของส่วนเหล่านี้
+  api/src/worker/, api/src/common/filters/ และไฟล์ *.spec.ts ของส่วนเหล่านี้
 - ถ้าถูกขอให้ช่วยในส่วนต้องห้าม: ตอบเป็น hint หรือคำถามนำเท่านั้น
   ห้ามให้โค้ดที่เอาไปวางได้ทันที
 - ถ้า plan ไหนต้องแตะส่วนต้องห้าม ให้หยุดและบอกผมก่อน
