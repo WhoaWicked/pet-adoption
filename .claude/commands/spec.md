@@ -82,6 +82,8 @@ Before making any content, switch to a new Git branch using the `branch_name` de
 
 Create a markdown spec document that Plan mode can use directly and save it in the _specs folder using the `feature_slug`. Use the exact structure as defined in the spec template file here: @_specs/template.md. Do not add technical implementation details such as code examples.
 
+Write the spec in Thai. Keep technical terms, file paths, and code identifiers in English.
+
 ## Step 5. Final output to the user
 
 After the file is saved, respond to the user with a short summary in this exact format:
