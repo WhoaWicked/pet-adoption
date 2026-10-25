@@ -3,7 +3,7 @@
 
 ## สัปดาห์ 1 — Backend
 - [x] 1. 🤖 Setup: docker-compose (Postgres), config, src/database, /health
-- [ ] 2. 🤖 Migration 6 ตาราง (รีวิว constraint เอง)
+- [x] 2. 🤖 Migration 6 ตาราง (รีวิว constraint เอง)
 - [ ] 3. ✍️ Error response กลาง (exception filter + รูปแบบ error เดียวทั้งระบบ)
 - [ ] 4. ✍️ Auth: register, login, JWT guard
 - [ ] 5. 🤖 Pets: สร้าง, รายการ + filter + pagination, รายละเอียด, ปิดโพสต์, บันทึก

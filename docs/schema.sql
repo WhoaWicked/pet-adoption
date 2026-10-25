@@ -1,3 +1,6 @@
+-- การออกแบบ schema ตั้งต้นของโปรเจกต์ (เอกสารอ้างอิง)
+-- schema ปัจจุบันของ database ให้ดูจาก api/migrations/ ไฟล์นี้ไม่ถูกอัปเดตตามอัตโนมัติ
+
 CREATE TABLE users (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email         TEXT NOT NULL UNIQUE,
