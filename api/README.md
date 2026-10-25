@@ -38,6 +38,21 @@ curl -i localhost:3000/health # 200 {"status":"ok","database":"up"} / 503 when t
 If port 5432 is already used by another Postgres on your machine, set a different `DB_PORT` in `.env`.
 Tests: `npm test` (unit) and `npm run test:e2e`. The scripts run Jest with `--experimental-vm-modules` because NestJS 12 ships as ESM.
 
+## Database migrations
+
+Migrations are plain `.sql` files in `migrations/`, run by [node-pg-migrate](https://github.com/salsita/node-pg-migrate).
+Each file has a `-- Up Migration` and a `-- Down Migration` section. The scripts read the same `DB_*` variables from `.env` as the API.
+
+```bash
+npm run migrate:up                       # apply every pending migration (all in one transaction)
+npm run migrate:down                     # undo the latest migration only
+npm run migrate:create -- <name>         # new timestamped .sql file to fill in
+```
+
+- `migrate:down` drops tables, so it deletes all data in your dev database.
+- If tables were created by hand and `migrate:up` fails with "already exists", reset the dev database with `docker compose down -v && docker compose up -d --wait`.
+- `docs/schema.sql` is the original design; the current schema is whatever `migrations/` produces.
+
 ## Project setup
 
 ```bash

@@ -18,6 +18,9 @@
     "test:watch": "node --experimental-vm-modules node_modules/jest/bin/jest.js --watch",
     "test:cov": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "migrate:up": "node scripts/migrate.mjs up",
+    "migrate:down": "node scripts/migrate.mjs down",
+    "migrate:create": "node scripts/migrate.mjs create",
     "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config ./test/jest-e2e.json"
   },
   "dependencies": {
@@ -40,6 +43,7 @@
     "@types/pg": "^8.23.1",
     "@types/supertest": "^7.0.0",
     "jest": "^30.0.0",
+    "node-pg-migrate": "^9.0.0",
     "oxlint": "^1.58.0",
     "prettier": "^3.4.2",
     "source-map-support": "^0.5.21",
