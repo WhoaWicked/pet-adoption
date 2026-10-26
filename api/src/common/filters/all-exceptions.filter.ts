@@ -11,6 +11,16 @@ const ERROR_CODES: Record<number, string> = {
     503: "SERVICE_UNAVAILABLE",
 };
 
+function extractValidationDetails(exception: unknown): string[] | undefined {
+    const error = exception instanceof HttpException ? exception.getResponse() : undefined;
+    if (typeof error === "object" && error !== null) {
+        if ("message" in error && Array.isArray(error.message)) {
+            return error.message;
+        }
+    }
+    return undefined;
+}
+
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
     catch(exception: unknown, host: ArgumentsHost) {
@@ -20,6 +30,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
             ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
         const message = exception instanceof HttpException
             ? exception.message : "Internal Server Error";
+        const details = extractValidationDetails(exception);
         let error = ERROR_CODES[status]
         if (!error) {
             if (status < 500) {
@@ -29,10 +40,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
                 error = ERROR_CODES[500]
             }
         }
-        response.status(status).json({
-            statusCode: status,
-            error: error,
-            message: message,
-        });
+        const body: Record<string, unknown> = { statusCode: status, error, message };
+        if (details) {
+            body.error = "VALIDATION_FAILED"
+            body.message = "Validation failed"
+            body.details = details;
+        }
+        response.status(status).json(body);
     }
 }
