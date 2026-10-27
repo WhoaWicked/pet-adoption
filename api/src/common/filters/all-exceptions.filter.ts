@@ -1,4 +1,4 @@
-import { ArgumentsHost, ExceptionFilter, Catch, HttpException, HttpStatus } from "@nestjs/common";
+import { ArgumentsHost, ExceptionFilter, Catch, HttpException, HttpStatus, Logger } from "@nestjs/common";
 import { Response } from "express";
 
 const ERROR_CODES: Record<number, string> = {
@@ -32,6 +32,8 @@ function getPgErrorCode(exception: unknown): string | undefined {
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
+    private readonly logger = new Logger(AllExceptionsFilter.name);
+
     catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
@@ -41,12 +43,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
         if (exception instanceof HttpException) {
             status = exception.getStatus();
             message = exception.message;
+            if (status >= 500) {
+                this.logger.error(exception.message, exception.stack);
+            }
         } else if (pgCode === "23505") {
             status = 409;
             message = "Resource already exists"
         } else if (pgCode === "23514") {
             status = 400;
             message = "Invalid data";
+            this.logger.warn("pg check_violation (23514): validation should have caught this")
         } else if (pgCode === "23503") {
             status = 409;
             message = "Operation conflicts with related data";
@@ -54,6 +60,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
         else {
             status = HttpStatus.INTERNAL_SERVER_ERROR;
             message = "Internal Server Error";
+            if (exception instanceof Error) {
+                this.logger.error(exception.message, exception.stack)
+            } else {
+                this.logger.error(String(exception));
+            }
         }
         const details = extractValidationDetails(exception);
         let error = ERROR_CODES[status]
