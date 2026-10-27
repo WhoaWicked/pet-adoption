@@ -21,15 +21,40 @@ function extractValidationDetails(exception: unknown): string[] | undefined {
     return undefined;
 }
 
+function getPgErrorCode(exception: unknown): string | undefined {
+    if (exception instanceof Error && "code" in exception) {
+        if (typeof exception.code === "string") {
+            return exception.code;
+        }
+    }
+    return undefined;
+}
+
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
     catch(exception: unknown, host: ArgumentsHost) {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse<Response>();
-        const status = exception instanceof HttpException
-            ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-        const message = exception instanceof HttpException
-            ? exception.message : "Internal Server Error";
+        const pgCode = getPgErrorCode(exception);
+        let status: number;
+        let message: string;
+        if (exception instanceof HttpException) {
+            status = exception.getStatus();
+            message = exception.message;
+        } else if (pgCode === "23505") {
+            status = 409;
+            message = "Resource already exists"
+        } else if (pgCode === "23514") {
+            status = 400;
+            message = "Invalid data";
+        } else if (pgCode === "23503") {
+            status = 409;
+            message = "Operation conflicts with related data";
+        }
+        else {
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            message = "Internal Server Error";
+        }
         const details = extractValidationDetails(exception);
         let error = ERROR_CODES[status]
         if (!error) {
