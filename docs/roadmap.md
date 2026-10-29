@@ -4,7 +4,7 @@
 ## สัปดาห์ 1 — Backend
 - [x] 1. 🤖 Setup: docker-compose (Postgres), config, src/database, /health
 - [x] 2. 🤖 Migration 6 ตาราง (รีวิว constraint เอง)
-- [ ] 3. ✍️ Error response กลาง (exception filter + รูปแบบ error เดียวทั้งระบบ)
+- [x] 3. ✍️ Error response กลาง (exception filter + รูปแบบ error เดียวทั้งระบบ)
 - [ ] 4. ✍️ Auth: register, login, JWT guard
 - [ ] 5. 🤖 Pets: สร้าง, รายการ + filter + pagination, รายละเอียด, ปิดโพสต์, บันทึก
 - [ ] 6. ✍️ Applications: ยื่น (+แจ้งเตือนคนโพสต์), ถอน, business rules + unit test
