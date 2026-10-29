@@ -7,6 +7,7 @@ const validRaw = {
   DB_NAME: 'pet_adoption',
   DB_USER: 'pet_user',
   DB_PASSWORD: 'p@ss:w/rd#1$x',
+  JWT_SECRET: 'test-jwt-secret',
 };
 
 describe('validateEnv', () => {
@@ -18,6 +19,7 @@ describe('validateEnv', () => {
       DB_NAME: 'pet_adoption',
       DB_USER: 'pet_user',
       DB_PASSWORD: 'p@ss:w/rd#1$x',
+      JWT_SECRET: 'test-jwt-secret',
     });
   });
 
