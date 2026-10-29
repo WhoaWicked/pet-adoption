@@ -5,6 +5,7 @@ import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './health/health.module';
 import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
     }),
     DatabaseModule,
     HealthModule,
+    AuthModule,
   ],
   providers: [
     {
