@@ -5,6 +5,7 @@ import { Env } from '../config/env';
 import { AuthRepository } from "./auth.repository";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
+import { JwtAuthGuard } from "./jwt-auth.guard";
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import { AuthController } from "./auth.controller";
         })
     ],
     controllers: [AuthController],
-    providers: [AuthRepository, AuthService],
+    providers: [AuthRepository, AuthService, JwtAuthGuard],
     exports: [AuthService],
 })
 
