@@ -1,7 +1,7 @@
 import { PetsService } from "./pets.service";
 import { CreatePetDto } from "./dto/create-pet.dto";
 import { JwtAuthGuard, type AuthenticateRequest } from "../auth/jwt-auth.guard";
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { CreatePetInput } from "./pets.repository";
 import { ListPetsQueryDto } from "./dto/list-pets-query.dto";
 
@@ -26,5 +26,10 @@ export class PetsController {
     @Get()
     async findAll(@Query() query: ListPetsQueryDto) {
         return this.petsService.findAll(query);
+    }
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id/close')
+    async close(@Param('id', ParseUUIDPipe) id: string, @Req() req: AuthenticateRequest) {
+        return this.petsService.close(id, req.user!.id);
     }
 }

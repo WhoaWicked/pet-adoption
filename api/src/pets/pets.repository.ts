@@ -82,4 +82,10 @@ export class PetsRepository {
         const pets = await this.pool.query<PetRow>(query, params);
         return { rows: pets.rows, total: count.rows[0].total }
     }
+    async close(id: string): Promise<PetRow | undefined> {
+        const query = `UPDATE pets SET status = 'closed', updated_at = NOW()
+        WHERE id = $1 AND status <> 'adopted' RETURNING *`;
+        const pet = await this.pool.query<PetRow>(query, [id]);
+        return pet.rows[0];
+    }
 }

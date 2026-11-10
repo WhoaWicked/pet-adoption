@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { CreatePetInput, PetRow, PetsRepository } from "./pets.repository";
 
 export interface ListPetsInput {
@@ -22,7 +22,7 @@ export class PetsService {
     async findById(id: string): Promise<PetRow> {
         const pet = await this.petsRepository.findById(id);
         if (!pet) {
-            throw new NotFoundException("Not found a pet");
+            throw new NotFoundException("Pet not found");
         }
         return pet;
     }
@@ -33,5 +33,22 @@ export class PetsService {
             data: rows,
             meta: { total, limit, offset, }
         }
+    }
+    async close(id: string, userId: string): Promise<PetRow> {
+        const pet = await this.findById(id);
+        if (pet.owner_id !== userId) {
+            throw new ForbiddenException("You do not own this pet");
+        }
+        if (pet.status === 'adopted') {
+            throw new ConflictException("Pet is already adopted");
+        }
+        if (pet.status === 'closed') {
+            return pet;
+        }
+        const editPet = await this.petsRepository.close(id);
+        if (!editPet) {
+            throw new ConflictException("Pet cannot be closed");
+        }
+        return editPet;
     }
 }
