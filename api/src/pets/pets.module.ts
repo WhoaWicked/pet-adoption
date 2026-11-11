@@ -8,6 +8,7 @@ import { PetsController } from "./pets.controller";
     imports: [AuthModule],
     providers: [PetsRepository, PetsService],
     controllers: [PetsController],
+    exports: [PetsService],
 })
 
 export class PetsModule { }
