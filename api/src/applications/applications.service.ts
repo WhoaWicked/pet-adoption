@@ -1,6 +1,11 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PetsService } from "../pets/pets.service";
-import { ApplicationAnswers, ApplicationRow, ApplicationsRepository } from './applications.repository';
+import { ApplicationAnswers, ApplicationRow, ApplicationsRepository, MyApplicationRow } from './applications.repository';
+
+export interface PagedApplications {
+    data: MyApplicationRow[];
+    meta: { total: number, limit: number, offset: number };
+}
 
 @Injectable()
 export class ApplicationsService {
@@ -41,5 +46,9 @@ export class ApplicationsService {
             throw new ConflictException("Application cannot be withdrawn");
         }
         return result;
+    }
+    async listMine(applicantId: string, limit = 20, offset = 0): Promise<PagedApplications> {
+        const { rows, total } = await this.applicationsRepository.findMine(applicantId, limit, offset);
+        return { data: rows, meta: { total, limit, offset } };
     }
 }

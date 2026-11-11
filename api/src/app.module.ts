@@ -7,6 +7,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { AuthModule } from './auth/auth.module';
 import { PetsModule } from './pets/pets.module';
+import { ApplicationsModule } from './applications/applications.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PetsModule } from './pets/pets.module';
     HealthModule,
     AuthModule,
     PetsModule,
+    ApplicationsModule,
   ],
   providers: [
     {
