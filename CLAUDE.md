@@ -54,7 +54,7 @@ users, pets, adoption_applications, ai_summaries, saved_pets, notifications
 - เขียนได้: setup, config, migration, api/src/pets/, api/src/notifications/,
   api/src/database/, api/src/health/, api/src/config/, api/src/ai/,
   web/ ทั้งหมด, CI, deploy config, และไฟล์โครงเปล่าที่ได้จาก nest g
-- ห้ามเขียนหรือแก้ logic ใน: api/src/auth/, api/src/applications/*.service.ts, api/src/pets/
+- ห้ามเขียนหรือแก้ logic ใน: api/src/auth/, api/src/applications/*.service.ts, api/src/pets/, api/src/applications/
   api/src/worker/, api/src/common/filters/ และไฟล์ *.spec.ts ของส่วนเหล่านี้
 - ถ้าถูกขอให้ช่วยในส่วนต้องห้าม: ตอบเป็น hint หรือคำถามนำเท่านั้น
   ห้ามให้โค้ดที่เอาไปวางได้ทันที
