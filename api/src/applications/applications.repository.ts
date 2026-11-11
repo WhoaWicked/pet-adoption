@@ -18,6 +18,16 @@ export interface ApplicationRow {
     decided_at: Date | null;
 }
 
+export interface MyApplicationRow extends ApplicationRow {
+    pet_name: string;
+    pet_status: 'available' | 'adopted' | 'closed';
+}
+
+export interface ApplicationListResult {
+    rows: MyApplicationRow[];
+    total: number;
+}
+
 @Injectable()
 export class ApplicationsRepository {
     constructor(@Inject(PG_POOL) private readonly pool: Pool) { }
@@ -42,5 +52,15 @@ export class ApplicationsRepository {
         const result = await this.pool.query<ApplicationRow>(query, [id]);
         return result.rows[0];
     }
-
+    async findMine(applicantId: string, limit: number, offset: number): Promise<ApplicationListResult> {
+        const countQuery = `SELECT COUNT(*)::int AS total FROM adoption_applications WHERE applicant_id = $1`;
+        const query = `SELECT a.*, p.name AS pet_name, p.status AS pet_status
+        FROM adoption_applications AS a JOIN pets AS p ON p.id = a.pet_id
+        WHERE a.applicant_id = $1
+        ORDER BY a.created_at DESC
+        LIMIT $2 OFFSET $3;`;
+        const count = await this.pool.query<{ total: number }>(countQuery, [applicantId]);
+        const result = await this.pool.query<MyApplicationRow>(query, [applicantId, limit, offset]);
+        return { rows: result.rows, total: count.rows[0].total }
+    }
 }
