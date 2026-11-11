@@ -18,6 +18,7 @@ export interface ApplicationRow {
     decided_at: Date | null;
 }
 
+@Injectable()
 export class ApplicationsRepository {
     constructor(@Inject(PG_POOL) private readonly pool: Pool) { }
     async findById(id: string): Promise<ApplicationRow | undefined> {

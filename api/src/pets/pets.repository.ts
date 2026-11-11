@@ -38,6 +38,7 @@ export interface PetListResult {
     total: number;
 }
 
+@Injectable()
 export class PetsRepository {
     constructor(@Inject(PG_POOL) private readonly pool: Pool) { }
     async create(input: CreatePetInput): Promise<PetRow> {
