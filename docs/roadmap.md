@@ -7,7 +7,7 @@
 - [x] 3. ✍️ Error response กลาง (exception filter + รูปแบบ error เดียวทั้งระบบ)
 - [x] 4. ✍️ Auth: register, login, JWT guard
 - [x] 5. 🤖 Pets: สร้าง, รายการ + filter + pagination, รายละเอียด, ปิดโพสต์, บันทึก
-- [ ] 6. ✍️ Applications: ยื่น (+แจ้งเตือนคนโพสต์), ถอน, business rules + unit test
+- [x] 6. ✍️ Applications: ยื่น (+แจ้งเตือนคนโพสต์), ถอน, business rules + unit test
 - [ ] 7. ✍️ อนุมัติ/ปฏิเสธ แบบ transaction + แจ้งเตือน + เทสต์ยิงพร้อมกัน
 
 ## สัปดาห์ 2 — API ที่เหลือ, Frontend, AI, Ship
