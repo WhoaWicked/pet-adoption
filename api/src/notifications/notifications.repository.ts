@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { Pool } from "pg";
+import { Pool, PoolClient } from "pg";
 import { PG_POOL } from "../database/database.constants";
 
 export interface NotificationRow {
@@ -16,6 +16,13 @@ export interface NotificationRow {
 export interface NotificationListResult {
     rows: NotificationRow[];
     total: number;
+}
+
+export interface CreateNotificationInput {
+    userId: string;
+    type: string;
+    entityId: string;
+    message: string;
 }
 
 @Injectable()
@@ -46,5 +53,11 @@ export class NotificationsRepository {
         WHERE id = $1 AND user_id = $2 RETURNING *;`;
         const result = await this.pool.query<NotificationRow>(query, [id, userId]);
         return result.rows[0];
+    }
+    async create(client: PoolClient, input: CreateNotificationInput): Promise<void> {
+        const query = `INSERT INTO notifications (user_id, type, entity_id, message)
+        VALUES ($1, $2, $3, $4)`;
+        await client.query(query, [input.userId, input.type, input.entityId, input.message]);
+        return;
     }
 }

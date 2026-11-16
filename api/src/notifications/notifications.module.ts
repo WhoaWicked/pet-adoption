@@ -8,5 +8,6 @@ import { NotificationsService } from "./notifications.service";
     imports: [AuthModule],
     providers: [NotificationsRepository, NotificationsService],
     controllers: [NotificationsController],
+    exports: [NotificationsRepository],
 })
 export class NotificationsModule { }
