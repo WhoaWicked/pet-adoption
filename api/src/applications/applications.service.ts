@@ -1,6 +1,6 @@
 import { ConflictException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PetsService } from "../pets/pets.service";
-import { ApplicationAnswers, ApplicationRow, ApplicationsRepository, MyApplicationRow } from './applications.repository';
+import { ApplicationAnswers, ApplicationRow, ApplicationsRepository, MyApplicationRow, PetsApplicationRow } from './applications.repository';
 
 export interface PagedApplications {
     data: MyApplicationRow[];
@@ -50,5 +50,49 @@ export class ApplicationsService {
     async listMine(applicantId: string, limit = 20, offset = 0): Promise<PagedApplications> {
         const { rows, total } = await this.applicationsRepository.findMine(applicantId, limit, offset);
         return { data: rows, meta: { total, limit, offset } };
+    }
+    async reject(id: string, userId: string): Promise<ApplicationRow> {
+        const application = await this.applicationsRepository.findById(id);
+        if (!application) {
+            throw new NotFoundException("Application not found");
+        }
+        const pet = await this.petsService.findById(application.pet_id);
+        if (pet.owner_id !== userId) {
+            throw new ForbiddenException("You do not own this pet");
+        }
+        if (application.status !== 'pending') {
+            throw new ConflictException("Only pending applications can be rejected");
+        }
+        const result = await this.applicationsRepository.reject(id);
+        if (!result) {
+            throw new ConflictException("Application cannot be rejected");
+        }
+        return result;
+    }
+    async listByPet(petId: string, userId: string): Promise<{ data: PetsApplicationRow[] }> {
+        const pet = await this.petsService.findById(petId);
+        if (pet.owner_id !== userId) {
+            throw new ForbiddenException("You do not own this pet");
+        }
+        const result = await this.applicationsRepository.findByPet(petId);
+        return { data: result }
+    }
+    async approve(id: string, userId: string): Promise<ApplicationRow> {
+        const application = await this.applicationsRepository.findById(id);
+        if (!application) {
+            throw new NotFoundException("Application not found");
+        }
+        const pet = await this.petsService.findById(application.pet_id);
+        if (pet.owner_id !== userId) {
+            throw new ForbiddenException("You do not own this pet");
+        }
+        if (application.status !== 'pending') {
+            throw new ConflictException("Only pending applications can be approved");
+        }
+        const result = await this.applicationsRepository.approve(id, pet.id);
+        if (!result) {
+            throw new ConflictException("Application cannot be approved");
+        }
+        return result;
     }
 }

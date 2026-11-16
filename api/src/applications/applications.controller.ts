@@ -27,4 +27,22 @@ export class ApplicationsController {
     async withdraw(@Param('id', ParseUUIDPipe) id: string, @Req() req: AuthenticateRequest) {
         return this.applicationsService.withdraw(id, req.user!.id);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id/reject')
+    async reject(@Param('id', ParseUUIDPipe) id: string, @Req() req: AuthenticateRequest) {
+        return this.applicationsService.reject(id, req.user!.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Get('pet/:petId')
+    async listByPet(@Param('petId', ParseUUIDPipe) petId: string, @Req() req: AuthenticateRequest) {
+        return this.applicationsService.listByPet(petId, req.user!.id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch(':id/approve')
+    async approve(@Param('id', ParseUUIDPipe) id: string, @Req() req: AuthenticateRequest) {
+        return this.applicationsService.approve(id, req.user!.id);
+    }
 }
