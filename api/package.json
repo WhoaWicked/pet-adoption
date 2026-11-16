@@ -21,6 +21,7 @@
     "migrate:up": "node scripts/migrate.mjs up",
     "migrate:down": "node scripts/migrate.mjs down",
     "migrate:create": "node scripts/migrate.mjs create",
+    "test:integration": "node --env-file=.env.test scripts/migrate.mjs up && node --env-file=.env.test --experimental-vm-modules node_modules/jest/bin/jest.js --config ./test/jest-e2e.json --runInBand",
     "test:e2e": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config ./test/jest-e2e.json"
   },
   "dependencies": {
