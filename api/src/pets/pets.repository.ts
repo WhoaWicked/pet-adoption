@@ -89,4 +89,23 @@ export class PetsRepository {
         const pet = await this.pool.query<PetRow>(query, [id]);
         return pet.rows[0];
     }
+    async save(userId: string, petId: string): Promise<void> {
+        const query = `INSERT INTO saved_pets (user_id, pet_id) VALUES ($1, $2)
+        ON CONFLICT (user_id, pet_id) DO NOTHING`;
+        await this.pool.query(query, [userId, petId]);
+        return;
+    }
+    async unsave(userId: string, petId: string): Promise<void> {
+        const query = `DELETE FROM saved_pets WHERE user_id = $1 AND pet_id = $2`;
+        await this.pool.query(query, [userId, petId]);
+        return
+    }
+    async findSave(userId: string): Promise<PetRow[]> {
+        const query = `SELECT p.* FROM saved_pets s
+        JOIN pets p ON p.id = s.pet_id
+        WHERE s.user_id = $1
+        ORDER BY s.created_at DESC`;
+        const result = await this.pool.query<PetRow>(query, [userId]);
+        return result.rows;
+    }
 }

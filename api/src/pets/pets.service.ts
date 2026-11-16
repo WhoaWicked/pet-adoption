@@ -51,4 +51,19 @@ export class PetsService {
         }
         return editPet;
     }
+    async save(userId: string, petId: string): Promise<void> {
+        await this.findById(petId);
+        await this.petsRepository.save(userId, petId);
+        return;
+    }
+
+    async unsave(userId: string, petId: string): Promise<void> {
+        await this.petsRepository.unsave(userId, petId);
+        return
+    }
+
+    async listSaved(userId: string): Promise<PetRow[]> {
+        const result = await this.petsRepository.findSave(userId);
+        return result;
+    }
 }
