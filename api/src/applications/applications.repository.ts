@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { Pool } from "pg";
 import { PG_POOL } from "../database/database.constants";
 import { PetRow } from "../pets/pets.repository";
+import { NotificationsRepository } from "../notifications/notifications.repository";
 
 export interface ApplicationAnswers {
     housingType: 'house' | 'condo' | 'apartment' | 'other';
@@ -35,21 +36,44 @@ export interface PetsApplicationRow extends ApplicationRow {
 
 @Injectable()
 export class ApplicationsRepository {
-    constructor(@Inject(PG_POOL) private readonly pool: Pool) { }
+    constructor(
+        @Inject(PG_POOL) private readonly pool: Pool,
+        private readonly notificationsRepository: NotificationsRepository) { }
     async findById(id: string): Promise<ApplicationRow | undefined> {
         const query = `SELECT * FROM adoption_applications WHERE id = $1`;
         const result = await this.pool.query<ApplicationRow>(query, [id]);
         return result.rows[0];
     }
-    async create(petId: string, applicantId: string, answers: ApplicationAnswers): Promise<ApplicationRow | undefined> {
+    async create(petId: string, applicantId: string, answers: ApplicationAnswers, ownerId: string): Promise<ApplicationRow | undefined> {
         const query = `
         INSERT INTO adoption_applications (pet_id, applicant_id, answers) 
         VALUES ($1, $2, $3)
         ON CONFLICT (pet_id, applicant_id)
         DO UPDATE SET status = 'pending', answers = EXCLUDED.answers, created_at = NOW(), decided_at = NULL
         WHERE adoption_applications.status = 'withdrawn' RETURNING *`;
-        const result = await this.pool.query<ApplicationRow>(query, [petId, applicantId, answers]);
-        return result.rows[0];
+        const client = await this.pool.connect();
+        try {
+            await client.query('BEGIN');
+            const result = await client.query<ApplicationRow>(query, [petId, applicantId, answers]);
+            if (result.rows.length === 0) {
+                await client.query('ROLLBACK');
+                return undefined;
+            }
+            const { id } = result.rows[0];
+            await this.notificationsRepository.create(client, {
+                userId: ownerId,
+                type: 'application.received',
+                entityId: id,
+                message: 'You received a new adoption application',
+            });
+            await client.query('COMMIT');
+            return result.rows[0];
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
+        }
     }
     async withdraw(id: string): Promise<ApplicationRow | undefined> {
         const query = `UPDATE adoption_applications SET status = 'withdrawn'
@@ -70,9 +94,30 @@ export class ApplicationsRepository {
     }
     async reject(id: string): Promise<ApplicationRow | undefined> {
         const query = `UPDATE adoption_applications SET status = 'rejected', decided_at = NOW()
-        WHERE id = $1 AND status = 'pending' RETURNING *`;
-        const result = await this.pool.query<ApplicationRow>(query, [id]);
-        return result.rows[0];
+        WHERE id = $1 AND status = 'pending' RETURNING *;`;
+        const client = await this.pool.connect();
+        try {
+            await client.query('BEGIN');
+            const result = await client.query<ApplicationRow>(query, [id]);
+            if (result.rows.length === 0) {
+                await client.query('ROLLBACK');
+                return undefined;
+            }
+            const { applicant_id } = result.rows[0];
+            await this.notificationsRepository.create(client, {
+                userId: applicant_id,
+                type: 'application.rejected',
+                entityId: id,
+                message: 'Your adoption application was not selected',
+            });
+            await client.query('COMMIT');
+            return result.rows[0];
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
+        }
     }
     async findByPet(petId: string): Promise<PetsApplicationRow[]> {
         const query = `SELECT a.*, u.display_name AS applicant_name
@@ -88,7 +133,7 @@ export class ApplicationsRepository {
         const queryApproved = `UPDATE adoption_applications SET status = 'approved', decided_at = NOW()
         WHERE id = $1 AND status = 'pending' RETURNING *;`;
         const queryRejected = `UPDATE adoption_applications SET status = 'rejected', decided_at = NOW()
-        WHERE pet_id = $2 AND id <> $1 AND status = 'pending';`;
+        WHERE pet_id = $2 AND id <> $1 AND status = 'pending' RETURNING id, applicant_id;`;
         const queryAdopted = `UPDATE pets SET status = 'adopted', updated_at = NOW()
         WHERE id = $1 AND status = 'available';`;
         const client = await this.pool.connect();
@@ -104,8 +149,23 @@ export class ApplicationsRepository {
                 await client.query('ROLLBACK');
                 return undefined;
             }
-            await client.query(queryRejected, [applicationId, petId]);
+            const { id, applicant_id } = approved.rows[0];
+            const rejected = await client.query<{ id: string, applicant_id: string }>(queryRejected, [applicationId, petId]);
+            for (const row of rejected.rows) {
+                await this.notificationsRepository.create(client, {
+                    userId: row.applicant_id,
+                    type: 'application.rejected',
+                    entityId: row.id,
+                    message: 'Your adoption application was not selected',
+                });
+            }
             await client.query(queryAdopted, [petId]);
+            await this.notificationsRepository.create(client, {
+                userId: applicant_id,
+                type: 'application.approved',
+                entityId: id,
+                message: 'Your adoption application was approved',
+            });
             await client.query('COMMIT');
             return approved.rows[0];
         } catch (err) {

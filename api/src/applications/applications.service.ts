@@ -21,7 +21,7 @@ export class ApplicationsService {
         if (pet.status !== 'available') {
             throw new ConflictException("Pet is not available");
         }
-        const application = await this.applicationsRepository.create(petId, applicantId, answers);
+        const application = await this.applicationsRepository.create(petId, applicantId, answers, pet.owner_id);
         if (!application) {
             throw new ConflictException("You already applied to this pet");
         }

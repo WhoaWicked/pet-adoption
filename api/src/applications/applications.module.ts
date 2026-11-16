@@ -4,10 +4,11 @@ import { PetsModule } from '../pets/pets.module';
 import { ApplicationsController } from './applications.controller';
 import { ApplicationsRepository } from './applications.repository';
 import { ApplicationsService } from './applications.service';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
-  imports: [AuthModule, PetsModule],
+  imports: [AuthModule, PetsModule, NotificationsModule],
   controllers: [ApplicationsController],
   providers: [ApplicationsService, ApplicationsRepository],
 })
-export class ApplicationsModule {}
+export class ApplicationsModule { }
