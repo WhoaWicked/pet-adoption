@@ -66,4 +66,8 @@ export class PetsService {
         const result = await this.petsRepository.findSave(userId);
         return result;
     }
+    async listMine(userId: string): Promise<PetRow[]> {
+        const result = await this.petsRepository.findByOwner(userId);
+        return result;
+    }
 }

@@ -108,4 +108,9 @@ export class PetsRepository {
         const result = await this.pool.query<PetRow>(query, [userId]);
         return result.rows;
     }
+    async findByOwner(ownerId: string): Promise<PetRow[]> {
+        const query = `SELECT * FROM pets WHERE owner_id = $1 ORDER BY created_at DESC;`;
+        const result = await this.pool.query<PetRow>(query, [ownerId]);
+        return result.rows;
+    }
 }
