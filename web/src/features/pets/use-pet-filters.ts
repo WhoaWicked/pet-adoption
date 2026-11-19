@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router'
 import { isSpecies } from '@/lib/constants/labels'
 import { isProvince } from '@/lib/constants/provinces'
 import type { Species } from '@/lib/types'
+import { parsePage } from '@/lib/use-page-param'
 
 // filter + หน้าปัจจุบันของหน้ารายการสัตว์ เก็บใน URL (?species=&province=&page=) เพื่อ refresh/แชร์ลิงก์ได้
 
@@ -12,12 +13,6 @@ export interface PetFilters {
   species?: Species
   province?: string
   page: number
-}
-
-function parsePage(value: string | null): number {
-  if (!value || !/^\d+$/.test(value)) return 1
-  const page = Number(value)
-  return Number.isSafeInteger(page) && page >= 1 ? page : 1
 }
 
 export function usePetFilters() {

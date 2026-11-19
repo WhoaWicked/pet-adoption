@@ -7,3 +7,11 @@ export function formatAge(ageMonths: number): string {
   if (months === 0) return `${years} ปี`
   return `${years} ปี ${months} เดือน`
 }
+
+const dateFormatter = new Intl.DateTimeFormat('th-TH', { day: 'numeric', month: 'short', year: 'numeric' })
+
+// วันที่จาก API (ISO string) → "19 พ.ย. 2569"
+export function formatDate(iso: string): string {
+  const date = new Date(iso)
+  return Number.isNaN(date.getTime()) ? '-' : dateFormatter.format(date)
+}

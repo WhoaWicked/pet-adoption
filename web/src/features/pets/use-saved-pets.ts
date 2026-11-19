@@ -5,6 +5,7 @@ import { useAuth } from '@/features/auth/auth-context'
 import { listSavedPets, savePet, unsavePet } from '@/lib/api/endpoints'
 import { getErrorMessage } from '@/lib/api/errors'
 import { queryKeys } from '@/lib/query/query-keys'
+import type { Pet } from '@/lib/types'
 
 // สัตว์ที่บันทึกไว้ — API ไม่มี field "is_saved" ในรายละเอียดสัตว์ จึงดูจากรายการ GET /pets/saved
 
@@ -23,6 +24,22 @@ export function useIsPetSaved(petId: string) {
   const saved = useSavedPets()
   const ids = useMemo(() => new Set(saved.data?.map((p) => p.id)), [saved.data])
   return { isSaved: ids.has(petId), isLoading: saved.isPending && saved.fetchStatus !== 'idle' }
+}
+
+/** เลิกบันทึกจากหน้า /saved — เอาการ์ดออกจากรายการทันทีเมื่อสำเร็จ แล้วโหลดใหม่ให้ตรงกับ server */
+export function useUnsavePet() {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (petId: string) => unsavePet(petId),
+    onSuccess: (_data, petId) => {
+      queryClient.setQueryData<Pet[]>(queryKeys.pets.saved, (old) => old?.filter((p) => p.id !== petId))
+      toast.success('เลิกบันทึกแล้ว')
+    },
+    onError: (err) => {
+      toast.error(getErrorMessage(err))
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.pets.saved }),
+  })
 }
 
 /** บันทึก / เลิกบันทึก แล้วโหลดรายการที่บันทึกใหม่ */

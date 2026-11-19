@@ -9,6 +9,8 @@ export const queryKeys = {
   },
   pets: {
     all: ['pets'] as const,
+    /** ทุกหน้าของรายการ (ทุก filter) — ใช้ invalidate ทีเดียวหลังลงประกาศ */
+    lists: ['pets', 'list'] as const,
     list: (filter: PetListFilter) => ['pets', 'list', filter] as const,
     detail: (id: string) => ['pets', 'detail', id] as const,
     saved: ['pets', 'saved'] as const,

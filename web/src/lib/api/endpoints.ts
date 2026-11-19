@@ -3,6 +3,7 @@ import type {
   ApplicationAnswers,
   LoginResponse,
   Me,
+  MyApplication,
   Paged,
   Pet,
   RegisteredUser,
@@ -77,6 +78,33 @@ export function listSavedPets(signal?: AbortSignal) {
   return apiRequest<Pet[]>('/pets/saved', { signal })
 }
 
+export interface CreatePetInput {
+  name: string
+  species: Species
+  ageMonths: number
+  province: string
+  description: string
+  requirements: string
+  imageUrl?: string
+}
+
+/** ลงประกาศ — ส่งเฉพาะ field ของ CreatePetDto และไม่ส่ง imageUrl เมื่อว่าง */
+export function createPet(input: CreatePetInput) {
+  const imageUrl = input.imageUrl?.trim()
+  return apiRequest<Pet>('/pets', {
+    method: 'POST',
+    body: {
+      name: input.name,
+      species: input.species,
+      ageMonths: input.ageMonths,
+      province: input.province,
+      description: input.description,
+      requirements: input.requirements,
+      ...(imageUrl ? { imageUrl } : {}),
+    },
+  })
+}
+
 /** บันทึก/เลิกบันทึก — API ตอบ body ว่าง และทำซ้ำได้ */
 export function savePet(id: string) {
   return apiRequest<void>(`/pets/${encodeURIComponent(id)}/save`, { method: 'PUT' })
@@ -107,4 +135,19 @@ export function createApplication({ petId, answers }: CreateApplicationInput) {
       },
     },
   })
+}
+
+export interface PageRequest {
+  limit: number
+  offset: number
+}
+
+/** คำขอที่ผู้ใช้ยื่น ใหม่สุดก่อน พร้อม pet_name / pet_status */
+export function listMyApplications({ limit, offset }: PageRequest, signal?: AbortSignal) {
+  return apiRequest<Paged<MyApplication>>('/applications/mine', { query: { limit, offset }, signal })
+}
+
+/** ถอนคำขอ (เฉพาะ pending — สถานะอื่นได้ 409) */
+export function withdrawApplication(id: string) {
+  return apiRequest<Application>(`/applications/${encodeURIComponent(id)}/withdraw`, { method: 'PATCH' })
 }

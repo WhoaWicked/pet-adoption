@@ -47,6 +47,12 @@ export interface Application {
   decided_at: string | null
 }
 
+/** แถวจาก GET /applications/mine — มีชื่อและสถานะของสัตว์มาด้วย */
+export interface MyApplication extends Application {
+  pet_name: string
+  pet_status: PetStatus
+}
+
 export interface LoginResponse {
   accessToken: string
 }
