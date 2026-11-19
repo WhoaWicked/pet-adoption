@@ -25,6 +25,12 @@ export class PetsController {
         return this.petsService.listSaved(req.user!.id);
     }
 
+    @UseGuards(JwtAuthGuard)
+    @Get('mine')
+    async listMine(@Req() req: AuthenticateRequest) {
+        return this.petsService.listMine(req.user!.id);
+    }
+
     @Get(':id')
     async findOne(@Param('id', ParseUUIDPipe) id: string) {
         return this.petsService.findById(id);
@@ -50,4 +56,5 @@ export class PetsController {
     async unsave(@Param('id', ParseUUIDPipe) id: string, @Req() req: AuthenticateRequest) {
         return this.petsService.unsave(req.user!.id, id);
     }
+
 }
