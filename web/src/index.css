@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource-variable/noto-sans-thai";
+
+/*
+ * Design tokens — ชุดเดียวทั้งแอป
+ * สีทุกสีในแอปต้องมาจากตัวแปรใน :root เท่านั้น (component ใช้ผ่าน utility เช่น bg-primary, text-muted-foreground)
+ * โทน: อบอุ่น เป็นมิตร — พื้นขาวนวล, ตัวอักษรน้ำตาลเข้ม, สีหลักส้มอิฐ (ใช้เฉพาะปุ่มสำคัญ)
+ * ไม่มี dark mode (นอกขอบเขต)
+ */
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Noto Sans Thai Variable', ui-sans-serif, system-ui, sans-serif;
+
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+
+    /* ป้ายสถานะ: สีจาง ๆ ไม่แย่งความเด่นจากสีหลัก */
+    --color-status-available: var(--status-available);
+    --color-status-available-foreground: var(--status-available-foreground);
+    --color-status-adopted: var(--status-adopted);
+    --color-status-adopted-foreground: var(--status-adopted-foreground);
+    --color-status-closed: var(--status-closed);
+    --color-status-closed-foreground: var(--status-closed-foreground);
+
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+    --radius-3xl: calc(var(--radius) * 2.2);
+    --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+    /* พื้นและตัวอักษร */
+    --background: oklch(0.985 0.008 80);
+    --foreground: oklch(0.29 0.025 50);
+    --card: oklch(1 0.004 80);
+    --card-foreground: oklch(0.29 0.025 50);
+    --popover: oklch(1 0.004 80);
+    --popover-foreground: oklch(0.29 0.025 50);
+
+    /* สีหลัก (ส้มอิฐอุ่น) — ใช้เฉพาะปุ่มสำคัญ */
+    --primary: oklch(0.6 0.14 45);
+    --primary-foreground: oklch(0.99 0.005 80);
+
+    /* สีรอง / พื้นผิวจาง */
+    --secondary: oklch(0.955 0.015 75);
+    --secondary-foreground: oklch(0.33 0.03 50);
+    --muted: oklch(0.95 0.012 75);
+    --muted-foreground: oklch(0.52 0.025 55);
+    --accent: oklch(0.94 0.02 70);
+    --accent-foreground: oklch(0.29 0.025 50);
+
+    --destructive: oklch(0.56 0.19 27);
+    --border: oklch(0.9 0.014 70);
+    --input: oklch(0.88 0.016 70);
+    --ring: oklch(0.6 0.14 45);
+
+    /* สถานะสัตว์ */
+    --status-available: oklch(0.94 0.04 150);
+    --status-available-foreground: oklch(0.4 0.08 150);
+    --status-adopted: oklch(0.94 0.045 85);
+    --status-adopted-foreground: oklch(0.45 0.08 70);
+    --status-closed: oklch(0.93 0.008 70);
+    --status-closed-foreground: oklch(0.48 0.015 60);
+
+    /* มุมโค้งสม่ำเสมอทั้งแอป */
+    --radius: 0.875rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
+}

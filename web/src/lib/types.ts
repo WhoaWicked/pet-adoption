@@ -1,0 +1,46 @@
+// รูปแบบข้อมูลจาก API — response เป็น snake_case ตามจริง (ยกเว้น login ที่ตอบ accessToken)
+
+export type Species = 'dog' | 'cat' | 'other'
+export type PetStatus = 'available' | 'adopted' | 'closed'
+export type ApplicationStatus = 'pending' | 'approved' | 'rejected' | 'withdrawn'
+export type HousingType = 'house' | 'condo' | 'apartment' | 'other'
+
+export interface Pet {
+  id: string
+  owner_id: string
+  name: string
+  species: Species
+  age_months: number
+  province: string
+  description: string
+  requirements: string
+  image_url: string | null
+  status: PetStatus
+  created_at: string
+  updated_at: string
+}
+
+export interface PageMeta {
+  total: number
+  limit: number
+  offset: number
+}
+
+export interface Paged<T> {
+  data: T[]
+  meta: PageMeta
+}
+
+export interface LoginResponse {
+  accessToken: string
+}
+
+export interface RegisteredUser {
+  id: string
+  email: string
+  display_name: string
+}
+
+export interface Me {
+  id: string
+}
