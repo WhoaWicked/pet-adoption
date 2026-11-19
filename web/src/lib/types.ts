@@ -58,6 +58,18 @@ export interface PetApplication extends Application {
   applicant_name: string
 }
 
+/** แจ้งเตือนในแอป — id เป็น string เพราะเป็น BIGSERIAL (pg คืนเป็น string) */
+export interface Notification {
+  id: string
+  user_id: string
+  type: string
+  /** id ของคำขอรับเลี้ยง (ไม่ใช่ id ของสัตว์) */
+  entity_id: string
+  message: string
+  read_at: string | null
+  created_at: string
+}
+
 export interface LoginResponse {
   accessToken: string
 }

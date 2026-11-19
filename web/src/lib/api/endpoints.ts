@@ -4,6 +4,7 @@ import type {
   LoginResponse,
   Me,
   MyApplication,
+  Notification,
   PetApplication,
   Paged,
   Pet,
@@ -178,4 +179,21 @@ export function rejectApplication(id: string) {
 /** ปิดโพสต์ (ไม่มีการลบ) — adopted แล้วได้ 409 */
 export function closePet(id: string) {
   return apiRequest<Pet>(`/pets/${encodeURIComponent(id)}/close`, { method: 'PATCH' })
+}
+
+// ---------- notifications ----------
+
+/** แจ้งเตือนของฉัน ใหม่สุดก่อน */
+export function listNotifications({ limit, offset }: PageRequest, signal?: AbortSignal) {
+  return apiRequest<Paged<Notification>>('/notifications', { query: { limit, offset }, signal })
+}
+
+/** จำนวนที่ยังไม่อ่าน — กระดิ่ง poll ตัวนี้ */
+export function getUnreadCount(signal?: AbortSignal) {
+  return apiRequest<{ count: number }>('/notifications/unread-count', { signal })
+}
+
+/** กดอ่าน — กดซ้ำได้, ไม่พบ/ไม่ใช่ของตัวเองได้ 404 */
+export function markNotificationRead(id: string) {
+  return apiRequest<Notification>(`/notifications/${encodeURIComponent(id)}/read`, { method: 'PATCH' })
 }

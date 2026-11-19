@@ -4,6 +4,7 @@ import { LogOutIcon, MenuIcon, PawPrintIcon, PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '@/features/auth/auth-context'
+import { NotificationBell } from '@/features/notifications/NotificationBell'
 import { cn } from '@/lib/utils'
 
 interface NavItem {
@@ -55,7 +56,8 @@ export function Header() {
         </nav>
 
         <div className="ml-auto flex items-center gap-2">
-          {/* ตำแหน่งกระดิ่งแจ้งเตือน (รอบถัดไป) */}
+          {/* กระดิ่งอยู่แถบบนทุกขนาดจอ (มือถืออยู่ข้างปุ่มเมนู) — แสดงเฉพาะตอน login */}
+          {isLoggedIn && <NotificationBell />}
           <Button asChild className="hidden h-10 px-4 sm:inline-flex">
             <Link to="/pets/new">
               <PlusIcon aria-hidden />
