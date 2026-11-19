@@ -93,7 +93,7 @@ export function ApplyForm({ petId, petName }: { petId: string; petName: string }
           value={values.housingType}
           onValueChange={(v) => setValues((s) => ({ ...s, housingType: v as HousingType }))}
         >
-          <SelectTrigger {...fieldAria('housingType', fieldErrors.housingType)} className="h-10 w-full">
+          <SelectTrigger {...fieldAria('housingType', fieldErrors.housingType)} className="w-full">
             <SelectValue placeholder="เลือกประเภทที่พัก" />
           </SelectTrigger>
           <SelectContent>
@@ -144,7 +144,7 @@ export function ApplyForm({ petId, petName }: { petId: string; petName: string }
         </p>
       </FormField>
 
-      <Button type="submit" className="h-11 w-full text-base" disabled={mutation.isPending}>
+      <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
         {mutation.isPending ? 'กำลังส่งคำขอ…' : 'ยื่นคำขอรับเลี้ยง'}
       </Button>
     </form>

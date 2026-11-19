@@ -110,7 +110,6 @@ export function RegisterPage() {
           <Input
             {...fieldAria('displayName', fieldErrors.displayName)}
             autoComplete="nickname"
-            className="h-11"
             value={values.displayName}
             onChange={update('displayName')}
           />
@@ -122,7 +121,6 @@ export function RegisterPage() {
             type="email"
             autoComplete="email"
             inputMode="email"
-            className="h-11"
             value={values.email}
             onChange={update('email')}
           />
@@ -138,13 +136,12 @@ export function RegisterPage() {
             {...fieldAria('password', fieldErrors.password, true)}
             type="password"
             autoComplete="new-password"
-            className="h-11"
             value={values.password}
             onChange={update('password')}
           />
         </FormField>
 
-        <Button type="submit" className="h-11 w-full text-base" disabled={mutation.isPending}>
+        <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
           {mutation.isPending ? 'กำลังสมัครสมาชิก…' : 'สมัครสมาชิก'}
         </Button>
       </form>

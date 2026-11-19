@@ -31,7 +31,7 @@ export function SavedPetsPage() {
         title="ยังไม่ได้บันทึกน้องตัวไหน"
         description="กดปุ่ม “บันทึกน้อง” ในหน้ารายละเอียด เพื่อเก็บไว้ดูทีหลัง"
         action={
-          <Button asChild className="h-10 px-4">
+          <Button asChild>
             <Link to="/">ไปดูน้อง ๆ</Link>
           </Button>
         }
@@ -48,7 +48,8 @@ export function SavedPetsPage() {
               {/* ปุ่มอยู่นอกลิงก์ของการ์ด — กดแล้วไม่พาไปหน้ารายละเอียด */}
               <Button
                 variant="ghost"
-                className="h-9 self-end px-3 text-muted-foreground"
+                size="sm"
+                className="self-end text-muted-foreground"
                 onClick={() => unsave.mutate(pet.id)}
                 disabled={isRemoving}
               >

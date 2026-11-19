@@ -23,7 +23,7 @@ type PendingAction =
 
 function BackToMyPets() {
   return (
-    <Button asChild variant="ghost" className="-ml-2 mb-4 h-9 px-2 text-muted-foreground">
+    <Button asChild variant="ghost" size="sm" className="-ml-2 mb-4 px-2 text-muted-foreground">
       <Link to="/my-pets">
         <ArrowLeftIcon aria-hidden />
         สัตว์ของฉัน
@@ -39,7 +39,7 @@ function NotOwnerState() {
       title="คุณไม่ใช่เจ้าของโพสต์นี้"
       description="หน้าจัดการเปิดได้เฉพาะคนที่ลงประกาศน้องตัวนี้"
       action={
-        <Button asChild variant="outline" className="h-10 px-4">
+        <Button asChild variant="outline">
           <Link to="/my-pets">ไปที่สัตว์ของฉัน</Link>
         </Button>
       }
@@ -88,7 +88,7 @@ export function ManagePetPage() {
           title="ไม่พบข้อมูลสัตว์ตัวนี้"
           description="ลิงก์อาจไม่ถูกต้อง หรือประกาศนี้ไม่มีอยู่แล้ว"
           action={
-            <Button asChild variant="outline" className="h-10 px-4">
+            <Button asChild variant="outline">
               <Link to="/my-pets">กลับไปที่สัตว์ของฉัน</Link>
             </Button>
           }
@@ -114,7 +114,7 @@ export function ManagePetPage() {
     list = (
       <ul className="space-y-3" aria-busy="true" aria-label="กำลังโหลดคำขอ">
         {Array.from({ length: 2 }, (_, i) => (
-          <li key={i} className="space-y-3 rounded-2xl border bg-card p-5">
+          <li key={i} className="space-y-3 rounded-2xl bg-secondary p-5">
             <Skeleton className="h-5 w-1/3" />
             <Skeleton className="h-4 w-2/3" />
           </li>

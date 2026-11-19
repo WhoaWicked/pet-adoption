@@ -45,7 +45,7 @@ export function PetsListPage() {
           title="ไม่มีหน้านี้"
           description={`ตอนนี้มีทั้งหมด ${totalPages} หน้า`}
           action={
-            <Button variant="outline" className="h-10 px-4" onClick={() => setPage(1)}>
+            <Button variant="outline" onClick={() => setPage(1)}>
               กลับไปหน้าแรก
             </Button>
           }
@@ -58,7 +58,7 @@ export function PetsListPage() {
           title="ไม่พบสัตว์ตามตัวกรอง"
           description="ลองเปลี่ยนชนิดสัตว์หรือจังหวัดดูนะ"
           action={
-            <Button variant="outline" className="h-10 px-4" onClick={clearFilters}>
+            <Button variant="outline" onClick={clearFilters}>
               ล้างตัวกรอง
             </Button>
           }
@@ -70,7 +70,7 @@ export function PetsListPage() {
           title="ยังไม่มีน้องรอบ้านตอนนี้"
           description="ถ้าคุณมีน้องที่กำลังหาบ้านใหม่ ลงประกาศได้เลย"
           action={
-            <Button asChild className="h-10 px-4">
+            <Button asChild>
               <Link to="/pets/new">
                 <PlusIcon aria-hidden />
                 ลงประกาศ

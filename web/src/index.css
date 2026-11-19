@@ -59,22 +59,23 @@
     --popover: oklch(1 0.004 80);
     --popover-foreground: oklch(0.29 0.025 50);
 
-    /* สีหลัก (ส้มอิฐอุ่น) — ใช้เฉพาะปุ่มสำคัญ */
-    --primary: oklch(0.6 0.14 45);
+    /* สีหลัก (ส้มอิฐอุ่น) — ใช้เฉพาะปุ่มสำคัญ
+       L 0.53 ให้ข้อความขาวบนปุ่ม contrast ≥ 4.5:1 (เดิม 0.60 ได้ราว 3.9:1) */
+    --primary: oklch(0.53 0.14 42);
     --primary-foreground: oklch(0.99 0.005 80);
 
     /* สีรอง / พื้นผิวจาง */
-    --secondary: oklch(0.955 0.015 75);
+    --secondary: oklch(0.955 0.018 72);
     --secondary-foreground: oklch(0.33 0.03 50);
-    --muted: oklch(0.95 0.012 75);
-    --muted-foreground: oklch(0.52 0.025 55);
+    --muted: oklch(0.935 0.014 72);
+    --muted-foreground: oklch(0.5 0.025 55);
     --accent: oklch(0.94 0.02 70);
     --accent-foreground: oklch(0.29 0.025 50);
 
     --destructive: oklch(0.56 0.19 27);
-    --border: oklch(0.9 0.014 70);
+    --border: oklch(0.89 0.016 70);
     --input: oklch(0.88 0.016 70);
-    --ring: oklch(0.6 0.14 45);
+    --ring: oklch(0.53 0.14 42);
 
     /* สถานะสัตว์ */
     --status-available: oklch(0.94 0.04 150);
@@ -93,7 +94,12 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground antialiased;
+    /* ภาษาไทยมีสระบน/ล่าง — line-height โปร่งกว่าปกติ ไม่ให้บรรทัดชนกัน */
+    @apply bg-background text-foreground antialiased leading-[1.7];
+  }
+  /* หัวข้อ: ชิดกว่าเนื้อความเล็กน้อย แต่ไม่บีบตัวอักษร (ไม่ใช้ tracking-tight กับภาษาไทย) */
+  h1, h2, h3 {
+    @apply leading-snug;
   }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;

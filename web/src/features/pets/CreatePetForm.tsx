@@ -131,13 +131,13 @@ export function CreatePetForm() {
       )}
 
       <FormField id="name" label="ชื่อน้อง" error={fieldErrors.name}>
-        <Input {...fieldAria('name', fieldErrors.name)} className="h-11" value={values.name} onChange={set('name')} />
+        <Input {...fieldAria('name', fieldErrors.name)} value={values.name} onChange={set('name')} />
       </FormField>
 
       <div className="grid gap-6 sm:grid-cols-2">
         <FormField id="species" label="ชนิดสัตว์" error={fieldErrors.species}>
           <Select value={values.species} onValueChange={(v) => setValues((s) => ({ ...s, species: v as Species }))}>
-            <SelectTrigger {...fieldAria('species', fieldErrors.species)} className="h-11 w-full">
+            <SelectTrigger {...fieldAria('species', fieldErrors.species)} className="w-full">
               <SelectValue placeholder="เลือกชนิดสัตว์" />
             </SelectTrigger>
             <SelectContent>
@@ -152,7 +152,7 @@ export function CreatePetForm() {
 
         <FormField id="province" label="จังหวัด" error={fieldErrors.province}>
           <Select value={values.province} onValueChange={(v) => setValues((s) => ({ ...s, province: v }))}>
-            <SelectTrigger {...fieldAria('province', fieldErrors.province)} className="h-11 w-full">
+            <SelectTrigger {...fieldAria('province', fieldErrors.province)} className="w-full">
               <SelectValue placeholder="เลือกจังหวัด" />
             </SelectTrigger>
             <SelectContent className="max-h-72">
@@ -176,7 +176,6 @@ export function CreatePetForm() {
               id="ageYears"
               inputMode="numeric"
               placeholder="0"
-              className="h-11"
               aria-invalid={fieldErrors.ageMonths ? true : undefined}
               value={values.ageYears}
               onChange={set('ageYears')}
@@ -188,7 +187,6 @@ export function CreatePetForm() {
               id="ageMonthsPart"
               inputMode="numeric"
               placeholder="0"
-              className="h-11"
               aria-invalid={fieldErrors.ageMonths ? true : undefined}
               value={values.ageMonthsPart}
               onChange={set('ageMonthsPart')}
@@ -233,13 +231,12 @@ export function CreatePetForm() {
           type="url"
           inputMode="url"
           placeholder="https://"
-          className="h-11"
           value={values.imageUrl}
           onChange={set('imageUrl')}
         />
       </FormField>
 
-      <Button type="submit" className="h-11 w-full text-base sm:w-auto sm:px-8" disabled={mutation.isPending}>
+      <Button type="submit" size="lg" className="w-full sm:w-auto sm:px-8" disabled={mutation.isPending}>
         {mutation.isPending ? 'กำลังลงประกาศ…' : 'ลงประกาศ'}
       </Button>
     </form>

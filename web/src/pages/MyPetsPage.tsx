@@ -9,7 +9,7 @@ import { useMyPets } from '@/features/pets/use-my-pets'
 
 function NewPostButton() {
   return (
-    <Button asChild className="h-10 px-4">
+    <Button asChild>
       <Link to="/pets/new">
         <PlusIcon aria-hidden />
         ลงประกาศ

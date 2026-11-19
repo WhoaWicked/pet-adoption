@@ -18,17 +18,19 @@ export function ManagePetHeader({
   disabled: boolean
 }) {
   return (
-    <section className="flex flex-col gap-4 rounded-2xl border bg-card p-4 sm:flex-row sm:items-center sm:p-5">
+    <section className="flex flex-col gap-4 rounded-2xl bg-secondary p-4 sm:flex-row sm:items-center sm:p-5">
       <div className="aspect-[4/3] w-full shrink-0 overflow-hidden rounded-xl sm:w-40">
         <PetImage src={pet.image_url} alt={pet.name} species={pet.species} />
       </div>
       <div className="min-w-0 flex-1 space-y-1.5">
         <div className="flex flex-wrap items-center gap-2">
-          <h1 className="break-words text-2xl font-bold tracking-tight">{pet.name}</h1>
+          <h1 className="break-words text-2xl font-bold sm:text-3xl">{pet.name}</h1>
           <PetStatusBadge status={pet.status} />
         </div>
-        <p className="text-sm text-muted-foreground">
-          {SPECIES_LABELS[pet.species]} · {formatAge(pet.age_months)} · {pet.province}
+        <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+          <span>{SPECIES_LABELS[pet.species]}</span>
+          <span>{formatAge(pet.age_months)}</span>
+          <span>{pet.province}</span>
         </p>
         <Link
           to={`/pets/${pet.id}`}
@@ -39,7 +41,7 @@ export function ManagePetHeader({
         </Link>
       </div>
       {pet.status === 'available' && (
-        <Button variant="outline" className="h-10 shrink-0 px-4" onClick={onClose} disabled={disabled}>
+        <Button variant="outline" className="shrink-0" onClick={onClose} disabled={disabled}>
           <LockIcon aria-hidden />
           ปิดโพสต์
         </Button>

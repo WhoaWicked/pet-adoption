@@ -29,7 +29,7 @@ export function AdoptionPanel({ pet }: { pet: Pet }) {
     content = (
       <Notice icon={<SettingsIcon className="size-6" aria-hidden />} title="นี่คือโพสต์ของคุณ">
         <p className="text-sm text-muted-foreground">ดูคำขอที่เข้ามา อนุมัติ หรือปิดโพสต์ได้ที่หน้าจัดการ</p>
-        <Button asChild className="h-10 px-4">
+        <Button asChild>
           <Link to={`/my-pets/${pet.id}`}>ไปหน้าจัดการ</Link>
         </Button>
       </Notice>
@@ -49,7 +49,7 @@ export function AdoptionPanel({ pet }: { pet: Pet }) {
   } else if (status === 'checking') {
     content = (
       <div className="space-y-4" aria-busy="true">
-        <Skeleton className="h-10 w-full" />
+        <Skeleton className="w-full" />
         <Skeleton className="h-10 w-2/3" />
         <Skeleton className="h-24 w-full" />
       </div>
@@ -58,7 +58,7 @@ export function AdoptionPanel({ pet }: { pet: Pet }) {
     content = (
       <Notice icon={<LockIcon className="size-6" aria-hidden />} title="เข้าสู่ระบบเพื่อยื่นคำขอ">
         <p className="text-sm text-muted-foreground">ต้องมีบัญชีก่อนจึงจะยื่นขอรับเลี้ยงน้องได้</p>
-        <Button asChild className="h-10 px-4">
+        <Button asChild>
           <Link to={loginPath(location.pathname + location.search)}>เข้าสู่ระบบ</Link>
         </Button>
       </Notice>
@@ -68,7 +68,8 @@ export function AdoptionPanel({ pet }: { pet: Pet }) {
   }
 
   return (
-    <section aria-labelledby="adopt-heading" className="rounded-2xl border bg-card p-5 sm:p-6">
+    // พื้นโทนสีหลักจาง — กล่องเดียวในหน้าที่ใช้สีหลักเป็นพื้น ให้สายตาไปที่จุดตัดสินใจ
+    <section aria-labelledby="adopt-heading" className="rounded-2xl bg-primary/6 p-5 ring-1 ring-primary/15 sm:p-6">
       <h2 id="adopt-heading" className="mb-4 text-lg font-semibold">
         ขอรับเลี้ยง {pet.name}
       </h2>

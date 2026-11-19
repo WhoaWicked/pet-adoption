@@ -43,7 +43,7 @@ export function MyApplicationsPage() {
     content = (
       <ul className="space-y-3" aria-busy="true" aria-label="กำลังโหลดคำขอ">
         {Array.from({ length: 4 }, (_, i) => (
-          <li key={i} className="space-y-2 rounded-2xl border bg-card p-5">
+          <li key={i} className="space-y-2 rounded-2xl bg-secondary p-5">
             <Skeleton className="h-6 w-1/3" />
             <Skeleton className="h-4 w-2/3" />
           </li>
@@ -60,7 +60,7 @@ export function MyApplicationsPage() {
           title="ไม่มีหน้านี้"
           description={`ตอนนี้มีทั้งหมด ${totalPages} หน้า`}
           action={
-            <Button variant="outline" className="h-10 px-4" onClick={() => setPage(1)}>
+            <Button variant="outline" onClick={() => setPage(1)}>
               กลับไปหน้าแรก
             </Button>
           }
@@ -71,7 +71,7 @@ export function MyApplicationsPage() {
           title="ยังไม่ได้ยื่นคำขอรับเลี้ยง"
           description="เลือกน้องที่ถูกใจ แล้วยื่นคำขอได้จากหน้ารายละเอียด"
           action={
-            <Button asChild className="h-10 px-4">
+            <Button asChild>
               <Link to="/">ไปดูน้อง ๆ</Link>
             </Button>
           }

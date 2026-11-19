@@ -49,12 +49,11 @@ export function ConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending} className="h-10 px-4">
+          <AlertDialogCancel disabled={isPending}>
             ยกเลิก
           </AlertDialogCancel>
           <AlertDialogAction
             variant={destructive ? 'destructive' : 'default'}
-            className="h-10 px-4"
             disabled={isPending}
             onClick={(e) => {
               // ไม่ให้ Radix ปิดกล่องเอง — ผู้เรียกปิดเมื่อ action สำเร็จ

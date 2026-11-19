@@ -23,12 +23,12 @@ export function PetFilters({
   const toValue = (v: string) => (v === ALL ? undefined : v)
 
   return (
-    <div className="flex flex-col gap-3 rounded-2xl border bg-card p-4 sm:flex-row sm:items-end">
+    <div className="flex flex-col gap-3 rounded-2xl bg-secondary p-4 sm:flex-row sm:items-end">
       <div className="grid flex-1 gap-3 sm:grid-cols-2">
         <div className="space-y-2">
           <Label htmlFor="filter-species">ชนิดสัตว์</Label>
           <Select value={filters.species ?? ALL} onValueChange={(v) => onChange('species', toValue(v))}>
-            <SelectTrigger id="filter-species" className="h-10 w-full">
+            <SelectTrigger id="filter-species" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -44,7 +44,7 @@ export function PetFilters({
         <div className="space-y-2">
           <Label htmlFor="filter-province">จังหวัด</Label>
           <Select value={filters.province ?? ALL} onValueChange={(v) => onChange('province', toValue(v))}>
-            <SelectTrigger id="filter-province" className="h-10 w-full">
+            <SelectTrigger id="filter-province" className="w-full">
               <SelectValue />
             </SelectTrigger>
             <SelectContent className="max-h-72">
@@ -59,7 +59,7 @@ export function PetFilters({
         </div>
       </div>
       {hasActiveFilters && (
-        <Button variant="ghost" className="h-10 px-3" onClick={onClear}>
+        <Button variant="ghost" className="px-3" onClick={onClear}>
           <XIcon aria-hidden />
           ล้างตัวกรอง
         </Button>

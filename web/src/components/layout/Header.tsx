@@ -58,7 +58,7 @@ export function Header() {
         <div className="ml-auto flex items-center gap-2">
           {/* กระดิ่งอยู่แถบบนทุกขนาดจอ (มือถืออยู่ข้างปุ่มเมนู) — แสดงเฉพาะตอน login */}
           {isLoggedIn && <NotificationBell />}
-          <Button asChild className="hidden h-10 px-4 sm:inline-flex">
+          <Button asChild className="hidden sm:inline-flex">
             <Link to="/pets/new">
               <PlusIcon aria-hidden />
               ลงประกาศ
@@ -68,16 +68,16 @@ export function Header() {
           <div className="hidden md:flex md:items-center md:gap-2">
             {status === 'anonymous' && (
               <>
-                <Button asChild variant="ghost" className="h-10 px-3">
+                <Button asChild variant="ghost" className="px-3">
                   <Link to="/login">เข้าสู่ระบบ</Link>
                 </Button>
-                <Button asChild variant="outline" className="h-10 px-3">
+                <Button asChild variant="outline" className="px-3">
                   <Link to="/register">สมัครสมาชิก</Link>
                 </Button>
               </>
             )}
             {isLoggedIn && (
-              <Button variant="ghost" className="h-10 px-3" onClick={logout}>
+              <Button variant="ghost" className="px-3" onClick={logout}>
                 <LogOutIcon aria-hidden />
                 ออกจากระบบ
               </Button>
@@ -101,7 +101,7 @@ export function Header() {
                     {item.label}
                   </NavLink>
                 ))}
-                <Button asChild className="mt-3 h-10">
+                <Button asChild className="mt-3">
                   <Link to="/pets/new" onClick={closeMenu}>
                     <PlusIcon aria-hidden />
                     ลงประกาศ
@@ -110,10 +110,10 @@ export function Header() {
                 <div className="mt-4 flex flex-col gap-2 border-t pt-4">
                   {status === 'anonymous' && (
                     <>
-                      <Button asChild variant="outline" className="h-10">
+                      <Button asChild variant="outline">
                         <Link to="/login" onClick={closeMenu}>เข้าสู่ระบบ</Link>
                       </Button>
-                      <Button asChild variant="ghost" className="h-10">
+                      <Button asChild variant="ghost">
                         <Link to="/register" onClick={closeMenu}>สมัครสมาชิก</Link>
                       </Button>
                     </>
@@ -121,7 +121,7 @@ export function Header() {
                   {isLoggedIn && (
                     <Button
                       variant="ghost"
-                      className="h-10 justify-start"
+                      className="justify-start"
                       onClick={() => {
                         closeMenu()
                         logout()

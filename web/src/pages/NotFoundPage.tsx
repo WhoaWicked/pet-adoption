@@ -10,7 +10,7 @@ export function NotFoundPage() {
       title="ไม่พบหน้าที่คุณต้องการ"
       description="ลิงก์อาจไม่ถูกต้อง หรือหน้านี้ถูกย้ายไปแล้ว"
       action={
-        <Button asChild variant="outline" className="h-10 px-4">
+        <Button asChild variant="outline">
           <Link to="/">กลับหน้าแรก</Link>
         </Button>
       }

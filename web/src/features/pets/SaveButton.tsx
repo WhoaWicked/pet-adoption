@@ -27,7 +27,7 @@ export function SaveButton({ petId, className }: { petId: string; className?: st
   return (
     <Button
       variant="outline"
-      className={cn('h-10 px-4', className)}
+      className={className}
       onClick={onClick}
       disabled={busy}
       aria-pressed={status === 'authenticated' ? isSaved : undefined}

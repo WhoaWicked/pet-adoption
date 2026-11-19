@@ -93,7 +93,6 @@ export function LoginPage() {
             type="email"
             autoComplete="email"
             inputMode="email"
-            className="h-11"
             value={values.email}
             onChange={(e) => setValues((v) => ({ ...v, email: e.target.value }))}
           />
@@ -104,13 +103,12 @@ export function LoginPage() {
             {...fieldAria('password', fieldErrors.password)}
             type="password"
             autoComplete="current-password"
-            className="h-11"
             value={values.password}
             onChange={(e) => setValues((v) => ({ ...v, password: e.target.value }))}
           />
         </FormField>
 
-        <Button type="submit" className="h-11 w-full text-base" disabled={mutation.isPending}>
+        <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
           {mutation.isPending ? 'กำลังเข้าสู่ระบบ…' : 'เข้าสู่ระบบ'}
         </Button>
       </form>

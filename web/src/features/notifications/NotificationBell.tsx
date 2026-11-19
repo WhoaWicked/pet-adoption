@@ -81,7 +81,7 @@ export function NotificationBell() {
     body = (
       <div role="alert" className="flex flex-col items-center gap-2 px-3 py-6 text-center">
         <p className="text-sm text-muted-foreground">{getErrorMessage(list.error)}</p>
-        <Button variant="outline" className="h-9 px-3" onClick={() => list.refetch()} disabled={list.isFetching}>
+        <Button variant="outline" size="sm" onClick={() => list.refetch()} disabled={list.isFetching}>
           <RotateCwIcon className={list.isFetching ? 'animate-spin' : undefined} aria-hidden />
           ลองใหม่
         </Button>

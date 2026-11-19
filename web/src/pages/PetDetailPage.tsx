@@ -18,7 +18,7 @@ function BackLink() {
   // มีประวัติในแอป (เช่นมาจากหน้ารายการพร้อม filter) → ย้อนกลับเพื่อรักษา filter/หน้าเดิม, ไม่งั้นไปหน้าแรก
   const canGoBack = (window.history.state as { idx?: number } | null)?.idx ? true : false
   return (
-    <Button variant="ghost" className="-ml-2 mb-4 h-9 px-2 text-muted-foreground" onClick={() => (canGoBack ? navigate(-1) : navigate('/'))}>
+    <Button variant="ghost" size="sm" className="-ml-2 mb-4 px-2 text-muted-foreground" onClick={() => (canGoBack ? navigate(-1) : navigate('/'))}>
       <ArrowLeftIcon aria-hidden />
       กลับไปดูน้อง ๆ
     </Button>
@@ -30,7 +30,7 @@ function TextSection({ title, text }: { title: string; text: string }) {
     <section className="space-y-2">
       <h2 className="text-lg font-semibold">{title}</h2>
       {/* pre-line รักษาการขึ้นบรรทัดของเจ้าของโพสต์, break-words กันข้อความยาวไม่มีช่องว่างล้นจอมือถือ */}
-      <p className="whitespace-pre-line break-words text-muted-foreground">{text}</p>
+      <p className="max-w-prose whitespace-pre-line break-words text-muted-foreground">{text}</p>
     </section>
   )
 }
@@ -73,7 +73,7 @@ export function PetDetailPage() {
           title="ไม่พบข้อมูลสัตว์ตัวนี้"
           description="ลิงก์อาจไม่ถูกต้อง หรือประกาศนี้ไม่มีอยู่แล้ว"
           action={
-            <Button asChild variant="outline" className="h-10 px-4">
+            <Button asChild variant="outline">
               <Link to="/">กลับไปดูน้อง ๆ</Link>
             </Button>
           }
@@ -93,15 +93,17 @@ export function PetDetailPage() {
   return (
     <div>
       <BackLink />
-      <div className="grid gap-8 lg:grid-cols-2 lg:items-start">
-        <div className="aspect-[4/3] overflow-hidden rounded-2xl border bg-card">
-          <PetImage src={pet.image_url} alt={pet.name} species={pet.species} />
-        </div>
+      {/* จอใหญ่: ซ้าย = เรื่องของน้อง, ขวา = กล่องรับเลี้ยงที่ติดอยู่ขณะเลื่อน (จุดตัดสินใจจุดเดียวของหน้า)
+          มือถือ: เรียงลงมา อ่านรายละเอียดและเงื่อนไขก่อนถึงฟอร์ม */}
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:items-start lg:gap-12">
+        <div className="min-w-0 space-y-8">
+          <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-secondary">
+            <PetImage src={pet.image_url} alt={pet.name} species={pet.species} />
+          </div>
 
-        <div className="min-w-0 space-y-6">
           <div className="space-y-3">
             <PetStatusBadge status={pet.status} />
-            <h1 className="break-words text-3xl font-bold tracking-tight">{pet.name}</h1>
+            <h1 className="break-words text-2xl font-bold sm:text-3xl">{pet.name}</h1>
             <ul className="flex flex-wrap gap-x-5 gap-y-2 text-muted-foreground">
               <li className="flex items-center gap-1.5">
                 <PawPrintIcon className="size-4" aria-hidden />
@@ -121,6 +123,9 @@ export function PetDetailPage() {
 
           <TextSection title="เกี่ยวกับน้อง" text={pet.description} />
           <TextSection title="เงื่อนไขการรับเลี้ยง" text={pet.requirements} />
+        </div>
+
+        <div className="lg:sticky lg:top-24">
           <AdoptionPanel pet={pet} />
         </div>
       </div>

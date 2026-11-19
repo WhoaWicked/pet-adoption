@@ -19,7 +19,7 @@ export function Pagination({
     <nav className="flex items-center justify-center gap-3" aria-label="เปลี่ยนหน้า">
       <Button
         variant="outline"
-        className="h-10 px-3"
+        className="px-3"
         onClick={() => onPageChange(page - 1)}
         disabled={disabled || page <= 1}
       >
@@ -31,7 +31,7 @@ export function Pagination({
       </span>
       <Button
         variant="outline"
-        className="h-10 px-3"
+        className="px-3"
         onClick={() => onPageChange(page + 1)}
         disabled={disabled || page >= totalPages}
       >
