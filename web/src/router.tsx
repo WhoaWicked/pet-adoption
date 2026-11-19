@@ -1,17 +1,18 @@
 import { createBrowserRouter } from 'react-router'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { RequireAuth } from '@/features/auth/RequireAuth'
-import { ComingSoonPage } from '@/pages/ComingSoonPage'
 import { CreatePetPage } from '@/pages/CreatePetPage'
 import { LoginPage } from '@/pages/LoginPage'
+import { ManagePetPage } from '@/pages/ManagePetPage'
 import { MyApplicationsPage } from '@/pages/MyApplicationsPage'
+import { MyPetsPage } from '@/pages/MyPetsPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PetDetailPage } from '@/pages/PetDetailPage'
 import { PetsListPage } from '@/pages/PetsListPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { SavedPetsPage } from '@/pages/SavedPetsPage'
 
-// เส้นทางทั้งหมดของแอป — หน้าที่ยังไม่ทำ (รอบถัดไป) ชี้ไป ComingSoonPage ชั่วคราว
+// เส้นทางทั้งหมดของแอป
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,
@@ -26,8 +27,8 @@ export const router = createBrowserRouter([
           { path: 'pets/new', element: <CreatePetPage /> },
           { path: 'my-applications', element: <MyApplicationsPage /> },
           { path: 'saved', element: <SavedPetsPage /> },
-          { path: 'my-pets', element: <ComingSoonPage /> },
-          { path: 'my-pets/:petId', element: <ComingSoonPage /> },
+          { path: 'my-pets', element: <MyPetsPage /> },
+          { path: 'my-pets/:petId', element: <ManagePetPage /> },
         ],
       },
       { path: 'pets/:id', element: <PetDetailPage /> },

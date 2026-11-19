@@ -53,6 +53,11 @@ export interface MyApplication extends Application {
   pet_status: PetStatus
 }
 
+/** แถวจาก GET /applications/pet/:petId (เจ้าของดู) — มีชื่อผู้ยื่นมาด้วย */
+export interface PetApplication extends Application {
+  applicant_name: string
+}
+
 export interface LoginResponse {
   accessToken: string
 }

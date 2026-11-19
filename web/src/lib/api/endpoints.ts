@@ -4,6 +4,7 @@ import type {
   LoginResponse,
   Me,
   MyApplication,
+  PetApplication,
   Paged,
   Pet,
   RegisteredUser,
@@ -150,4 +151,31 @@ export function listMyApplications({ limit, offset }: PageRequest, signal?: Abor
 /** ถอนคำขอ (เฉพาะ pending — สถานะอื่นได้ 409) */
 export function withdrawApplication(id: string) {
   return apiRequest<Application>(`/applications/${encodeURIComponent(id)}/withdraw`, { method: 'PATCH' })
+}
+
+// ---------- owner ----------
+
+/** สัตว์ที่ผู้ใช้ลงประกาศ ทุกสถานะ ใหม่สุดก่อน (array ไม่มี meta) */
+export function listMyPets(signal?: AbortSignal) {
+  return apiRequest<Pet[]>('/pets/mine', { signal })
+}
+
+/** คำขอของสัตว์ตัวหนึ่ง (เฉพาะเจ้าของ — ไม่ใช่เจ้าของได้ 403) — API ห่อมาเป็น { data } */
+export async function listPetApplications(petId: string, signal?: AbortSignal) {
+  const res = await apiRequest<{ data: PetApplication[] }>(`/applications/pet/${encodeURIComponent(petId)}`, { signal })
+  return res.data
+}
+
+/** อนุมัติ — API ปฏิเสธคำขอ pending อื่นของสัตว์ตัวนี้และเปลี่ยนสัตว์เป็น adopted ใน transaction เดียว */
+export function approveApplication(id: string) {
+  return apiRequest<Application>(`/applications/${encodeURIComponent(id)}/approve`, { method: 'PATCH' })
+}
+
+export function rejectApplication(id: string) {
+  return apiRequest<Application>(`/applications/${encodeURIComponent(id)}/reject`, { method: 'PATCH' })
+}
+
+/** ปิดโพสต์ (ไม่มีการลบ) — adopted แล้วได้ 409 */
+export function closePet(id: string) {
+  return apiRequest<Pet>(`/pets/${encodeURIComponent(id)}/close`, { method: 'PATCH' })
 }
