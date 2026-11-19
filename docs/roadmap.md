@@ -11,9 +11,9 @@
 - [x] 7. ✍️ อนุมัติ/ปฏิเสธ แบบ transaction + แจ้งเตือน + เทสต์ยิงพร้อมกัน
 
 ## สัปดาห์ 2 — API ที่เหลือ, Frontend, AI, Ship
-- [ ] 8. 🤖 Notifications API: รายการ, จำนวนยังไม่อ่าน, กดอ่าน
-- [ ] 9. 🤖 Frontend: setup, login/register, หน้ารวมสัตว์, รายละเอียด
-- [ ] 10. 🤖 Frontend: ฟอร์มยื่นคำขอ, คำขอของฉัน, สัตว์ของฉัน + รีวิวคำขอ, ที่บันทึกไว้, กระดิ่งแจ้งเตือน
+- [x] 8. 🤖 Notifications API: รายการ, จำนวนยังไม่อ่าน, กดอ่าน
+- [x] 9. 🤖 Frontend: setup, login/register, หน้ารวมสัตว์, รายละเอียด
+- [x] 10. 🤖 Frontend: ฟอร์มยื่นคำขอ, คำขอของฉัน, สัตว์ของฉัน + รีวิวคำขอ, ที่บันทึกไว้, กระดิ่งแจ้งเตือน
 - [ ] 11. 🤖 อัปโหลดรูป (storage ภายนอก)
 - [ ] 12. 🤖 src/ai client + prompt / ✍️ worker (timeout, retry, fallback, ทำงานค้างต่อหลัง restart)
 - [ ] 13. 🤖 CI (GitHub Actions รันเทสต์กับ Postgres) + deploy
