@@ -4,6 +4,7 @@ import { RequireAuth } from '@/features/auth/RequireAuth'
 import { ComingSoonPage } from '@/pages/ComingSoonPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
+import { PetDetailPage } from '@/pages/PetDetailPage'
 import { PetsListPage } from '@/pages/PetsListPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 
@@ -26,7 +27,7 @@ export const router = createBrowserRouter([
           { path: 'my-pets/:petId', element: <ComingSoonPage /> },
         ],
       },
-      { path: 'pets/:id', element: <ComingSoonPage /> },
+      { path: 'pets/:id', element: <PetDetailPage /> },
       { path: '*', element: <NotFoundPage /> },
     ],
   },

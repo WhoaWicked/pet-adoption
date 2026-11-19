@@ -31,6 +31,22 @@ export interface Paged<T> {
   meta: PageMeta
 }
 
+export interface ApplicationAnswers {
+  housingType: HousingType
+  hasPetExperience: boolean
+  note?: string
+}
+
+export interface Application {
+  id: string
+  pet_id: string
+  applicant_id: string
+  answers: ApplicationAnswers
+  status: ApplicationStatus
+  created_at: string
+  decided_at: string | null
+}
+
 export interface LoginResponse {
   accessToken: string
 }

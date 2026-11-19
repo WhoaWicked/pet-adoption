@@ -1,4 +1,13 @@
-import type { LoginResponse, Me, Paged, Pet, RegisteredUser, Species } from '@/lib/types'
+import type {
+  Application,
+  ApplicationAnswers,
+  LoginResponse,
+  Me,
+  Paged,
+  Pet,
+  RegisteredUser,
+  Species,
+} from '@/lib/types'
 import { apiRequest } from './client'
 
 // ฟังก์ชันเรียก API แต่ละ endpoint — body เป็น camelCase และมีเฉพาะ field ที่ DTO รับ
@@ -55,5 +64,47 @@ export function listPets(filter: PetListFilter, signal?: AbortSignal) {
     query: { species: filter.species, province: filter.province, limit: filter.limit, offset: filter.offset },
     auth: false,
     signal,
+  })
+}
+
+/** รายละเอียดสัตว์ — ดูได้โดยไม่ต้อง login (คืนทุกสถานะ) */
+export function getPet(id: string, signal?: AbortSignal) {
+  return apiRequest<Pet>(`/pets/${encodeURIComponent(id)}`, { auth: false, signal })
+}
+
+/** สัตว์ที่ผู้ใช้บันทึกไว้ ทุกสถานะ (array ไม่มี meta) */
+export function listSavedPets(signal?: AbortSignal) {
+  return apiRequest<Pet[]>('/pets/saved', { signal })
+}
+
+/** บันทึก/เลิกบันทึก — API ตอบ body ว่าง และทำซ้ำได้ */
+export function savePet(id: string) {
+  return apiRequest<void>(`/pets/${encodeURIComponent(id)}/save`, { method: 'PUT' })
+}
+
+export function unsavePet(id: string) {
+  return apiRequest<void>(`/pets/${encodeURIComponent(id)}/save`, { method: 'DELETE' })
+}
+
+// ---------- applications ----------
+
+export interface CreateApplicationInput {
+  petId: string
+  answers: ApplicationAnswers
+}
+
+export function createApplication({ petId, answers }: CreateApplicationInput) {
+  // ส่ง note เฉพาะเมื่อมีข้อความ — body ตรงกับ CreateApplicationDto/AnswersDto พอดี
+  const note = answers.note?.trim()
+  return apiRequest<Application>('/applications', {
+    method: 'POST',
+    body: {
+      petId,
+      answers: {
+        housingType: answers.housingType,
+        hasPetExperience: answers.hasPetExperience,
+        ...(note ? { note } : {}),
+      },
+    },
   })
 }
