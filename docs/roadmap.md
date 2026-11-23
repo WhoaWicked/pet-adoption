@@ -9,6 +9,10 @@
 - [x] 5. 🤖 Pets: สร้าง, รายการ + filter + pagination, รายละเอียด, ปิดโพสต์, บันทึก
 - [x] 6. ✍️ Applications: ยื่น (+แจ้งเตือนคนโพสต์), ถอน, business rules + unit test
 - [x] 7. ✍️ อนุมัติ/ปฏิเสธ แบบ transaction + แจ้งเตือน + เทสต์ยิงพร้อมกัน
+- [ ] 12. AI สรุปคำขอ (แบบเรียกตามกดปุ่ม ไม่มี worker)
+  - 🤖 AI client + prompt, ปุ่มและหน้าแสดงผลใน FE
+  - ✍️ BE: timeout, retry เบาๆ, fallback, เก็บผลสรุป (summary + summary_generated_at)
+  - endpoint: POST /pets/:id/summary (เฉพาะเจ้าของ)
 
 ## สัปดาห์ 2 — API ที่เหลือ, Frontend, AI, Ship
 - [x] 8. 🤖 Notifications API: รายการ, จำนวนยังไม่อ่าน, กดอ่าน

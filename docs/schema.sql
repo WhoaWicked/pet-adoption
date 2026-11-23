@@ -16,7 +16,7 @@ CREATE TABLE pets (
   species      TEXT NOT NULL CHECK (species IN ('dog', 'cat', 'other')),
   age_months   INT  NOT NULL CHECK (age_months >= 0),
   province     TEXT NOT NULL,
-  description  TEXT NOT NULL,
+  description  TEXT NOT NULL, 
   requirements TEXT NOT NULL,
   image_url    TEXT,
   status       TEXT NOT NULL DEFAULT 'available'
