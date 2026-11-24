@@ -19,8 +19,13 @@
 - [x] 8. 🤖 Notifications API: รายการ, จำนวนยังไม่อ่าน, กดอ่าน
 - [x] 9. 🤖 Frontend: setup, login/register, หน้ารวมสัตว์, รายละเอียด
 - [x] 10. 🤖 Frontend: ฟอร์มยื่นคำขอ, คำขอของฉัน, สัตว์ของฉัน + รีวิวคำขอ, ที่บันทึกไว้, กระดิ่งแจ้งเตือน
-- [ ] 11. 🤖 อัปโหลดรูป (storage ภายนอก)
-- [ ] 12. 🤖 src/ai client + prompt / ✍️ worker (timeout, retry, fallback, ทำงานค้างต่อหลัง restart)
+- [x] 11. 🤖 อัปโหลดรูป ~~อัปโหลดรูป~~ (ตัด: ใช้ URL รูปแทน)
+- [ ] 12. AI สรุปคำขอ (แบบเรียกตามกดปุ่ม ไม่มี worker)
+  - [x] 🤖 BE: โมดูล `api/src/ai/` (AI client ของ Gemini, prompt, validator, repository ของ ai_summaries)
+  - [x] ✍️ BE: endpoint `POST /applications/:id/summary` (เฉพาะเจ้าของสัตว์, เฉพาะคำขอ pending), timeout, รีเซ็ตสรุปเมื่อยื่นใหม่หลังถอน
+  - [ ] ✍️ BE: unit test ของ summarize, retry เบาๆ, บันทึกสถานะ failed
+  - [ ] 🤖 FE: ปุ่ม "สรุปด้วย AI" ในการ์ดคำขอ, ปุ่ม "สรุปทั้งหมด" (เรียกทีละใบ), สถานะโหลด/ล้มเหลว
+  - เก็บผลใน `ai_summaries` ที่มีอยู่แล้ว ไม่เพิ่มคอลัมน์
 - [ ] 13. 🤖 CI (GitHub Actions รันเทสต์กับ Postgres) + deploy
 - [ ] 14. ✍️ README + สรุปส่วนที่เขียนเอง/AI เขียน
 
