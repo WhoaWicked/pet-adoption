@@ -8,15 +8,15 @@
 ## Stack
 - api/: NestJS (TypeScript), PostgreSQL ผ่าน pg (raw SQL, ไม่ใช้ ORM), Jest + supertest
 - web/: React + Vite + TypeScript
-- Deploy: web → Vercel, api → Render, database → Neon
+- Deploy: web → Vercel, api → Vercel (serverless), database → Neon
 
 ## โครงสร้าง api/src (แต่ละ module แยก controller → service → repository)
 - auth/           — register, login, JWT guard
 - pets/           — โพสต์สัตว์, รายการ, filter, ปิดโพสต์, บันทึกสัตว์
 - applications/   — ยื่น/ถอน/อนุมัติ/ปฏิเสธคำขอ
 - notifications/  — รายการแจ้งเตือน, จำนวนยังไม่อ่าน, กดอ่าน
-- worker/         — งานเบื้องหลัง (AI summary)
-- ai/             — client สำหรับเรียก LLM
+- worker/         — (สำรอง ยังไม่ใช้ในเวอร์ชันแรก)
+- ai/             — AiClient (Gemini), prompt builder, validator, repository ของ ai_summaries
 - database/       — DatabaseModule และ pool (inject ผ่าน token PG_POOL)
 - health/         — GET /health
 - config/         — โหลดและ validate env
@@ -24,7 +24,8 @@
 
 ## เทสต์
 - Unit test อยู่ข้างไฟล์ที่ทดสอบ (xxx.spec.ts)
-- E2E test อยู่ใน api/test/ ตาม convention ของ NestJS
+- E2E test (ไม่ต้องมี DB) อยู่ใน api/test/ ชื่อ *.e2e-spec.ts รันด้วย npm run test:e2e
+- Integration test (ต้องมี DB จริง) อยู่ใน api/test/ ชื่อ *.integration-spec.ts รันด้วย npm run test:integration (ใช้ jest-integration.json)
 - ห้ามสร้างโฟลเดอร์ tests/ อื่น
 
 ## ตาราง
@@ -44,23 +45,29 @@ users, pets, adoption_applications, ai_summaries, saved_pets, notifications
 - กดอนุมัติพร้อมกันหลายคำขอ ต้องสำเร็จได้แค่ 1
 - ไม่มีการลบโพสต์ มีแค่ปิดโพสต์ (status = closed)
 - แจ้งเตือนต้องถูกสร้างใน transaction เดียวกับการเปลี่ยนสถานะที่ทำให้เกิดแจ้งเตือนนั้น
-- งาน AI summary ต้องไม่หายถ้าเซิร์ฟเวอร์ restart
+- AI summary เรียกตามกดปุ่ม ทีละคำขอ เก็บผลใน ai_summaries
+- ถ้าสรุปใหม่ล้มเหลว ห้ามเขียนทับสรุปเก่าที่มีอยู่
+- ยื่นใหม่หลังถอน (answers เปลี่ยน) ต้องรีเซ็ตสรุปเดิมของคำขอนั้น
+- AI สรุปให้อ่านเท่านั้น ห้ามให้คะแนน จัดอันดับ หรือแนะนำให้อนุมัติ/ปฏิเสธ
 
 ## นอกขอบเขต
-แชท, real-time, แผนที่, อีเมล, push notification, ระบบแอดมิน
+แชท, real-time, แผนที่, อีเมล, push notification, ระบบแอดมิน, อัปโหลดรูป (ใช้ลิงก์ imageUrl แทน)
 
 ## กติกาการช่วยเขียนโค้ด (สำคัญที่สุด)
 นี่คือโปรเจกต์ portfolio ที่ผมต้องอธิบายได้ในสัมภาษณ์
-- เขียนได้: setup, config, migration, api/src/pets/, api/src/notifications/,
+- เขียนได้: setup, config, migration, api/src/notifications/,
   api/src/database/, api/src/health/, api/src/config/, api/src/ai/,
   web/ ทั้งหมด, CI, deploy config, และไฟล์โครงเปล่าที่ได้จาก nest g
-- ห้ามเขียนหรือแก้ logic ใน: api/src/auth/, api/src/applications/*.service.ts, api/src/pets/, api/src/applications/
-  api/src/worker/, api/src/common/filters/ และไฟล์ *.spec.ts ของส่วนเหล่านี้
+- ห้ามเขียนหรือแก้ logic ใน: api/src/auth/, api/src/applications/,
+  api/src/pets/, api/src/worker/, api/src/common/filters/
+  และไฟล์ *.spec.ts / *.integration-spec.ts ของส่วนเหล่านี้
 - ถ้าถูกขอให้ช่วยในส่วนต้องห้าม: ตอบเป็น hint หรือคำถามนำเท่านั้น
   ห้ามให้โค้ดที่เอาไปวางได้ทันที
 - ถ้า plan ไหนต้องแตะส่วนต้องห้าม ให้หยุดและบอกผมก่อน
 - ทุกครั้งที่เขียนโค้ดให้ อธิบายสั้น ๆ ว่าแต่ละส่วนทำอะไร
 - ถ้าถูกขอให้รีวิว: รีวิวอย่างเดียว ห้ามแก้ไฟล์
+- ห้ามอ่านหรือพิมพ์ค่าใน api/.env, api/.env.test (อ่านได้เฉพาะไฟล์ .example)
+- ห้ามใส่ค่า key หรือชื่อ model ลงในไฟล์ใดๆ ที่ commit ได้
 
 ## เอกสาร
 - docs/roadmap.md — ลำดับฟีเจอร์และสถานะ
