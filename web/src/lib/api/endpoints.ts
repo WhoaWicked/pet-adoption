@@ -1,6 +1,7 @@
 import type {
   Application,
   ApplicationAnswers,
+  ApplicationSummaryResult,
   LoginResponse,
   Me,
   MyApplication,
@@ -174,6 +175,11 @@ export function approveApplication(id: string) {
 
 export function rejectApplication(id: string) {
   return apiRequest<Application>(`/applications/${encodeURIComponent(id)}/reject`, { method: 'PATCH' })
+}
+
+/** สรุปคำขอด้วย AI (เฉพาะเจ้าของ, เฉพาะ pending) — เรียกซ้ำได้ผลเดิมทันทีจาก BE ไม่เสียโควตา AI */
+export function summarizeApplication(id: string) {
+  return apiRequest<ApplicationSummaryResult>(`/applications/${encodeURIComponent(id)}/summary`, { method: 'POST' })
 }
 
 /** ปิดโพสต์ (ไม่มีการลบ) — adopted แล้วได้ 409 */

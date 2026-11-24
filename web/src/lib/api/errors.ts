@@ -74,6 +74,22 @@ export function getErrorMessage(err: unknown, options: ErrorMessageOptions = {})
   return STATUS_MESSAGES[err.statusCode] ?? err.message ?? UNKNOWN_ERROR_MESSAGE
 }
 
+// ---------- สรุปคำขอด้วย AI ----------
+
+// 502/503/504 ของ endpoint นี้มาจาก BE ที่คุยกับ AI ไม่ใช่ proxy → ต้อง override ข้อความ "เชื่อมต่อไม่ได้" ของค่าเริ่มต้น
+const SUMMARY_ERROR_MESSAGES: Partial<Record<number, string>> = {
+  403: 'คุณไม่ใช่เจ้าของโพสต์นี้ จึงขอสรุปไม่ได้',
+  404: 'ไม่พบคำขอนี้',
+  409: 'คำขอนี้ถูกตัดสินไปแล้ว จึงสรุปไม่ได้',
+  502: 'AI ตอบกลับในรูปแบบที่อ่านไม่ได้ กรุณาลองใหม่',
+  503: 'บริการ AI ใช้ไม่ได้ชั่วคราว กรุณาลองใหม่ภายหลัง',
+  504: 'AI ใช้เวลานานเกินไป กรุณาลองใหม่',
+}
+
+export function getSummaryErrorMessage(err: unknown): string {
+  return getErrorMessage(err, { overrides: SUMMARY_ERROR_MESSAGES })
+}
+
 // ---------- validation error (details) → ข้อความใต้ช่องกรอก ----------
 
 function translateValidationMessage(text: string): string {

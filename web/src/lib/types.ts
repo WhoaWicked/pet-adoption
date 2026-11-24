@@ -58,6 +58,19 @@ export interface PetApplication extends Application {
   applicant_name: string
 }
 
+/** สรุปคำขอโดย AI — ให้อ่านประกอบเท่านั้น ไม่มีคะแนนหรือคำแนะนำให้อนุมัติ/ปฏิเสธ */
+export interface AiSummary {
+  overview: string
+  highlights: string[]
+  concerns: string[]
+}
+
+/** ผลจาก POST /applications/:id/summary */
+export interface ApplicationSummaryResult {
+  summary: AiSummary
+  updated_at: string
+}
+
 /** แจ้งเตือนในแอป — id เป็น string เพราะเป็น BIGSERIAL (pg คืนเป็น string) */
 export interface Notification {
   id: string

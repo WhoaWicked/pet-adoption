@@ -20,6 +20,10 @@ export const queryKeys = {
     all: ['applications'] as const,
     mine: (page: number) => ['applications', 'mine', page] as const,
     byPet: (petId: string) => ['applications', 'pet', petId] as const,
+    /** ผลสรุป AI ของคำขอ 1 ใบ — เขียนด้วย setQueryData หลังสรุปสำเร็จ ไม่มี queryFn */
+    summary: (applicationId: string) => ['applications', 'summary', applicationId] as const,
+    /** mutation key ของการสรุป (ทุกใบใช้ key เดียวกัน แยกใบด้วย variables = application id) */
+    summarize: ['applications', 'summarize'] as const,
   },
   notifications: {
     all: ['notifications'] as const,

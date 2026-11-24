@@ -3,8 +3,9 @@ import { ApplicationStatusBadge } from '@/features/applications/ApplicationStatu
 import { HOUSING_TYPE_LABELS } from '@/lib/constants/labels'
 import { formatDate } from '@/lib/format'
 import type { PetApplication } from '@/lib/types'
+import { ApplicationSummary } from './ApplicationSummary'
 
-// คำขอ 1 รายการในหน้าจัดการ: ผู้ยื่น + คำตอบ + ปุ่มตัดสิน (เฉพาะ pending)
+// คำขอ 1 รายการในหน้าจัดการ: ผู้ยื่น + คำตอบ + สรุป AI + ปุ่มตัดสิน (เฉพาะ pending)
 export function PetApplicationCard({
   application,
   canApprove,
@@ -66,6 +67,8 @@ export function PetApplicationCard({
         )}
       </dl>
       )}
+
+      {isPending && <ApplicationSummary applicationId={application.id} disabled={disabled} />}
 
       {isPending && (
         <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">

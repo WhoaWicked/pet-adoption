@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { ArrowLeftIcon, InboxIcon, SearchXIcon, ShieldAlertIcon } from 'lucide-react'
+import { ArrowLeftIcon, InboxIcon, Loader2Icon, SearchXIcon, ShieldAlertIcon, SparklesIcon } from 'lucide-react'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
@@ -10,6 +10,7 @@ import { useAuth } from '@/features/auth/auth-context'
 import { ManagePetHeader } from '@/features/owner/ManagePetHeader'
 import { PetApplicationCard } from '@/features/owner/PetApplicationCard'
 import { useOwnerActions } from '@/features/owner/use-owner-actions'
+import { useSummarizeAll } from '@/features/owner/use-summarize-all'
 import { usePetApplications } from '@/features/owner/use-pet-applications'
 import { usePet } from '@/features/pets/use-pet'
 import { ApiError } from '@/lib/api/client'
@@ -66,7 +67,12 @@ export function ManagePetPage() {
   const [dialog, setDialog] = useState<PendingAction | null>(null)
 
   const applications = useMemo(() => sortPendingFirst(appsQuery.data ?? []), [appsQuery.data])
-  const pendingCount = applications.filter((a) => a.status === 'pending').length
+  const pendingIds = useMemo(
+    () => applications.filter((a) => a.status === 'pending').map((a) => a.id),
+    [applications],
+  )
+  const pendingCount = pendingIds.length
+  const summarizeAll = useSummarizeAll(petId, pendingIds)
 
   if (petQuery.isPending) {
     return (
@@ -166,6 +172,27 @@ export function ManagePetPage() {
           </h2>
           {pendingCount > 0 && <p className="text-sm text-muted-foreground">รอพิจารณา {pendingCount} รายการ</p>}
         </div>
+        {(summarizeAll.remainingCount > 0 || summarizeAll.isRunning) && (
+          // สรุปทีละใบตามลำดับในหน้า ข้ามใบที่สรุปแล้ว — ปิดปุ่มตอนมีอนุมัติ/ปฏิเสธ/ปิดโพสต์รออยู่
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={summarizeAll.run}
+            disabled={summarizeAll.isRunning || actions.isBusy}
+          >
+            {summarizeAll.progress ? (
+              <>
+                <Loader2Icon className="animate-spin" aria-hidden />
+                กำลังสรุป {summarizeAll.progress.current}/{summarizeAll.progress.total}
+              </>
+            ) : (
+              <>
+                <SparklesIcon aria-hidden />
+                สรุปทั้งหมด
+              </>
+            )}
+          </Button>
+        )}
         {!canApprove && pendingCount > 0 && (
           <p className="text-sm text-muted-foreground">
             ประกาศนี้ปิดรับแล้ว จึงอนุมัติไม่ได้ แต่ยังปฏิเสธคำขอที่ค้างอยู่ได้
