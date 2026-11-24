@@ -6,9 +6,19 @@ export interface Env {
   DB_USER: string;
   DB_PASSWORD: string;
   JWT_SECRET: string;
+  GEMINI_API_KEY: string;
+  AI_MODEL: string;
 }
 
-const STRING_KEYS = ['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASSWORD', 'JWT_SECRET'] as const;
+const STRING_KEYS = [
+  'DB_HOST',
+  'DB_NAME',
+  'DB_USER',
+  'DB_PASSWORD',
+  'JWT_SECRET',
+  'GEMINI_API_KEY',
+  'AI_MODEL',
+] as const;
 const PORT_KEYS = ['PORT', 'DB_PORT'] as const;
 
 function parsePort(value: unknown): number | undefined {
@@ -21,7 +31,8 @@ function parsePort(value: unknown): number | undefined {
 
 // Validates raw environment variables once at startup. It collects every
 // problem into a single error so the developer can fix them in one go, and it
-// only reports variable names, never values, so DB_PASSWORD and JWT_SECRET cannot leak.
+// only reports variable names, never values, so secrets like DB_PASSWORD,
+// JWT_SECRET and GEMINI_API_KEY cannot leak.
 export function validateEnv(raw: Record<string, unknown>): Env {
   const problems: string[] = [];
   const env: Partial<Env> = {};

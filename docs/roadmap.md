@@ -10,9 +10,10 @@
 - [x] 6. ✍️ Applications: ยื่น (+แจ้งเตือนคนโพสต์), ถอน, business rules + unit test
 - [x] 7. ✍️ อนุมัติ/ปฏิเสธ แบบ transaction + แจ้งเตือน + เทสต์ยิงพร้อมกัน
 - [ ] 12. AI สรุปคำขอ (แบบเรียกตามกดปุ่ม ไม่มี worker)
-  - 🤖 AI client + prompt, ปุ่มและหน้าแสดงผลใน FE
-  - ✍️ BE: timeout, retry เบาๆ, fallback, เก็บผลสรุป (summary + summary_generated_at)
-  - endpoint: POST /pets/:id/summary (เฉพาะเจ้าของ)
+  - 🤖 BE: โมดูล `api/src/ai/` (AI client ของ Gemini, prompt, validator, repository ของ ai_summaries)
+  - ✍️ BE: endpoint `POST /applications/:id/summary` (เฉพาะเจ้าของสัตว์), timeout, retry เบาๆ, fallback (มีสรุปเก่าก็คืนอันเก่า), รีเซ็ตสรุปเมื่อยื่นใหม่หลังถอน + unit test
+  - 🤖 FE: ปุ่ม "สรุปด้วย AI" ในการ์ดคำขอ, ปุ่ม "สรุปทั้งหมด" (เรียกทีละใบ), สถานะโหลด/ล้มเหลว
+  - เก็บผลใน `ai_summaries` ที่มีอยู่แล้ว ไม่เพิ่มคอลัมน์
 
 ## สัปดาห์ 2 — API ที่เหลือ, Frontend, AI, Ship
 - [x] 8. 🤖 Notifications API: รายการ, จำนวนยังไม่อ่าน, กดอ่าน

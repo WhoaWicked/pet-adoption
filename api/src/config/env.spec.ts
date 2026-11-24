@@ -8,6 +8,8 @@ const validRaw = {
   DB_USER: 'pet_user',
   DB_PASSWORD: 'p@ss:w/rd#1$x',
   JWT_SECRET: 'test-jwt-secret',
+  GEMINI_API_KEY: 'fake-gemini-key-123',
+  AI_MODEL: 'fake-model',
 };
 
 describe('validateEnv', () => {
@@ -20,6 +22,8 @@ describe('validateEnv', () => {
       DB_USER: 'pet_user',
       DB_PASSWORD: 'p@ss:w/rd#1$x',
       JWT_SECRET: 'test-jwt-secret',
+      GEMINI_API_KEY: 'fake-gemini-key-123',
+      AI_MODEL: 'fake-model',
     });
   });
 
@@ -41,5 +45,21 @@ describe('validateEnv', () => {
 
     expect(() => validateEnv(raw)).toThrow(/DB_PORT/);
     expect(() => validateEnv(raw)).not.toThrow(/p@ss/);
+  });
+
+  it('names GEMINI_API_KEY and AI_MODEL when they are missing or empty', () => {
+    const raw: Record<string, unknown> = { ...validRaw, AI_MODEL: '   ' };
+    delete raw.GEMINI_API_KEY;
+
+    expect(() => validateEnv(raw)).toThrow(/GEMINI_API_KEY/);
+    expect(() => validateEnv(raw)).toThrow(/AI_MODEL/);
+  });
+
+  it('never includes the Gemini key or model name in the error message', () => {
+    const raw = { ...validRaw, AI_MODEL: '' };
+
+    expect(() => validateEnv(raw)).toThrow(/AI_MODEL/);
+    expect(() => validateEnv(raw)).not.toThrow(/fake-gemini-key-123/);
+    expect(() => validateEnv({ ...validRaw, GEMINI_API_KEY: '' })).not.toThrow(/fake-model/);
   });
 });
