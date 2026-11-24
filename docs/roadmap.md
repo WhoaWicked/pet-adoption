@@ -24,7 +24,7 @@
   - [x] 🤖 BE: โมดูล `api/src/ai/` (AI client ของ Gemini, prompt, validator, repository ของ ai_summaries)
   - [x] ✍️ BE: endpoint `POST /applications/:id/summary` (เฉพาะเจ้าของสัตว์, เฉพาะคำขอ pending), timeout, รีเซ็ตสรุปเมื่อยื่นใหม่หลังถอน
   - [ ] ✍️ BE: unit test ของ summarize, retry เบาๆ, บันทึกสถานะ failed
-  - [ ] 🤖 FE: ปุ่ม "สรุปด้วย AI" ในการ์ดคำขอ, ปุ่ม "สรุปทั้งหมด" (เรียกทีละใบ), สถานะโหลด/ล้มเหลว
+  - [x] 🤖 FE: ปุ่ม "สรุปด้วย AI" ในการ์ดคำขอ, ปุ่ม "สรุปทั้งหมด" (เรียกทีละใบ), สถานะโหลด/ล้มเหลว
   - เก็บผลใน `ai_summaries` ที่มีอยู่แล้ว ไม่เพิ่มคอลัมน์
 - [ ] 13. 🤖 CI (GitHub Actions รันเทสต์กับ Postgres) + deploy
 - [ ] 14. ✍️ README + สรุปส่วนที่เขียนเอง/AI เขียน
