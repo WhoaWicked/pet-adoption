@@ -45,4 +45,10 @@ export class ApplicationsController {
     async approve(@Param('id', ParseUUIDPipe) id: string, @Req() req: AuthenticateRequest) {
         return this.applicationsService.approve(id, req.user!.id);
     }
+
+    @UseGuards(JwtAuthGuard)
+    @Post(':id/summary')
+    async summary(@Param('id', ParseUUIDPipe) id: string, @Req() req: AuthenticateRequest) {
+        return this.applicationsService.summarize(id, req.user!.id);
+    }
 }

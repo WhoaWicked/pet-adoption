@@ -43,4 +43,12 @@ export class AiSummariesRepository {
     ]);
     return result.rows[0];
   }
+
+  // Remove this application's summary row, if any. Deleting a row that does
+  // not exist is not an error, so callers can reset without checking first.
+  async deleteByApplicationId(applicationId: string, client?: PoolClient): Promise<void> {
+    const db = client ?? this.pool;
+    const query = `DELETE FROM ai_summaries WHERE application_id = $1;`;
+    await db.query(query, [applicationId]);
+  }
 }

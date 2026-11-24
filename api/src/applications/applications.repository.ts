@@ -3,6 +3,7 @@ import { Pool } from "pg";
 import { PG_POOL } from "../database/database.constants";
 import { PetRow } from "../pets/pets.repository";
 import { NotificationsRepository } from "../notifications/notifications.repository";
+import { AiSummariesRepository } from "../ai/ai-summaries.repository";
 
 export interface ApplicationAnswers {
     housingType: 'house' | 'condo' | 'apartment' | 'other';
@@ -38,7 +39,8 @@ export interface PetsApplicationRow extends ApplicationRow {
 export class ApplicationsRepository {
     constructor(
         @Inject(PG_POOL) private readonly pool: Pool,
-        private readonly notificationsRepository: NotificationsRepository) { }
+        private readonly notificationsRepository: NotificationsRepository,
+        private readonly aiSummariesRepository: AiSummariesRepository) { }
     async findById(id: string): Promise<ApplicationRow | undefined> {
         const query = `SELECT * FROM adoption_applications WHERE id = $1`;
         const result = await this.pool.query<ApplicationRow>(query, [id]);
@@ -60,6 +62,7 @@ export class ApplicationsRepository {
                 return undefined;
             }
             const { id } = result.rows[0];
+            await this.aiSummariesRepository.deleteByApplicationId(id, client);
             await this.notificationsRepository.create(client, {
                 userId: ownerId,
                 type: 'application.received',

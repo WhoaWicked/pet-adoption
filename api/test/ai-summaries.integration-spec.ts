@@ -105,6 +105,34 @@ describe('AiSummariesRepository (integration)', () => {
     await expect(repo.findByApplicationId(applicationId)).resolves.toBeUndefined();
   });
 
+  it('deletes the row for the application', async () => {
+    await repo.upsert({ applicationId, status: 'done', summary });
+
+    await repo.deleteByApplicationId(applicationId);
+
+    await expect(repo.findByApplicationId(applicationId)).resolves.toBeUndefined();
+  });
+
+  it('does nothing and does not throw when there is no row to delete', async () => {
+    await expect(repo.deleteByApplicationId(applicationId)).resolves.toBeUndefined();
+  });
+
+  it('deletes through the given PoolClient, so a rollback keeps the row', async () => {
+    await repo.upsert({ applicationId, status: 'done', summary });
+
+    const client = await pool.connect();
+    try {
+      await client.query('BEGIN');
+      await repo.deleteByApplicationId(applicationId, client);
+      await expect(repo.findByApplicationId(applicationId, client)).resolves.toBeUndefined();
+      await client.query('ROLLBACK');
+    } finally {
+      client.release();
+    }
+
+    await expect(repo.findByApplicationId(applicationId)).resolves.toMatchObject({ summary });
+  });
+
   it('fails with a foreign key error for an application that does not exist', async () => {
     await expect(
       repo.upsert({ applicationId: '00000000-0000-4000-8000-000000000000', status: 'pending' }),
