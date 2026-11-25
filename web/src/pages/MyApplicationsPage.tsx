@@ -4,7 +4,6 @@ import { FileTextIcon, SearchXIcon } from 'lucide-react'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
-import { PageHeader } from '@/components/common/PageHeader'
 import { Pagination } from '@/components/common/Pagination'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -16,6 +15,8 @@ import {
 } from '@/features/applications/use-my-applications'
 import type { MyApplication } from '@/lib/types'
 import { usePageParam } from '@/lib/use-page-param'
+
+const PILL_OUTLINE = 'rounded-full border-field-border/50 bg-card px-6'
 
 // หน้า "คำขอของฉัน" — รายการคำขอที่ยื่นไป + ถอนคำขอที่ยังรอพิจารณา
 export function MyApplicationsPage() {
@@ -41,11 +42,20 @@ export function MyApplicationsPage() {
   let content
   if (query.isPending) {
     content = (
-      <ul className="space-y-3" aria-busy="true" aria-label="กำลังโหลดคำขอ">
+      // skeleton ทรงแถว: คอลัมน์เดียวกับ MyApplicationItem (ชื่อ+คำตอบ | วันที่ | ป้าย | ปุ่ม)
+      <ul className="divide-y border-y" aria-busy="true" aria-label="กำลังโหลดคำขอ">
         {Array.from({ length: 4 }, (_, i) => (
-          <li key={i} className="space-y-2 rounded-2xl bg-secondary p-5">
-            <Skeleton className="h-6 w-1/3" />
-            <Skeleton className="h-4 w-2/3" />
+          <li
+            key={i}
+            className="flex flex-col gap-3 py-5 md:grid md:grid-cols-[minmax(0,1fr)_10rem_8rem_7.5rem] md:items-center md:gap-6"
+          >
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-1/3 bg-muted" />
+              <Skeleton className="h-4 w-1/2 bg-muted" />
+            </div>
+            <Skeleton className="h-4 w-28 bg-muted" />
+            <Skeleton className="h-6 w-20 rounded-full bg-muted" />
+            <span />
           </li>
         ))}
       </ul>
@@ -60,7 +70,7 @@ export function MyApplicationsPage() {
           title="ไม่มีหน้านี้"
           description={`ตอนนี้มีทั้งหมด ${totalPages} หน้า`}
           action={
-            <Button variant="outline" onClick={() => setPage(1)}>
+            <Button variant="outline" className={PILL_OUTLINE} onClick={() => setPage(1)}>
               กลับไปหน้าแรก
             </Button>
           }
@@ -69,9 +79,9 @@ export function MyApplicationsPage() {
         <EmptyState
           icon={<FileTextIcon className="size-7" aria-hidden />}
           title="ยังไม่ได้ยื่นคำขอรับเลี้ยง"
-          description="เลือกน้องที่ถูกใจ แล้วยื่นคำขอได้จากหน้ารายละเอียด"
+          description="เลือกน้องที่ถูกใจ แล้วส่งคำขอได้จากหน้าของน้อง"
           action={
-            <Button asChild>
+            <Button asChild className="rounded-full px-6">
               <Link to="/pets">ไปดูน้อง ๆ</Link>
             </Button>
           }
@@ -80,7 +90,8 @@ export function MyApplicationsPage() {
   } else {
     content = (
       <div className="space-y-8">
-        <ul className="space-y-3 transition-opacity data-[stale=true]:opacity-60" data-stale={query.isPlaceholderData}>
+        {/* รายการแถวคั่นด้วยเส้นบาง ไม่มีกล่อง/การ์ด */}
+        <ul className="divide-y border-y transition-opacity data-[stale=true]:opacity-60" data-stale={query.isPlaceholderData}>
           {items.map((a) => (
             <MyApplicationItem
               key={a.id}
@@ -97,10 +108,13 @@ export function MyApplicationsPage() {
 
   return (
     <div>
-      <PageHeader
-        title="คำขอของฉัน"
-        description={query.isSuccess && total > 0 ? `ทั้งหมด ${total.toLocaleString('th-TH')} คำขอ` : 'ติดตามสถานะคำขอรับเลี้ยงที่คุณยื่นไว้'}
-      />
+      {/* ส่วนหัวแบบเดียวกับ /pets: หัวข้อ + จำนวนจริง */}
+      <div className="mb-8 space-y-2">
+        <h1 className="text-3xl font-bold sm:text-4xl">คำขอของฉัน</h1>
+        <p className="text-muted-foreground">
+          {query.isSuccess && total > 0 ? `ทั้งหมด ${total.toLocaleString('th-TH')} คำขอ` : 'ติดตามสถานะคำขอรับเลี้ยงที่คุณส่งไว้'}
+        </p>
+      </div>
       {content}
       <ConfirmDialog
         open={target !== null}
