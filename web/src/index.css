@@ -123,6 +123,11 @@
   h1, h2 {
     @apply font-heading;
   }
+  /* ลิงก์ที่ไม่ได้กำหนด focus ของตัวเอง (footer, ลิงก์ในข้อความ) → เห็นชัดเมื่อโฟกัสด้วยคีย์บอร์ด
+     ลิงก์ที่ใช้ ring ของตัวเองใส่ outline-none อยู่แล้ว จึงไม่ซ้อนกัน */
+  a:focus-visible {
+    @apply rounded-sm outline-2 outline-offset-2 outline-ring;
+  }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
   }

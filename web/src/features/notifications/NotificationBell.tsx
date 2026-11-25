@@ -26,7 +26,7 @@ function NotificationItem({ notification, onSelect }: { notification: Notificati
         type="button"
         onClick={() => onSelect(notification)}
         className={cn(
-          'flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-muted focus-visible:bg-muted focus-visible:outline-none',
+          'flex w-full items-start gap-3 rounded-lg px-3 py-2.5 text-left transition-colors outline-none hover:bg-muted focus-visible:bg-muted focus-visible:ring-3 focus-visible:ring-ring/50',
           unread && 'bg-secondary',
         )}
       >

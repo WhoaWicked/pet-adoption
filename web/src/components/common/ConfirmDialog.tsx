@@ -49,11 +49,13 @@ export function ConfirmDialog({
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isPending}>
+          {/* ปุ่มแคปซูลแบบเดียวกับทั้งเว็บ: ยกเลิก = รอง, ยืนยัน = หลัก (หรือแดงอ่อนเมื่อ destructive) */}
+          <AlertDialogCancel disabled={isPending} className="rounded-full border-field-border/50 bg-card px-5">
             ยกเลิก
           </AlertDialogCancel>
           <AlertDialogAction
             variant={destructive ? 'destructive' : 'default'}
+            className="rounded-full px-5"
             disabled={isPending}
             onClick={(e) => {
               // ไม่ให้ Radix ปิดกล่องเอง — ผู้เรียกปิดเมื่อ action สำเร็จ
