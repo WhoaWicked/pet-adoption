@@ -1,13 +1,16 @@
 import { ClosingCta } from '@/features/landing/ClosingCta'
+import { Faq } from '@/features/landing/Faq'
 import { HowItWorks } from '@/features/landing/HowItWorks'
 import { LandingHero } from '@/features/landing/LandingHero'
 import { LatestPets, LATEST_PETS_COUNT } from '@/features/landing/LatestPets'
+import { PhotoShowcase, SHOWCASE_COUNT } from '@/features/landing/PhotoShowcase'
 import { usePetsList } from '@/features/pets/use-pets-list'
 import type { Pet } from '@/lib/types'
 
-// หน้า landing ("/"): ส่วนต้อนรับ → น้อง ๆ ล่าสุด → ขั้นตอนการรับเลี้ยง → ส่วนปิดท้าย
+// หน้า landing ("/"): ต้อนรับ → กรอบรูป → ขั้นตอน → น้องล่าสุด → FAQ → ปิดท้าย (footer อยู่ใน AppLayout)
+// จังหวะ: สลับส่วนประโยคกลางหน้าโล่ง ๆ กับส่วนการ์ดที่แน่นขึ้น
 // ดึงข้อมูลครั้งเดียวด้วย hook เดิมของหน้า /pets (หน้า 1 ไม่มี filter = ตัวล่าสุดที่ยัง available)
-// → ไม่ต้องเพิ่ม endpoint และใช้ cache ร่วมกับ /pets หน้า 1 (กดไปดูทั้งหมดแล้วขึ้นทันที)
+// → ไม่ต้องเพิ่ม endpoint และใช้ cache ร่วมกับ /pets หน้า 1
 export function LandingPage() {
   const query = usePetsList({ page: 1 })
   const pets = query.data?.data ?? []
@@ -15,16 +18,20 @@ export function LandingPage() {
 
   return (
     <div>
-      <LandingHero pet={pickHeroPet(pets, latest)} isLoading={query.isPending} />
-      <LatestPets query={query} pets={latest} />
+      <LandingHero />
+      <PhotoShowcase pets={pickShowcasePets(pets, latest)} isLoading={query.isPending} />
       <HowItWorks />
+      <LatestPets query={query} pets={latest} />
+      <Faq />
       <ClosingCta />
     </div>
   )
 }
 
-/** รูปใหญ่ใน hero: ตัวที่มีรูป — เลือกตัวที่ไม่อยู่ในกริด "ล่าสุด" ก่อน จะได้ไม่เห็นตัวเดิมซ้ำสองที่ */
-function pickHeroPet(pets: Pet[], latest: Pet[]): Pet | undefined {
+/** รูปในกรอบใหญ่: เฉพาะตัวที่มีรูป — เอาตัวที่ไม่อยู่ในกริด "ล่าสุด" ก่อน ไม่พอค่อยใช้ตัวในกริด */
+function pickShowcasePets(pets: Pet[], latest: Pet[]): Pet[] {
   const withImage = pets.filter((p) => p.image_url)
-  return withImage.find((p) => !latest.includes(p)) ?? withImage[0] ?? pets[0]
+  const notInLatest = withImage.filter((p) => !latest.includes(p))
+  const inLatest = withImage.filter((p) => latest.includes(p))
+  return [...notInLatest, ...inLatest].slice(0, SHOWCASE_COUNT)
 }
