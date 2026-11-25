@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router'
-import { ArrowLeftIcon, InboxIcon, Loader2Icon, SearchXIcon, ShieldAlertIcon, SparklesIcon } from 'lucide-react'
+import { ArrowLeftIcon, InboxIcon, LoaderCircleIcon, SearchXIcon, ShieldAlertIcon } from 'lucide-react'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
@@ -24,7 +24,7 @@ type PendingAction =
 
 function BackToMyPets() {
   return (
-    <Button asChild variant="ghost" size="sm" className="-ml-2 mb-4 px-2 text-muted-foreground">
+    <Button asChild variant="ghost" size="sm" className="-ml-2 mb-6 rounded-full px-2 text-muted-foreground">
       <Link to="/my-pets">
         <ArrowLeftIcon aria-hidden />
         สัตว์ของฉัน
@@ -40,13 +40,15 @@ function NotOwnerState() {
       title="คุณไม่ใช่เจ้าของโพสต์นี้"
       description="หน้าจัดการเปิดได้เฉพาะคนที่ลงประกาศน้องตัวนี้"
       action={
-        <Button asChild variant="outline">
+        <Button asChild variant="outline" className={PILL_OUTLINE}>
           <Link to="/my-pets">ไปที่สัตว์ของฉัน</Link>
         </Button>
       }
     />
   )
 }
+
+const PILL_OUTLINE = 'rounded-full border-field-border/50 bg-card px-6'
 
 // pending ขึ้นก่อน (ต้องตัดสิน) ที่เหลือคงลำดับเดิมจาก API (ใหม่สุดก่อน)
 function sortPendingFirst(list: PetApplication[]) {
@@ -78,9 +80,15 @@ export function ManagePetPage() {
     return (
       <div>
         <BackToMyPets />
-        <div className="space-y-4" aria-busy="true" aria-label="กำลังโหลด">
-          <Skeleton className="h-36 w-full rounded-2xl" />
-          <Skeleton className="h-40 w-full rounded-2xl" />
+        <div className="space-y-6" aria-busy="true" aria-label="กำลังโหลด">
+          <div className="flex items-center gap-4 border-b pb-6">
+            <Skeleton className="size-20 shrink-0 rounded-xl bg-muted" />
+            <div className="flex-1 space-y-2">
+              <Skeleton className="h-8 w-1/3 bg-muted" />
+              <Skeleton className="h-4 w-1/2 bg-muted" />
+            </div>
+          </div>
+          <Skeleton className="h-48 w-full rounded-[1.25rem] bg-muted" />
         </div>
       </div>
     )
@@ -94,7 +102,7 @@ export function ManagePetPage() {
           title="ไม่พบข้อมูลสัตว์ตัวนี้"
           description="ลิงก์อาจไม่ถูกต้อง หรือประกาศนี้ไม่มีอยู่แล้ว"
           action={
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" className={PILL_OUTLINE}>
               <Link to="/my-pets">กลับไปที่สัตว์ของฉัน</Link>
             </Button>
           }
@@ -118,11 +126,21 @@ export function ManagePetPage() {
   let list
   if (appsQuery.isPending) {
     list = (
-      <ul className="space-y-3" aria-busy="true" aria-label="กำลังโหลดคำขอ">
+      // skeleton ทรงบล็อก: หัว (ชื่อ/วันที่/ป้าย) + แถวคำตอบ เหมือนบล็อกจริง
+      <ul className="space-y-4" aria-busy="true" aria-label="กำลังโหลดคำขอ">
         {Array.from({ length: 2 }, (_, i) => (
-          <li key={i} className="space-y-3 rounded-2xl bg-secondary p-5">
-            <Skeleton className="h-5 w-1/3" />
-            <Skeleton className="h-4 w-2/3" />
+          <li key={i} className="space-y-4 rounded-[1.25rem] border bg-card p-5 sm:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-6 w-1/3 bg-muted" />
+                <Skeleton className="h-4 w-1/4 bg-muted" />
+              </div>
+              <Skeleton className="h-6 w-20 rounded-full bg-muted" />
+            </div>
+            <div className="space-y-3 border-t pt-3">
+              <Skeleton className="h-4 w-2/3 bg-muted" />
+              <Skeleton className="h-4 w-1/2 bg-muted" />
+            </div>
           </li>
         ))}
       </ul>
@@ -139,7 +157,7 @@ export function ManagePetPage() {
     )
   } else {
     list = (
-      <ul className="space-y-3">
+      <ul className="space-y-4">
         {applications.map((a) => (
           <PetApplicationCard
             key={a.id}
@@ -159,40 +177,45 @@ export function ManagePetPage() {
   const otherPending = Math.max(0, pendingCount - 1)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
         <BackToMyPets />
         <ManagePetHeader pet={loadedPet} onClose={() => setDialog({ kind: 'close' })} disabled={actions.isBusy} />
       </div>
 
       <section aria-labelledby="applications-heading" className="space-y-4">
-        <div className="flex items-baseline justify-between gap-2">
-          <h2 id="applications-heading" className="text-lg font-semibold">
-            คำขอรับเลี้ยง
-          </h2>
-          {pendingCount > 0 && <p className="text-sm text-muted-foreground">รอพิจารณา {pendingCount} รายการ</p>}
-        </div>
-        {(summarizeAll.remainingCount > 0 || summarizeAll.isRunning) && (
-          // สรุปทีละใบตามลำดับในหน้า ข้ามใบที่สรุปแล้ว — ปิดปุ่มตอนมีอนุมัติ/ปฏิเสธ/ปิดโพสต์รออยู่
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={summarizeAll.run}
-            disabled={summarizeAll.isRunning || actions.isBusy}
-          >
-            {summarizeAll.progress ? (
-              <>
-                <Loader2Icon className="animate-spin" aria-hidden />
-                กำลังสรุป {summarizeAll.progress.current}/{summarizeAll.progress.total}
-              </>
-            ) : (
-              <>
-                <SparklesIcon aria-hidden />
-                สรุปทั้งหมด
-              </>
+        {/* แถบหัวรายการบรรทัดเดียว: หัวข้อ + จำนวนจริง (ซ้าย) · ปุ่มสรุปทั้งหมด (ขวา) — มือถือตัดลงบรรทัดใหม่ */}
+        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
+          <div className="space-y-1">
+            <h2 id="applications-heading" className="text-2xl font-bold">
+              คำขอรับเลี้ยง
+            </h2>
+            {appsQuery.isSuccess && applications.length > 0 && (
+              <p className="text-sm text-muted-foreground">
+                ทั้งหมด {applications.length} คำขอ{pendingCount > 0 && ` · รอพิจารณา ${pendingCount} รายการ`}
+              </p>
             )}
-          </Button>
-        )}
+          </div>
+          {(summarizeAll.remainingCount > 0 || summarizeAll.isRunning) && (
+            // สรุปทีละใบตามลำดับในหน้า ข้ามใบที่สรุปแล้ว — ปิดปุ่มตอนมีอนุมัติ/ปฏิเสธ/ปิดโพสต์รออยู่
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full border-field-border/50 bg-card px-4"
+              onClick={summarizeAll.run}
+              disabled={summarizeAll.isRunning || actions.isBusy}
+            >
+              {summarizeAll.progress ? (
+                <>
+                  <LoaderCircleIcon className="motion-safe:animate-spin" aria-hidden />
+                  กำลังสรุป {summarizeAll.progress.current}/{summarizeAll.progress.total}
+                </>
+              ) : (
+                'สรุปทั้งหมด'
+              )}
+            </Button>
+          )}
+        </div>
         {!canApprove && pendingCount > 0 && (
           <p className="text-sm text-muted-foreground">
             ประกาศนี้ปิดรับแล้ว จึงอนุมัติไม่ได้ แต่ยังปฏิเสธคำขอที่ค้างอยู่ได้
