@@ -3,7 +3,7 @@ import { Faq } from '@/features/landing/Faq'
 import { HowItWorks } from '@/features/landing/HowItWorks'
 import { LandingHero } from '@/features/landing/LandingHero'
 import { LatestPets, LATEST_PETS_COUNT } from '@/features/landing/LatestPets'
-import { PhotoShowcase, SHOWCASE_COUNT } from '@/features/landing/PhotoShowcase'
+import { PhotoShowcase } from '@/features/landing/PhotoShowcase'
 import { usePetsList } from '@/features/pets/use-pets-list'
 import type { Pet } from '@/lib/types'
 
@@ -28,10 +28,10 @@ export function LandingPage() {
   )
 }
 
-/** รูปในกรอบใหญ่: เฉพาะตัวที่มีรูป — เอาตัวที่ไม่อยู่ในกริด "ล่าสุด" ก่อน ไม่พอค่อยใช้ตัวในกริด */
+/** รูปในคอลัมน์เลื่อน: ทุกตัวที่มีรูป — ตัวที่ไม่อยู่ในกริด "ล่าสุด" ขึ้นก่อน (PhotoShowcase ทำซ้ำเองถ้าไม่พอ) */
 function pickShowcasePets(pets: Pet[], latest: Pet[]): Pet[] {
   const withImage = pets.filter((p) => p.image_url)
   const notInLatest = withImage.filter((p) => !latest.includes(p))
   const inLatest = withImage.filter((p) => latest.includes(p))
-  return [...notInLatest, ...inLatest].slice(0, SHOWCASE_COUNT)
+  return [...notInLatest, ...inLatest]
 }

@@ -60,6 +60,19 @@
     --radius-2xl: var(--radius);
     --radius-3xl: var(--radius);
     --radius-4xl: var(--radius);
+
+    /* คอลัมน์รูปเลื่อนต่อเนื่องในหน้า landing: เนื้อหาซ้ำ 2 ชุด เลื่อนครึ่งหนึ่ง (-50%) แล้ววนกลับ = ต่อเนื่องไม่สะดุด
+       ใช้ transform อย่างเดียว · ใช้ผ่าน motion-safe:animate-scroll-up / -down */
+    --animate-scroll-up: scroll-up 48s linear infinite;
+    --animate-scroll-down: scroll-down 56s linear infinite;
+    @keyframes scroll-up {
+        from { transform: translateY(0); }
+        to { transform: translateY(-50%); }
+    }
+    @keyframes scroll-down {
+        from { transform: translateY(-50%); }
+        to { transform: translateY(0); }
+    }
 }
 
 :root {
