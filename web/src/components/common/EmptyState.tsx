@@ -14,10 +14,11 @@ export function EmptyState({
   icon?: ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-dashed bg-card/60 px-6 py-16 text-center">
-      <div className="flex size-14 items-center justify-center rounded-full bg-secondary text-muted-foreground">{icon}</div>
-      <h2 className="text-lg font-semibold">{title}</h2>
-      {description && <p className="max-w-sm text-sm text-muted-foreground">{description}</p>}
+    // ไม่มีกล่อง/เส้นประ: กึ่งกลางบนพื้นหน้า · วงไอคอนสีเน้นอ่อน
+    <div className="flex flex-col items-center justify-center gap-3 px-6 py-20 text-center">
+      <div className="mb-1 flex size-16 items-center justify-center rounded-full bg-primary/10 text-primary">{icon}</div>
+      <h2 className="text-xl font-semibold">{title}</h2>
+      {description && <p className="max-w-sm text-muted-foreground">{description}</p>}
       {action && <div className="mt-2">{action}</div>}
     </div>
   )

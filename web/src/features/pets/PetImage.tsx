@@ -37,9 +37,10 @@ export function PetImage({
     <div
       role="img"
       aria-label={`${alt} (ยังไม่มีรูป)`}
-      className={cn('flex size-full items-center justify-center bg-secondary text-muted-foreground/60', className)}
+      // placeholder นุ่ม ๆ: พื้นทรายอ่อน ไอคอนเส้นบางสีจาง ไม่แย่งความสนใจจากการ์ดที่มีรูปจริง
+      className={cn('flex size-full items-center justify-center bg-muted text-muted-foreground/35', className)}
     >
-      <Icon className="size-14" strokeWidth={1.5} aria-hidden />
+      <Icon className="size-12" strokeWidth={1.25} aria-hidden />
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router'
-import { LogOutIcon, MenuIcon, PawPrintIcon, PlusIcon } from 'lucide-react'
+import { LogOutIcon, MenuIcon, PlusIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { useAuth } from '@/features/auth/auth-context'
@@ -21,10 +21,11 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/my-pets', label: 'สัตว์ของฉัน', requiresAuth: true },
 ]
 
+// เมนู: หน้าปัจจุบัน = ตัวหนา + เส้นใต้สีหลัก 2px (ใช้ border-b แทน underline เพราะเส้นใต้ตัวอักษรชนสระล่างภาษาไทย)
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return cn(
-    'rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-foreground',
-    isActive ? 'bg-secondary text-foreground' : 'text-muted-foreground',
+    'w-fit border-b-2 py-1.5 text-[0.95rem] transition-colors hover:text-foreground',
+    isActive ? 'border-primary font-semibold text-foreground' : 'border-transparent text-muted-foreground',
   )
 }
 
@@ -37,17 +38,15 @@ export function Header() {
   const closeMenu = () => setMenuOpen(false)
 
   return (
-    <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b bg-background">
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-        <Link to="/" className="flex items-center gap-2 font-bold">
-          <span className="flex size-9 items-center justify-center rounded-full bg-secondary text-primary">
-            <PawPrintIcon className="size-5" aria-hidden />
-          </span>
-          <span className="text-lg">บ้านใหม่</span>
+        {/* wordmark ตัวอักษรล้วนสีหลัก — ไม่ใช้ไอคอนอุ้งเท้าในวงกลมแบบแม่แบบ */}
+        <Link to="/" className="text-xl font-bold text-primary">
+          บ้านใหม่
         </Link>
 
         {/* เดสก์ท็อป */}
-        <nav className="ml-4 hidden items-center gap-1 md:flex" aria-label="เมนูหลัก">
+        <nav className="ml-8 hidden items-center gap-6 md:flex" aria-label="เมนูหลัก">
           {items.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.to === '/'} className={navLinkClass}>
               {item.label}
@@ -95,7 +94,7 @@ export function Header() {
               <SheetHeader>
                 <SheetTitle>เมนู</SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col gap-1 px-4" aria-label="เมนูหลัก">
+              <nav className="flex flex-col gap-3 px-4" aria-label="เมนูหลัก">
                 {items.map((item) => (
                   <NavLink key={item.to} to={item.to} end={item.to === '/'} className={navLinkClass} onClick={closeMenu}>
                     {item.label}

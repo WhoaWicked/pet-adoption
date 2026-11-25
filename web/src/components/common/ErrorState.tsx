@@ -15,11 +15,12 @@ export function ErrorState({
   isRetrying?: boolean
 }) {
   return (
-    <div role="alert" className="flex flex-col items-center justify-center gap-3 rounded-2xl bg-secondary px-6 py-16 text-center">
-      <div className="flex size-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+    // ไม่มีกล่อง: กึ่งกลางบนพื้นหน้า · วงไอคอนแดงอ่อน
+    <div role="alert" className="flex flex-col items-center justify-center gap-3 px-6 py-20 text-center">
+      <div className="mb-1 flex size-16 items-center justify-center rounded-full bg-destructive/10 text-destructive">
         <CloudOffIcon className="size-7" aria-hidden />
       </div>
-      <h2 className="text-lg font-semibold">{title}</h2>
+      <h2 className="text-xl font-semibold">{title}</h2>
       <p className="max-w-sm text-sm text-muted-foreground">{getErrorMessage(error)}</p>
       {onRetry && (
         <Button variant="outline" className="mt-2" onClick={onRetry} disabled={isRetrying}>

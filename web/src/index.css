@@ -2,20 +2,29 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/noto-sans-thai";
+@import "@fontsource-variable/anuphan";
+
+/* แอปนี้ไม่มี dark mode: ให้ dark: ทำงานเฉพาะเมื่อมีคลาส .dark (ซึ่งไม่มีวันใส่)
+   ไม่งั้นเครื่องที่ตั้ง OS เป็นโหมดมืด จะได้สไตล์ dark: ของ shadcn ปนเข้ามา (เช่นช่องกรอกพื้นเทา) */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /*
  * Design tokens — ชุดเดียวทั้งแอป
  * สีทุกสีในแอปต้องมาจากตัวแปรใน :root เท่านั้น (component ใช้ผ่าน utility เช่น bg-primary, text-muted-foreground)
- * โทน: อบอุ่น เป็นมิตร — พื้นขาวนวล, ตัวอักษรน้ำตาลเข้ม, สีหลักส้มอิฐ (ใช้เฉพาะปุ่มสำคัญ)
+ * โทน: อบอุ่น เป็นมิตร แบบเว็บรายการที่รูปเป็นพระเอก — พื้นขาวอมพีชจาง, ตัวอักษรถ่านอุ่น,
+ * สีเน้นสีเดียวคือเขียวใบไม้เข้ม (ปุ่มหลัก) ไม่มีเงาฟุ้ง ไม่มี gradient
  * ไม่มี dark mode (นอกขอบเขต)
  */
 
 @theme inline {
-    --font-heading: var(--font-sans);
+    /* หัวข้อ: Anuphan — ภาษาไทยไม่มีหัว ทรงกลมมนกว่า ให้ความรู้สึกเป็นมิตร · เนื้อความ: Noto Sans Thai อ่านง่าย */
+    --font-heading: 'Anuphan Variable', 'Noto Sans Thai Variable', ui-sans-serif, sans-serif;
     --font-sans: 'Noto Sans Thai Variable', ui-sans-serif, system-ui, sans-serif;
 
     --color-ring: var(--ring);
     --color-input: var(--input);
+    --color-field-border: var(--field-border);
+    --color-hero: var(--hero);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
     --color-accent-foreground: var(--accent-foreground);
@@ -41,52 +50,58 @@
     --color-status-closed: var(--status-closed);
     --color-status-closed-foreground: var(--status-closed-foreground);
 
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
+    /* มุมโค้งขนาดเดียวทั้งเว็บ: md ขึ้นไปเท่ากับ --radius ทั้งหมด (ไม่มีการ์ดโค้งใหญ่)
+       sm เล็กกว่าไว้ใช้กับชิ้นเล็กมาก เช่น checkbox */
+    --radius-sm: calc(var(--radius) * 0.5);
+    --radius-md: var(--radius);
     --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+    --radius-xl: var(--radius);
+    --radius-2xl: var(--radius);
+    --radius-3xl: var(--radius);
+    --radius-4xl: var(--radius);
 }
 
 :root {
-    /* พื้นและตัวอักษร */
-    --background: oklch(0.985 0.008 80);
-    --foreground: oklch(0.29 0.025 50);
-    --card: oklch(1 0.004 80);
-    --card-foreground: oklch(0.29 0.025 50);
-    --popover: oklch(1 0.004 80);
-    --popover-foreground: oklch(0.29 0.025 50);
+    /* พื้นและตัวอักษร: พื้นขาวอมชมพูพีชจาง ๆ (ไม่ใช่ครีมเหลือง) ตัวอักษรถ่านอุ่น */
+    --background: #fcf8f5;
+    --foreground: #2b2522; /* 14.3:1 บนพื้น */
+    --card: #ffffff;
+    --card-foreground: #2b2522;
+    --popover: #ffffff;
+    --popover-foreground: #2b2522;
 
-    /* สีหลัก (ส้มอิฐอุ่น) — ใช้เฉพาะปุ่มสำคัญ
-       L 0.53 ให้ข้อความขาวบนปุ่ม contrast ≥ 4.5:1 (เดิม 0.60 ได้ราว 3.9:1) */
-    --primary: oklch(0.53 0.14 42);
-    --primary-foreground: oklch(0.99 0.005 80);
+    /* สีหลัก: เขียวใบไม้เข้ม — ใช้กับปุ่มหลัก/ลิงก์สำคัญเท่านั้น (ตัวขาวบนปุ่ม 6.3:1) */
+    --primary: #2f6b55;
+    --primary-foreground: #ffffff;
 
-    /* สีรอง / พื้นผิวจาง */
-    --secondary: oklch(0.955 0.018 72);
-    --secondary-foreground: oklch(0.33 0.03 50);
-    --muted: oklch(0.935 0.014 72);
-    --muted-foreground: oklch(0.5 0.025 55);
-    --accent: oklch(0.94 0.02 70);
-    --accent-foreground: oklch(0.29 0.025 50);
+    /* พื้นผิวรอง: ทรายอ่อน */
+    --secondary: #f3ece6;
+    --secondary-foreground: #3a322e;
+    --muted: #f3ece6;
+    --muted-foreground: #6b615a; /* 5.7:1 บนพื้น, 5.2:1 บนทราย */
+    --accent: #efe7e0;
+    --accent-foreground: #2b2522;
 
-    --destructive: oklch(0.56 0.19 27);
-    --border: oklch(0.89 0.016 70);
-    --input: oklch(0.88 0.016 70);
-    --ring: oklch(0.53 0.14 42);
+    --destructive: #b3261e;
+    --border: #eae1d9; /* เส้นคั่นอ่อน */
+    --input: #e3d9d0; /* ความหมายเดิมของ shadcn: สีขอบอ่อน */
+    /* ใหม่: ขอบช่องกรอก (input/select/textarea) ให้เห็นชัดบนพื้นขาว 3.1:1 */
+    --field-border: #9a9089;
 
-    /* สถานะสัตว์ */
-    --status-available: oklch(0.94 0.04 150);
-    --status-available-foreground: oklch(0.4 0.08 150);
-    --status-adopted: oklch(0.94 0.045 85);
-    --status-adopted-foreground: oklch(0.45 0.08 70);
-    --status-closed: oklch(0.93 0.008 70);
-    --status-closed-foreground: oklch(0.48 0.015 60);
+    /* ใหม่: พื้นแถบต้อนรับหน้าแรก — ทรายอุ่นเข้มกว่าพื้นหน้าเล็กน้อย */
+    --hero: #f5ece4;
+    --ring: #2f6b55;
 
-    /* มุมโค้งสม่ำเสมอทั้งแอป */
-    --radius: 0.875rem;
+    /* สถานะสัตว์ (ป้ายพื้นจาง ตัวอักษรเข้ม) */
+    --status-available: #e3efe9;
+    --status-available-foreground: #24523f;
+    --status-adopted: #f8ecd6;
+    --status-adopted-foreground: #74500f;
+    --status-closed: #efe9e4;
+    --status-closed-foreground: #5c534d;
+
+    /* มุมโค้งปานกลางขนาดเดียวทั้งเว็บ (12px) */
+    --radius: 0.75rem;
 }
 
 @layer base {
@@ -100,6 +115,9 @@
   /* หัวข้อ: ชิดกว่าเนื้อความเล็กน้อย แต่ไม่บีบตัวอักษร (ไม่ใช้ tracking-tight กับภาษาไทย) */
   h1, h2, h3 {
     @apply leading-snug;
+  }
+  h1, h2 {
+    @apply font-heading;
   }
   button:not(:disabled), [role="button"]:not(:disabled) {
     cursor: pointer;
