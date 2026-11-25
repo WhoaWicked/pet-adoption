@@ -42,7 +42,7 @@ export function HowItWorks() {
             >
               <div className="flex items-center justify-between">
                 <Icon className="size-7 text-primary" strokeWidth={1.5} aria-hidden />
-                <span className="rounded-full bg-status-available px-2.5 py-0.5 text-xs font-medium text-status-available-foreground">
+                <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                   ขั้นที่ {i + 1}
                 </span>
               </div>

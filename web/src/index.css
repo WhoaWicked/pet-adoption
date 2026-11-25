@@ -11,8 +11,9 @@
 /*
  * Design tokens — ชุดเดียวทั้งแอป
  * สีทุกสีในแอปต้องมาจากตัวแปรใน :root เท่านั้น (component ใช้ผ่าน utility เช่น bg-primary, text-muted-foreground)
- * โทน: อบอุ่น เป็นมิตร แบบเว็บรายการที่รูปเป็นพระเอก — พื้นขาวอมพีชจาง, ตัวอักษรถ่านอุ่น,
- * สีเน้นสีเดียวคือเขียวใบไม้เข้ม (ปุ่มหลัก) ไม่มีเงาฟุ้ง ไม่มี gradient
+ * โทน: สะอาด เป็นมิตร แบบเว็บรายการที่รูปเป็นพระเอก — พื้นเทาอมฟ้าจาง, ตัวอักษรถ่านอมฟ้า,
+ * สีเน้นสีเดียวคือฟ้า #1F6FB2 (ปุ่มหลัก ลิงก์ เมนู active) ไม่มีเงาฟุ้ง ไม่มี gradient
+ * ข้อยกเว้น: สีสถานะ (--status-*) คงความหมายเดิม เช่น เขียว = รอบ้าน/อนุมัติแล้ว
  * ไม่มี dark mode (นอกขอบเขต)
  */
 
@@ -62,43 +63,46 @@
 }
 
 :root {
-    /* พื้นและตัวอักษร: พื้นขาวอมชมพูพีชจาง ๆ (ไม่ใช่ครีมเหลือง) ตัวอักษรถ่านอุ่น */
-    --background: #fcf8f5;
-    --foreground: #2b2522; /* 14.3:1 บนพื้น */
+    /* พื้นและตัวอักษร: พื้นเทาอมฟ้าจาง ๆ ตัวอักษรถ่านอมฟ้า */
+    --background: #f5f8fb;
+    --foreground: #1e2a36; /* 13.7:1 บนพื้น */
     --card: #ffffff;
-    --card-foreground: #2b2522;
+    --card-foreground: #1e2a36;
     --popover: #ffffff;
-    --popover-foreground: #2b2522;
+    --popover-foreground: #1e2a36;
 
-    /* สีหลัก: เขียวใบไม้เข้ม — ใช้กับปุ่มหลัก/ลิงก์สำคัญเท่านั้น (ตัวขาวบนปุ่ม 6.3:1) */
-    --primary: #2f6b55;
+    /* สีหลัก: ฟ้า — ปุ่มหลัก ลิงก์ เมนู active wordmark
+       ตัวขาวบนปุ่ม 5.28:1 · ลิงก์บนพื้น 4.96:1 / บน card 5.28:1 / บน muted 4.61:1 (ผ่าน AA ทั้งหมด) */
+    --primary: #1f6fb2;
     --primary-foreground: #ffffff;
 
-    /* พื้นผิวรอง: ทรายอ่อน */
-    --secondary: #f3ece6;
-    --secondary-foreground: #3a322e;
-    --muted: #f3ece6;
-    --muted-foreground: #6b615a; /* 5.7:1 บนพื้น, 5.2:1 บนทราย */
-    --accent: #efe7e0;
-    --accent-foreground: #2b2522;
+    /* พื้นผิวรอง: เทาอมฟ้าอ่อน */
+    --secondary: #ebf0f5;
+    --secondary-foreground: #2a3846;
+    --muted: #ebf0f5;
+    --muted-foreground: #566778; /* 5.46:1 บนพื้น, 5.08:1 บน muted, 5.82:1 บน card */
+    --accent: #e6edf4;
+    --accent-foreground: #1e2a36;
 
-    --destructive: #b3261e;
-    --border: #eae1d9; /* เส้นคั่นอ่อน */
-    --input: #e3d9d0; /* ความหมายเดิมของ shadcn: สีขอบอ่อน */
-    /* ใหม่: ขอบช่องกรอก (input/select/textarea) ให้เห็นชัดบนพื้นขาว 3.1:1 */
-    --field-border: #9a9089;
+    --destructive: #b3261e; /* 6.1:1 บนพื้น */
+    --border: #dde5ed; /* เส้นคั่นอ่อน */
+    --input: #d3dde7; /* ความหมายเดิมของ shadcn: สีขอบอ่อน */
+    /* ขอบช่องกรอก (input/select/textarea) ให้เห็นชัดบนพื้นขาว 3.1:1 (เกณฑ์ 3:1 ของขอบ UI) */
+    --field-border: #8494a3;
 
-    /* ใหม่: พื้นแถบต้อนรับหน้าแรก — ทรายอุ่นเข้มกว่าพื้นหน้าเล็กน้อย */
-    --hero: #f5ece4;
-    --ring: #2f6b55;
+    /* พื้นแถบเน้น — เทาอมฟ้าเข้มกว่าพื้นหน้าเล็กน้อย (ตอนนี้ยังไม่มีหน้าไหนใช้) */
+    --hero: #e8eff6;
+    --ring: #1f6fb2;
 
-    /* สถานะสัตว์ (ป้ายพื้นจาง ตัวอักษรเข้ม) */
+    /* สถานะ (ป้ายพื้นจาง ตัวอักษรเข้ม) — สีมีความหมาย จึงไม่เปลี่ยนตามสีหลัก
+       available = เขียว (ป้าย "รอบ้าน" และคำขอ "อนุมัติแล้ว") 7.6:1 · adopted = เหลืองอุ่น ("มีบ้านแล้ว"/"รอพิจารณา")
+       closed = เทาโทนเย็นให้เข้าพื้นใหม่ 5.8:1 */
     --status-available: #e3efe9;
     --status-available-foreground: #24523f;
     --status-adopted: #f8ecd6;
     --status-adopted-foreground: #74500f;
-    --status-closed: #efe9e4;
-    --status-closed-foreground: #5c534d;
+    --status-closed: #eaeef2;
+    --status-closed-foreground: #4f5d6b;
 
     /* มุมโค้งปานกลางขนาดเดียวทั้งเว็บ (12px) */
     --radius: 0.75rem;
