@@ -1,6 +1,6 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { useState, type ChangeEvent, type FormEvent, type ReactNode } from 'react'
 import { useNavigate } from 'react-router'
-import { AlertCircleIcon } from 'lucide-react'
+import { AlertCircleIcon, LoaderCircleIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { FormField } from '@/components/common/FormField'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -79,12 +79,29 @@ function validate(values: Values): FieldErrors {
   return errors
 }
 
+// หัวข้อกลุ่มฟิลด์: กลุ่มแรกไม่มีเส้นบน กลุ่มถัดไปคั่นด้วยเส้นบาง (ไม่มีกล่อง)
+function FormSection({ title, first = false, children }: { title: string; first?: boolean; children: ReactNode }) {
+  return (
+    <section className={first ? 'space-y-6' : 'space-y-6 border-t pt-8'}>
+      <h2 className="text-lg font-semibold">{title}</h2>
+      {children}
+    </section>
+  )
+}
+
 // ฟอร์มลงประกาศหาบ้านให้สัตว์ (ตาม CreatePetDto)
 export function CreatePetForm() {
   const navigate = useNavigate()
   const [values, setValues] = useState<Values>(INITIAL)
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({})
   const mutation = useCreatePet()
+
+  // ยกเลิก: มี history ในแอป → ย้อนกลับ, ไม่งั้นไปหน้าสัตว์ของฉัน (นำทางเท่านั้น ไม่แตะข้อมูล)
+  const cancel = () => {
+    const canGoBack = (window.history.state as { idx?: number } | null)?.idx ? true : false
+    if (canGoBack) navigate(-1)
+    else navigate('/my-pets')
+  }
 
   const set = (key: keyof Values) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     setValues((v) => ({ ...v, [key]: e.target.value }))
@@ -122,123 +139,145 @@ export function CreatePetForm() {
     : undefined
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-6">
+    <form onSubmit={onSubmit} noValidate className="space-y-8">
       {formError && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="rounded-[1rem] px-3 py-2.5">
           <AlertCircleIcon />
           <AlertDescription>{formError}</AlertDescription>
         </Alert>
       )}
 
-      <FormField id="name" label="ชื่อน้อง" error={fieldErrors.name}>
-        <Input {...fieldAria('name', fieldErrors.name)} value={values.name} onChange={set('name')} />
-      </FormField>
-
-      <div className="grid gap-6 sm:grid-cols-2">
-        <FormField id="species" label="ชนิดสัตว์" error={fieldErrors.species}>
-          <Select value={values.species} onValueChange={(v) => setValues((s) => ({ ...s, species: v as Species }))}>
-            <SelectTrigger {...fieldAria('species', fieldErrors.species)} className="w-full">
-              <SelectValue placeholder="เลือกชนิดสัตว์" />
-            </SelectTrigger>
-            <SelectContent>
-              {SPECIES_OPTIONS.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {SPECIES_LABELS[s]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+      <FormSection title="ข้อมูลน้อง" first>
+        <FormField id="name" label="ชื่อน้อง" error={fieldErrors.name}>
+          <Input {...fieldAria('name', fieldErrors.name)} value={values.name} onChange={set('name')} />
         </FormField>
 
-        <FormField id="province" label="จังหวัด" error={fieldErrors.province}>
-          <Select value={values.province} onValueChange={(v) => setValues((s) => ({ ...s, province: v }))}>
-            <SelectTrigger {...fieldAria('province', fieldErrors.province)} className="w-full">
-              <SelectValue placeholder="เลือกจังหวัด" />
-            </SelectTrigger>
-            <SelectContent className="max-h-72">
-              {PROVINCES.map((p) => (
-                <SelectItem key={p} value={p}>
-                  {p}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </FormField>
-      </div>
+        <div className="grid gap-6 sm:grid-cols-2">
+          <FormField id="species" label="ชนิดสัตว์" error={fieldErrors.species}>
+            <Select value={values.species} onValueChange={(v) => setValues((s) => ({ ...s, species: v as Species }))}>
+              <SelectTrigger {...fieldAria('species', fieldErrors.species)} className="w-full">
+                <SelectValue placeholder="เลือกชนิดสัตว์" />
+              </SelectTrigger>
+              <SelectContent>
+                {SPECIES_OPTIONS.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {SPECIES_LABELS[s]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormField>
 
-      {/* อายุ: 2 ช่องแต่เป็น field เดียวของ API (ageMonths) จึงแสดง error ใต้กลุ่ม */}
-      <fieldset className="space-y-2" aria-describedby={fieldErrors.ageMonths ? 'ageMonths-error' : 'ageMonths-hint'}>
-        <legend className="text-sm font-medium">อายุโดยประมาณ</legend>
-        <div className="grid grid-cols-2 gap-3 sm:max-w-sm">
-          <div className="space-y-1">
-            <Label htmlFor="ageYears" className="text-xs font-normal text-muted-foreground">ปี</Label>
-            <Input
-              id="ageYears"
-              inputMode="numeric"
-              placeholder="0"
-              aria-invalid={fieldErrors.ageMonths ? true : undefined}
-              value={values.ageYears}
-              onChange={set('ageYears')}
-            />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="ageMonthsPart" className="text-xs font-normal text-muted-foreground">เดือน</Label>
-            <Input
-              id="ageMonthsPart"
-              inputMode="numeric"
-              placeholder="0"
-              aria-invalid={fieldErrors.ageMonths ? true : undefined}
-              value={values.ageMonthsPart}
-              onChange={set('ageMonthsPart')}
-            />
-          </div>
+          <FormField id="province" label="จังหวัด" error={fieldErrors.province}>
+            <Select value={values.province} onValueChange={(v) => setValues((s) => ({ ...s, province: v }))}>
+              <SelectTrigger {...fieldAria('province', fieldErrors.province)} className="w-full">
+                <SelectValue placeholder="เลือกจังหวัด" />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                {PROVINCES.map((p) => (
+                  <SelectItem key={p} value={p}>
+                    {p}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormField>
         </div>
-        {fieldErrors.ageMonths ? (
-          <p id="ageMonths-error" className="text-sm text-destructive">{fieldErrors.ageMonths}</p>
-        ) : (
-          <p id="ageMonths-hint" className="text-xs text-muted-foreground">เช่น 1 ปี 6 เดือน หรือกรอกเฉพาะเดือนสำหรับลูกสัตว์</p>
-        )}
-      </fieldset>
 
-      <FormField id="description" label="เกี่ยวกับน้อง" error={fieldErrors.description}>
-        <Textarea
-          {...fieldAria('description', fieldErrors.description)}
-          rows={4}
-          placeholder="นิสัย สุขภาพ การฉีดวัคซีน/ทำหมัน"
-          value={values.description}
-          onChange={set('description')}
-        />
-      </FormField>
+        {/* อายุ: 2 ช่องแต่เป็น field เดียวของ API (ageMonths) จึงแสดง error ใต้กลุ่ม */}
+        <fieldset className="space-y-2" aria-describedby={fieldErrors.ageMonths ? 'ageMonths-error' : 'ageMonths-hint'}>
+          <legend className="text-sm font-medium">อายุโดยประมาณ</legend>
+          <div className="grid grid-cols-2 gap-3 sm:max-w-sm">
+            <div className="space-y-1">
+              <Label htmlFor="ageYears" className="text-xs font-normal text-muted-foreground">ปี</Label>
+              <Input
+                id="ageYears"
+                inputMode="numeric"
+                placeholder="0"
+                aria-invalid={fieldErrors.ageMonths ? true : undefined}
+                value={values.ageYears}
+                onChange={set('ageYears')}
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="ageMonthsPart" className="text-xs font-normal text-muted-foreground">เดือน</Label>
+              <Input
+                id="ageMonthsPart"
+                inputMode="numeric"
+                placeholder="0"
+                aria-invalid={fieldErrors.ageMonths ? true : undefined}
+                value={values.ageMonthsPart}
+                onChange={set('ageMonthsPart')}
+              />
+            </div>
+          </div>
+          {fieldErrors.ageMonths ? (
+            <p id="ageMonths-error" className="text-sm text-destructive">{fieldErrors.ageMonths}</p>
+          ) : (
+            <p id="ageMonths-hint" className="text-xs text-muted-foreground">เช่น 1 ปี 6 เดือน หรือกรอกเฉพาะเดือนสำหรับลูกสัตว์</p>
+          )}
+        </fieldset>
+      </FormSection>
 
-      <FormField id="requirements" label="เงื่อนไขการรับเลี้ยง" error={fieldErrors.requirements}>
-        <Textarea
-          {...fieldAria('requirements', fieldErrors.requirements)}
-          rows={3}
-          placeholder="เช่น ต้องเลี้ยงในบ้าน ยินดีให้ติดตามผลหลังรับเลี้ยง"
-          value={values.requirements}
-          onChange={set('requirements')}
-        />
-      </FormField>
+      <FormSection title="รายละเอียด">
+        <FormField id="description" label="เกี่ยวกับน้อง" error={fieldErrors.description}>
+          <Textarea
+            {...fieldAria('description', fieldErrors.description)}
+            rows={4}
+            placeholder="นิสัย สุขภาพ การฉีดวัคซีน/ทำหมัน"
+            value={values.description}
+            onChange={set('description')}
+          />
+        </FormField>
 
-      <FormField
-        id="imageUrl"
-        label="ลิงก์รูปน้อง (ไม่บังคับ)"
-        error={fieldErrors.imageUrl}
-        hint="วางลิงก์รูปที่อัปโหลดไว้ที่อื่น ถ้าไม่มีจะแสดงรูปตัวอย่างแทน"
-      >
-        <Input
-          {...fieldAria('imageUrl', fieldErrors.imageUrl, true)}
-          type="url"
-          inputMode="url"
-          placeholder="https://"
-          value={values.imageUrl}
-          onChange={set('imageUrl')}
-        />
-      </FormField>
+        <FormField id="requirements" label="เงื่อนไขการรับเลี้ยง" error={fieldErrors.requirements}>
+          <Textarea
+            {...fieldAria('requirements', fieldErrors.requirements)}
+            rows={3}
+            placeholder="เช่น ต้องเลี้ยงในบ้าน ยินดีให้ติดตามผลหลังรับเลี้ยง"
+            value={values.requirements}
+            onChange={set('requirements')}
+          />
+        </FormField>
 
-      <Button type="submit" size="lg" className="w-full sm:w-auto sm:px-8" disabled={mutation.isPending}>
-        {mutation.isPending ? 'กำลังลงประกาศ…' : 'ลงประกาศ'}
-      </Button>
+      </FormSection>
+
+      <FormSection title="รูปภาพ">
+        <FormField
+          id="imageUrl"
+          label="ลิงก์รูปน้อง (ไม่บังคับ)"
+          error={fieldErrors.imageUrl}
+          hint="วางลิงก์รูปที่อัปโหลดไว้ที่อื่น ถ้าไม่มีจะแสดงรูปตัวอย่างแทน"
+        >
+          <Input
+            {...fieldAria('imageUrl', fieldErrors.imageUrl, true)}
+            type="url"
+            inputMode="url"
+            placeholder="https://"
+            value={values.imageUrl}
+            onChange={set('imageUrl')}
+          />
+        </FormField>
+
+      </FormSection>
+
+      {/* ปุ่มหลัก + ปุ่มยกเลิกแบบรอง · มือถือเรียงลงเต็มความกว้าง (ปุ่มหลักอยู่บน) */}
+      <div className="flex flex-col gap-3 border-t pt-8 sm:flex-row">
+        <Button type="submit" size="lg" className="w-full rounded-full sm:w-auto sm:px-8" disabled={mutation.isPending}>
+          {mutation.isPending && <LoaderCircleIcon className="motion-safe:animate-spin" aria-hidden />}
+          {mutation.isPending ? 'กำลังลงประกาศ…' : 'ลงประกาศ'}
+        </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          className="w-full rounded-full border-field-border/50 bg-card sm:w-auto sm:px-8"
+          onClick={cancel}
+          disabled={mutation.isPending}
+        >
+          ยกเลิก
+        </Button>
+      </div>
     </form>
   )
 }
