@@ -24,6 +24,7 @@
 
     --color-ring: var(--ring);
     --color-input: var(--input);
+    --color-input-hover: var(--input-hover);
     --color-field-border: var(--field-border);
     --color-hero: var(--hero);
     --color-border: var(--border);
@@ -109,8 +110,11 @@
 
     --destructive: #b3261e; /* 6.1:1 บนพื้น */
     --border: #dde5ed; /* เส้นคั่นอ่อน */
-    --input: #d3dde7; /* ความหมายเดิมของ shadcn: สีขอบอ่อน */
-    /* ขอบช่องกรอก (input/select/textarea) ให้เห็นชัดบนพื้นขาว 3.1:1 (เกณฑ์ 3:1 ของขอบ UI) */
+    /* ขอบช่องกรอก (input / select / textarea / radio) — อ่อนลงตามที่เจ้าของโปรเจกต์เลือก (รับทราบว่าต่ำกว่า 3:1)
+       ปกติ 1.58:1 บนขาว · hover 2.03:1 · ตอน focus ใช้สีหลัก 5.28:1 + ring ให้เห็นชัดว่ากำลังกรอกช่องไหน */
+    --input: #c3cfdb;
+    --input-hover: #a9b8c7;
+    /* ขอบปุ่มแคปซูลรอง (ใช้ผ่าน border-field-border/50) — ช่องกรอกย้ายไปใช้ --input แล้ว */
     --field-border: #8494a3;
 
     /* พื้นแถบเน้น — เทาอมฟ้าเข้มกว่าพื้นหน้าเล็กน้อย (ตอนนี้ยังไม่มีหน้าไหนใช้) */
