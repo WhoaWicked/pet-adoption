@@ -5,6 +5,7 @@ import { ErrorState } from '@/components/common/ErrorState'
 import { Button } from '@/components/ui/button'
 import { PetCard, PetCardSkeleton } from '@/features/pets/PetCard'
 import { useSavedPets, useUnsavePet } from '@/features/pets/use-saved-pets'
+import { entranceDelay, useEntrance } from '@/lib/use-entrance'
 
 // กริดเดียวกับ /pets: 1 / 2 / 3 / 4 คอลัมน์ ระยะห่างเท่ากัน
 const GRID_CLASS = 'grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
@@ -13,6 +14,8 @@ const GRID_CLASS = 'grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-col
 export function SavedPetsPage() {
   const query = useSavedPets()
   const unsave = useUnsavePet()
+  // การ์ดเข้าแบบ stagger เฉพาะตอนโหลดครั้งแรกของหน้า — เลิกบันทึก/refetch ไม่เล่นซ้ำ
+  const entrance = useEntrance(query.isSuccess)
   const pets = query.data ?? []
 
   let content
@@ -42,10 +45,14 @@ export function SavedPetsPage() {
   } else {
     content = (
       <div className={GRID_CLASS}>
-        {pets.map((pet) => {
+        {pets.map((pet, i) => {
           const isRemoving = unsave.isPending && unsave.variables === pet.id
           return (
-            <div key={pet.id} className="flex flex-col gap-2">
+            <div
+              key={pet.id}
+              className={entrance ? 'flex flex-col gap-2 animate-enter' : 'flex flex-col gap-2'}
+              style={entrance ? { animationDelay: `${entranceDelay(i)}ms` } : undefined}
+            >
               <PetCard pet={pet} hideAvailable />
               {/* ปุ่มอยู่นอกลิงก์ของการ์ด — กดแล้วไม่พาไปหน้ารายละเอียด */}
               <Button

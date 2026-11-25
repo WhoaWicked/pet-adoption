@@ -16,6 +16,7 @@ import { usePet } from '@/features/pets/use-pet'
 import { ApiError } from '@/lib/api/client'
 import { isNotFoundError } from '@/lib/api/errors'
 import type { PetApplication } from '@/lib/types'
+import { entranceDelay, useEntrance } from '@/lib/use-entrance'
 
 type PendingAction =
   | { kind: 'approve'; application: PetApplication }
@@ -75,6 +76,8 @@ export function ManagePetPage() {
   )
   const pendingCount = pendingIds.length
   const summarizeAll = useSummarizeAll(petId, pendingIds)
+  // บล็อกคำขอเข้าแบบ stagger เฉพาะตอนโหลดครั้งแรก — อนุมัติ/ปฏิเสธ/invalidate ไม่เล่นซ้ำ
+  const entrance = useEntrance(appsQuery.isSuccess)
 
   if (petQuery.isPending) {
     return (
@@ -158,9 +161,10 @@ export function ManagePetPage() {
   } else {
     list = (
       <ul className="space-y-4">
-        {applications.map((a) => (
+        {applications.map((a, i) => (
           <PetApplicationCard
             key={a.id}
+            enterDelay={entrance ? entranceDelay(i) : undefined}
             application={a}
             canApprove={canApprove}
             disabled={actions.isBusy}

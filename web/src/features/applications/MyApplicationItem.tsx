@@ -15,14 +15,20 @@ export function MyApplicationItem({
   application,
   onWithdraw,
   isWithdrawing,
+  enterDelay,
 }: {
   application: MyApplication
   onWithdraw: (application: MyApplication) => void
   isWithdrawing: boolean
+  /** มีค่า = เล่นอนิเมชันเข้า (เฉพาะตอนเข้าหน้า) ด้วยดีเลย์นี้ (ms) */
+  enterDelay?: number
 }) {
   const { answers } = application
   return (
-    <li className={`flex flex-col gap-3 py-5 ${APPLICATION_ROW_GRID}`}>
+    <li
+      className={`flex flex-col gap-3 py-5 ${APPLICATION_ROW_GRID} ${enterDelay !== undefined ? 'animate-enter' : ''}`}
+      style={enterDelay !== undefined ? { animationDelay: `${enterDelay}ms` } : undefined}
+    >
       <div className="min-w-0 space-y-1">
         <Link
           to={`/pets/${application.pet_id}`}

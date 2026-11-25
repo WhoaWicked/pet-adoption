@@ -43,7 +43,14 @@ export function ApplicationSummary({ applicationId, disabled }: { applicationId:
 
   let content
   if (summary) {
-    content = <SummaryContent summary={summary} />
+    // ผลสรุปที่เพิ่งปรากฏกางออกนุ่ม ๆ (grid 0fr → 1fr + fade, 300ms) ด้วย @starting-style — เล่นตอน mount ครั้งเดียว
+    content = (
+      <div className="grid grid-rows-[1fr] opacity-100 transition-[grid-template-rows,opacity] duration-300 ease-out starting:grid-rows-[0fr] starting:opacity-0">
+        <div className="min-h-0 overflow-hidden">
+          <SummaryContent summary={summary} />
+        </div>
+      </div>
+    )
   } else if (isLoading) {
     content = (
       <Button variant="outline" size="sm" className={SUMMARY_BUTTON} disabled>

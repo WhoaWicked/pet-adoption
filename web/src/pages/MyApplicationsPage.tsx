@@ -15,6 +15,7 @@ import {
 } from '@/features/applications/use-my-applications'
 import type { MyApplication } from '@/lib/types'
 import { usePageParam } from '@/lib/use-page-param'
+import { entranceDelay, useEntrance } from '@/lib/use-entrance'
 
 const PILL_OUTLINE = 'rounded-full border-field-border/50 bg-card px-6'
 
@@ -23,6 +24,8 @@ export function MyApplicationsPage() {
   const { page, setPage } = usePageParam()
   const query = useMyApplications(page)
   const withdraw = useWithdrawApplication(page)
+  // แถวเข้าแบบ stagger เฉพาะตอนโหลดครั้งแรกของหน้า — ถอน/เปลี่ยนหน้า/refetch ไม่เล่นซ้ำ
+  const entrance = useEntrance(query.isSuccess)
   const [target, setTarget] = useState<MyApplication | null>(null)
 
   useEffect(() => {
@@ -92,9 +95,10 @@ export function MyApplicationsPage() {
       <div className="space-y-8">
         {/* รายการแถวคั่นด้วยเส้นบาง ไม่มีกล่อง/การ์ด */}
         <ul className="divide-y border-y transition-opacity data-[stale=true]:opacity-60" data-stale={query.isPlaceholderData}>
-          {items.map((a) => (
+          {items.map((a, i) => (
             <MyApplicationItem
               key={a.id}
+              enterDelay={entrance ? entranceDelay(i) : undefined}
               application={a}
               onWithdraw={setTarget}
               isWithdrawing={withdraw.isPending && withdraw.variables === a.id}

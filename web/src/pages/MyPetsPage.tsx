@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { PetImage } from '@/features/pets/PetImage'
 import { PetStatusBadge } from '@/features/pets/PetStatusBadge'
 import { useMyPets } from '@/features/pets/use-my-pets'
+import { entranceDelay, useEntrance } from '@/lib/use-entrance'
 import { SPECIES_LABELS } from '@/lib/constants/labels'
 import { formatAge, formatDate } from '@/lib/format'
 
@@ -28,6 +29,8 @@ function NewPostButton() {
 // หน้า "สัตว์ของฉัน" — ทุกสถานะ เป็นรายการแถว (ไม่มีกล่อง คั่นด้วยเส้นบาง) กด "จัดการ" ไปหน้าจัดการคำขอ
 export function MyPetsPage() {
   const query = useMyPets()
+  // แถวเข้าแบบ stagger เฉพาะตอนโหลดครั้งแรกของหน้า
+  const entrance = useEntrance(query.isSuccess)
   const pets = query.data ?? []
 
   let content
@@ -63,8 +66,12 @@ export function MyPetsPage() {
   } else {
     content = (
       <ul className="divide-y border-y">
-        {pets.map((pet) => (
-          <li key={pet.id} className={ROW}>
+        {pets.map((pet, i) => (
+          <li
+            key={pet.id}
+            className={entrance ? `${ROW} animate-enter` : ROW}
+            style={entrance ? { animationDelay: `${entranceDelay(i)}ms` } : undefined}
+          >
             <div className="flex min-w-0 items-center gap-4">
               {/* รูปเล็ก (PetImage เดิม: ไม่มีรูป → ไอคอนตามชนิดสัตว์) */}
               <div className="size-16 shrink-0 overflow-hidden rounded-xl bg-muted">

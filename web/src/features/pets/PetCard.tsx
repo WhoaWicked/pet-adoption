@@ -27,7 +27,8 @@ export function PetCard({
   const showStatus = !(hideAvailable && pet.status === 'available')
 
   return (
-    <div className="group relative flex h-full flex-col">
+    // hover: การ์ดยกขึ้น 4px + รูปซูม 1.05 ภายในกรอบ (250ms ease-out, transform อย่างเดียว)
+    <div className="group relative flex h-full flex-col transition-transform duration-250 ease-out hover:-translate-y-1">
       <Link
         to={to}
         className="flex flex-1 flex-col gap-3 rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:ring-offset-4 focus-visible:ring-offset-background"
@@ -38,7 +39,7 @@ export function PetCard({
             src={pet.image_url}
             alt={pet.name}
             species={pet.species}
-            className="object-[center_30%] motion-safe:transition-transform motion-safe:duration-500 motion-safe:ease-out motion-safe:group-hover:scale-[1.03]"
+            className="object-[center_30%] transition-transform duration-250 ease-out group-hover:scale-105"
           />
           {showStatus && <PetStatusBadge status={pet.status} className="absolute bottom-3 left-3" />}
         </div>

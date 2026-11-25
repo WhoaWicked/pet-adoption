@@ -63,6 +63,16 @@
 
     /* คอลัมน์รูปเลื่อนต่อเนื่องในหน้า landing: เนื้อหาซ้ำ 2 ชุด เลื่อนครึ่งหนึ่ง (-50%) แล้ววนกลับ = ต่อเนื่องไม่สะดุด
        ใช้ transform อย่างเดียว · ใช้ผ่าน motion-safe:animate-scroll-up / -down */
+    /* อนิเมชันเข้าหน้า (ครั้งเดียว): opacity + transform เท่านั้น ไม่ดัน layout */
+    --animate-enter: enter 400ms ease-out both;
+    --animate-fade-in: fade-in 400ms ease-out both;
+    @keyframes enter {
+        from { opacity: 0; transform: translateY(16px); }
+    }
+    @keyframes fade-in {
+        from { opacity: 0; }
+    }
+
     --animate-scroll-up: scroll-up 48s linear infinite;
     --animate-scroll-down: scroll-down 56s linear infinite;
     @keyframes scroll-up {

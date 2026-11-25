@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { HeartIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -31,6 +32,19 @@ export function SaveButton({
     toggle.mutate(!isSaved)
   }
 
+  // toggle จริง (login อยู่) → หัวใจ pop 1 → 1.25 → 1 ใน 250ms ด้วย Web Animations API
+  // เรียกก่อน onClick เดิม ไม่แตะ logic
+  const iconRef = useRef<SVGSVGElement>(null)
+  const handleClick = () => {
+    if (status === 'authenticated') {
+      iconRef.current?.animate(
+        [{ transform: 'scale(1)' }, { transform: 'scale(1.25)' }, { transform: 'scale(1)' }],
+        { duration: 250, easing: 'ease-out' },
+      )
+    }
+    onClick()
+  }
+
   const busy = status === 'checking' || isLoading || toggle.isPending
   const label = toggle.isPending ? 'กำลังบันทึก…' : isSaved ? 'บันทึกไว้แล้ว' : 'บันทึกน้อง'
 
@@ -38,7 +52,7 @@ export function SaveButton({
     return (
       <button
         type="button"
-        onClick={onClick}
+        onClick={handleClick}
         disabled={busy}
         aria-pressed={status === 'authenticated' ? isSaved : undefined}
         aria-label={label}
@@ -48,7 +62,7 @@ export function SaveButton({
           className,
         )}
       >
-        <HeartIcon className={cn('size-5', isSaved && 'fill-primary text-primary')} aria-hidden />
+        <HeartIcon ref={iconRef} className={cn('size-5', isSaved && 'fill-primary text-primary')} aria-hidden />
       </button>
     )
   }
@@ -57,11 +71,11 @@ export function SaveButton({
     <Button
       variant="outline"
       className={className}
-      onClick={onClick}
+      onClick={handleClick}
       disabled={busy}
       aria-pressed={status === 'authenticated' ? isSaved : undefined}
     >
-      <HeartIcon className={cn(isSaved && 'fill-primary text-primary')} aria-hidden />
+      <HeartIcon ref={iconRef} className={cn(isSaved && 'fill-primary text-primary')} aria-hidden />
       {label}
     </Button>
   )

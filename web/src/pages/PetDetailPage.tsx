@@ -129,11 +129,12 @@ export function PetDetailPage() {
           ขวา = ข้อมูล → คำอธิบาย → เงื่อนไข → กล่องรับเลี้ยง
           มือถือ: เรียงตามลำดับเดียวกัน รูป → ชื่อ → ข้อมูล → คำอธิบาย → ฟอร์ม */}
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start lg:gap-12">
-        <div className="aspect-[4/3] overflow-hidden rounded-[1.5rem] bg-muted lg:sticky lg:top-24">
+        {/* เข้าหน้า: รูปเฟดเข้า แล้วคอลัมน์ข้อมูลเฟดขึ้นตามหลัง 120ms (เล่นครั้งเดียวตอนสถานะโหลดสำเร็จ mount · refetch ไม่ remount) */}
+        <div className="aspect-[4/3] animate-fade-in overflow-hidden rounded-[1.5rem] bg-muted lg:sticky lg:top-24">
           <PetImage src={pet.image_url} alt={pet.name} species={pet.species} className="object-[center_30%]" />
         </div>
 
-        <div className="min-w-0 space-y-8">
+        <div className="min-w-0 animate-enter space-y-8 [animation-delay:120ms]">
           <div className="space-y-4">
             {/* ป้ายสถานะเฉพาะเมื่อต่างจากปกติ (มีบ้านแล้ว / ปิดรับ) เหมือนการ์ดในหน้ารายการ */}
             {pet.status !== 'available' && <PetStatusBadge status={pet.status} />}

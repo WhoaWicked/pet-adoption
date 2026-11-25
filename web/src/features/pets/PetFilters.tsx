@@ -64,56 +64,67 @@ export function PetFilters({
         {hasActiveFilters && clearButton}
       </div>
 
+      {/* กาง/พับบนมือถือแบบนุ่ม: grid-template-rows 0fr → 1fr + opacity 200ms (ไม่กระโดด)
+          ตอนพับใช้ invisible ให้ออกจาก tab order · จอ md ขึ้นไปเปิดเสมอ */}
       <div
-        id="pet-filters-panel"
+        data-open={open}
         className={cn(
-          open ? 'flex' : 'hidden',
-          'mt-3 flex-col gap-4 md:mt-0 md:flex md:flex-row md:flex-wrap md:items-center md:gap-x-6 md:gap-y-3',
+          'grid transition-[grid-template-rows,opacity,visibility] duration-200 ease-out',
+          'invisible grid-rows-[0fr] opacity-0 data-[open=true]:visible data-[open=true]:grid-rows-[1fr] data-[open=true]:opacity-100',
+          'md:visible md:grid-rows-[1fr] md:opacity-100',
         )}
       >
-        {/* ชนิดสัตว์: chip แบบ radio (Radix ให้ role="radiogroup" + ปุ่มลูกศรเลื่อนตัวเลือก) */}
-        <RadioGroup.Root
-          aria-label="ชนิดสัตว์"
-          orientation="horizontal"
-          value={filters.species ?? ALL}
-          onValueChange={(v) => onChange('species', toValue(v))}
-          className="flex flex-wrap gap-2"
-        >
-          <RadioGroup.Item value={ALL} className={CHIP_CLASS}>
-            ทั้งหมด
-          </RadioGroup.Item>
-          {SPECIES_OPTIONS.map((s) => {
-            const Icon = SPECIES_ICONS[s]
-            return (
-              <RadioGroup.Item key={s} value={s} className={CHIP_CLASS}>
-                <Icon className="size-4" strokeWidth={1.75} aria-hidden />
-                {SPECIES_LABELS[s]}
+        {/* padding กันขอบตัด focus ring ของชิปตอน overflow-hidden (มือถือ) */}
+        <div className="-mx-1 min-h-0 overflow-hidden px-1 md:mx-0 md:overflow-visible md:px-0">
+          <div
+            id="pet-filters-panel"
+            className="flex flex-col gap-4 pt-3 pb-1 md:flex-row md:flex-wrap md:items-center md:gap-x-6 md:gap-y-3 md:pt-0 md:pb-0"
+          >
+            {/* ชนิดสัตว์: chip แบบ radio (Radix ให้ role="radiogroup" + ปุ่มลูกศรเลื่อนตัวเลือก) */}
+            <RadioGroup.Root
+              aria-label="ชนิดสัตว์"
+              orientation="horizontal"
+              value={filters.species ?? ALL}
+              onValueChange={(v) => onChange('species', toValue(v))}
+              className="flex flex-wrap gap-2"
+            >
+              <RadioGroup.Item value={ALL} className={CHIP_CLASS}>
+                ทั้งหมด
               </RadioGroup.Item>
-            )
-          })}
-        </RadioGroup.Root>
+              {SPECIES_OPTIONS.map((s) => {
+                const Icon = SPECIES_ICONS[s]
+                return (
+                  <RadioGroup.Item key={s} value={s} className={CHIP_CLASS}>
+                    <Icon className="size-4" strokeWidth={1.75} aria-hidden />
+                    {SPECIES_LABELS[s]}
+                  </RadioGroup.Item>
+                )
+              })}
+            </RadioGroup.Root>
 
-        <div className="flex items-center gap-2">
-          <Label htmlFor="filter-province" className="shrink-0 text-muted-foreground">
-            จังหวัด
-          </Label>
-          <Select value={filters.province ?? ALL} onValueChange={(v) => onChange('province', toValue(v))}>
-            <SelectTrigger id="filter-province" className="w-full rounded-full md:w-56">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="max-h-72">
-              <SelectItem value={ALL}>ทุกจังหวัด</SelectItem>
-              {PROVINCES.map((p) => (
-                <SelectItem key={p} value={p}>
-                  {p}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <div className="flex items-center gap-2">
+              <Label htmlFor="filter-province" className="shrink-0 text-muted-foreground">
+                จังหวัด
+              </Label>
+              <Select value={filters.province ?? ALL} onValueChange={(v) => onChange('province', toValue(v))}>
+                <SelectTrigger id="filter-province" className="w-full rounded-full md:w-56">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="max-h-72">
+                  <SelectItem value={ALL}>ทุกจังหวัด</SelectItem>
+                  {PROVINCES.map((p) => (
+                    <SelectItem key={p} value={p}>
+                      {p}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* จอใหญ่: ล้างตัวกรองชิดขวาของแถบ (มือถืออยู่ข้างปุ่ม "ตัวกรอง" แล้ว) */}
+            {hasActiveFilters && <div className="hidden md:ml-auto md:block">{clearButton}</div>}
+          </div>
         </div>
-
-        {/* จอใหญ่: ล้างตัวกรองชิดขวาของแถบ (มือถืออยู่ข้างปุ่ม "ตัวกรอง" แล้ว) */}
-        {hasActiveFilters && <div className="hidden md:ml-auto md:block">{clearButton}</div>}
       </div>
     </div>
   )

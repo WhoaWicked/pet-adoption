@@ -9,6 +9,7 @@ import { PetCard, PetCardSkeleton } from '@/features/pets/PetCard'
 import { PetFilters } from '@/features/pets/PetFilters'
 import { PETS_PAGE_SIZE, usePetFilters } from '@/features/pets/use-pet-filters'
 import { usePetsList } from '@/features/pets/use-pets-list'
+import { entranceDelay, useEntrance } from '@/lib/use-entrance'
 
 // กริดการ์ด: 375px 1 คอลัมน์ / แท็บเล็ต 2 / จอใหญ่ 3 / จอกว้าง 4 · ระยะห่างเท่ากันทุกจอ · การ์ดสัดส่วนเดียวกันทุกใบ
 const GRID_CLASS = 'grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
@@ -20,6 +21,8 @@ const PILL_OUTLINE = 'rounded-full border-field-border/50 bg-card px-6'
 export function PetsListPage() {
   const { filters, setFilter, setPage, clearFilters, hasActiveFilters } = usePetFilters()
   const query = usePetsList(filters)
+  // การ์ดเข้าแบบ stagger เฉพาะตอนโหลดครั้งแรกของหน้า — กรอง/เปลี่ยนหน้า/refetch ไม่เล่นซ้ำ
+  const entrance = useEntrance(query.isSuccess)
 
   // เปลี่ยนหน้าแล้วเลื่อนกลับขึ้นบน
   useEffect(() => {
@@ -99,8 +102,14 @@ export function PetsListPage() {
           className={`${GRID_CLASS} transition-opacity data-[stale=true]:opacity-60`}
           data-stale={query.isPlaceholderData}
         >
-          {pets.map((pet) => (
-            <PetCard key={pet.id} pet={pet} hideAvailable showSave />
+          {pets.map((pet, i) => (
+            <div
+              key={pet.id}
+              className={entrance ? 'h-full animate-enter' : 'h-full'}
+              style={entrance ? { animationDelay: `${entranceDelay(i)}ms` } : undefined}
+            >
+              <PetCard pet={pet} hideAvailable showSave />
+            </div>
           ))}
         </div>
         <Pagination

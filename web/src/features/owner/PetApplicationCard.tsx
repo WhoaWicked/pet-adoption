@@ -3,6 +3,7 @@ import { ApplicationStatusBadge } from '@/features/applications/ApplicationStatu
 import { HOUSING_TYPE_LABELS } from '@/lib/constants/labels'
 import { formatDate } from '@/lib/format'
 import type { PetApplication } from '@/lib/types'
+import { cn } from '@/lib/utils'
 import { ApplicationSummary } from './ApplicationSummary'
 
 // คำตอบของผู้ยื่น: label | ค่า 2 คอลัมน์ คั่นแต่ละแถวด้วยเส้นบาง (ไม่มีกล่อง)
@@ -27,6 +28,7 @@ export function PetApplicationCard({
   disabled,
   onApprove,
   onReject,
+  enterDelay,
 }: {
   application: PetApplication
   /** อนุมัติได้เฉพาะตอนสัตว์ยัง available (ไม่งั้น API ตอบ 409) */
@@ -34,6 +36,8 @@ export function PetApplicationCard({
   disabled: boolean
   onApprove: (application: PetApplication) => void
   onReject: (application: PetApplication) => void
+  /** มีค่า = เล่นอนิเมชันเข้า (เฉพาะตอนเข้าหน้า) ด้วยดีเลย์นี้ (ms) */
+  enterDelay?: number
 }) {
   const { answers } = application
   const isPending = application.status === 'pending'
@@ -46,7 +50,10 @@ export function PetApplicationCard({
   ]
 
   return (
-    <li className="space-y-4 rounded-[1.25rem] border bg-card p-5 sm:p-6">
+    <li
+      className={cn('space-y-4 rounded-[1.25rem] border bg-card p-5 sm:p-6', enterDelay !== undefined && 'animate-enter')}
+      style={enterDelay !== undefined ? { animationDelay: `${enterDelay}ms` } : undefined}
+    >
       <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0">
           {/* คำขอที่ตัดสินแล้วดูเบากว่า ให้ pending ที่ต้องตัดสินเด่นกว่าโดยไม่ใช้แถบสี */}
