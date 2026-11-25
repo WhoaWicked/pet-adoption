@@ -2,7 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { AlertCircleIcon, CircleCheckIcon } from 'lucide-react'
 import { FormField } from '@/components/common/FormField'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -41,17 +41,18 @@ export function ApplyForm({ petId, petName }: { petId: string; petName: string }
   const mutation = useCreateApplication(petId)
 
   if (mutation.isSuccess) {
+    // ส่งสำเร็จ: แทนฟอร์มด้วยข้อความยืนยัน (role="status" ให้ screen reader อ่าน) · วงไอคอนเขียว = ความหมาย "สำเร็จ"
     return (
-      <Alert>
-        <CircleCheckIcon />
-        <AlertTitle>ส่งคำขอรับเลี้ยง {petName} แล้ว</AlertTitle>
-        <AlertDescription>
-          <p>เจ้าของโพสต์จะได้รับแจ้งเตือน และคุณจะได้รับแจ้งเตือนเมื่อมีการตัดสิน</p>
-          <Link to="/my-applications" className="font-medium text-primary underline-offset-4 hover:underline">
-            ดูคำขอของฉัน
-          </Link>
-        </AlertDescription>
-      </Alert>
+      <div role="status" className="flex flex-col items-start gap-3">
+        <div className="flex size-11 items-center justify-center rounded-full bg-status-available text-status-available-foreground">
+          <CircleCheckIcon className="size-5" strokeWidth={1.5} aria-hidden />
+        </div>
+        <p className="font-semibold">ส่งคำขอรับเลี้ยง {petName} แล้ว</p>
+        <p className="text-muted-foreground">เจ้าของโพสต์จะได้รับแจ้งเตือน และคุณจะได้รับแจ้งเตือนเมื่อมีการตัดสิน</p>
+        <Button asChild variant="outline" className="mt-1 rounded-full border-field-border/50 bg-card px-6">
+          <Link to="/my-applications">ดูคำขอของฉัน</Link>
+        </Button>
+      </div>
     )
   }
 
@@ -80,7 +81,7 @@ export function ApplyForm({ petId, petName }: { petId: string; petName: string }
     : undefined
 
   return (
-    <form onSubmit={onSubmit} noValidate className="space-y-5">
+    <form onSubmit={onSubmit} noValidate className="space-y-6">
       {formError && (
         <Alert variant="destructive">
           <AlertCircleIcon />
@@ -144,8 +145,9 @@ export function ApplyForm({ petId, petName }: { petId: string; petName: string }
         </p>
       </FormField>
 
-      <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
-        {mutation.isPending ? 'กำลังส่งคำขอ…' : 'ยื่นคำขอรับเลี้ยง'}
+      {/* ปุ่มหลักแคปซูลเต็มความกว้าง — ปุ่มสีหลักปุ่มเดียวของหน้า */}
+      <Button type="submit" size="lg" className="w-full rounded-full" disabled={mutation.isPending}>
+        {mutation.isPending ? 'กำลังส่งคำขอ…' : 'ส่งคำขอรับเลี้ยง'}
       </Button>
     </form>
   )

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router'
 import { useMutation } from '@tanstack/react-query'
-import { AlertCircleIcon, InfoIcon } from 'lucide-react'
+import { AlertCircleIcon, InfoIcon, LoaderCircleIcon } from 'lucide-react'
 import { FormField } from '@/components/common/FormField'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -56,12 +56,12 @@ export function LoginPage() {
 
   return (
     <AuthCard
-      title="ยินดีต้อนรับกลับ"
-      description="เข้าสู่ระบบเพื่อหาบ้านให้น้อง หรือรับน้องกลับบ้าน"
+      title="ยินดีต้อนรับกลับมา"
+      description="เข้าสู่ระบบเพื่อส่งคำขอและลงประกาศ"
       footer={
         <p>
           ยังไม่มีบัญชี?{' '}
-          <Link to={registerLink} className="font-medium text-primary underline-offset-4 hover:underline">
+          <Link to={registerLink} className="font-semibold text-primary underline-offset-4 hover:underline">
             สมัครสมาชิก
           </Link>
         </p>
@@ -69,19 +69,19 @@ export function LoginPage() {
     >
       <form onSubmit={onSubmit} noValidate className="space-y-5">
         {justRegistered && !mutation.isError && (
-          <Alert>
+          <Alert className="rounded-[1rem] px-3 py-2.5">
             <InfoIcon />
             <AlertDescription>สมัครสมาชิกสำเร็จ กรุณาเข้าสู่ระบบ</AlertDescription>
           </Alert>
         )}
         {reason === 'expired' && !mutation.isError && !justRegistered && (
-          <Alert>
+          <Alert className="rounded-[1rem] px-3 py-2.5">
             <InfoIcon />
             <AlertDescription>เซสชันหมดอายุ กรุณาเข้าสู่ระบบอีกครั้ง</AlertDescription>
           </Alert>
         )}
         {mutation.isError && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="rounded-[1rem] px-3 py-2.5">
             <AlertCircleIcon />
             <AlertDescription>{getErrorMessage(mutation.error)}</AlertDescription>
           </Alert>
@@ -108,7 +108,9 @@ export function LoginPage() {
           />
         </FormField>
 
-        <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
+        {/* ปุ่มหลักแคปซูลเต็มความกว้าง · ระหว่างส่ง: ไอคอนหมุน + ข้อความ "กำลัง…" และ disabled กันกดซ้ำ (เดิม) */}
+        <Button type="submit" size="lg" className="w-full rounded-full" disabled={mutation.isPending}>
+          {mutation.isPending && <LoaderCircleIcon className="motion-safe:animate-spin" aria-hidden />}
           {mutation.isPending ? 'กำลังเข้าสู่ระบบ…' : 'เข้าสู่ระบบ'}
         </Button>
       </form>

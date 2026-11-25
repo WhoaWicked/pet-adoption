@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router'
 import { useMutation } from '@tanstack/react-query'
-import { AlertCircleIcon } from 'lucide-react'
+import { AlertCircleIcon, LoaderCircleIcon } from 'lucide-react'
 import { FormField } from '@/components/common/FormField'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
@@ -87,12 +87,12 @@ export function RegisterPage() {
 
   return (
     <AuthCard
-      title="สมัครสมาชิก"
-      description="สร้างบัญชีเดียว ใช้ได้ทั้งลงประกาศหาบ้านและขอรับเลี้ยง"
+      title="สร้างบัญชีใหม่"
+      description="บัญชีเดียวใช้ได้ทั้งลงประกาศและขอรับเลี้ยง"
       footer={
         <p>
           มีบัญชีแล้ว?{' '}
-          <Link to={loginLink} className="font-medium text-primary underline-offset-4 hover:underline">
+          <Link to={loginLink} className="font-semibold text-primary underline-offset-4 hover:underline">
             เข้าสู่ระบบ
           </Link>
         </p>
@@ -100,7 +100,7 @@ export function RegisterPage() {
     >
       <form onSubmit={onSubmit} noValidate className="space-y-5">
         {formError && (
-          <Alert variant="destructive">
+          <Alert variant="destructive" className="rounded-[1rem] px-3 py-2.5">
             <AlertCircleIcon />
             <AlertDescription>{formError}</AlertDescription>
           </Alert>
@@ -141,7 +141,9 @@ export function RegisterPage() {
           />
         </FormField>
 
-        <Button type="submit" size="lg" className="w-full" disabled={mutation.isPending}>
+        {/* ปุ่มหลักแคปซูลเต็มความกว้าง · ระหว่างส่ง: ไอคอนหมุน + ข้อความ "กำลัง…" และ disabled กันกดซ้ำ (เดิม) */}
+        <Button type="submit" size="lg" className="w-full rounded-full" disabled={mutation.isPending}>
+          {mutation.isPending && <LoaderCircleIcon className="motion-safe:animate-spin" aria-hidden />}
           {mutation.isPending ? 'กำลังสมัครสมาชิก…' : 'สมัครสมาชิก'}
         </Button>
       </form>
