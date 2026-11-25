@@ -23,7 +23,8 @@ export function ErrorState({
       <h2 className="text-xl font-semibold">{title}</h2>
       <p className="max-w-sm text-sm text-muted-foreground">{getErrorMessage(error)}</p>
       {onRetry && (
-        <Button variant="outline" className="mt-2" onClick={onRetry} disabled={isRetrying}>
+        // ปุ่มแคปซูลรองตาม DESIGN.md
+        <Button variant="outline" className="mt-2 rounded-full border-field-border/50 bg-card px-6" onClick={onRetry} disabled={isRetrying}>
           <RotateCwIcon className={isRetrying ? 'animate-spin' : undefined} aria-hidden />
           {isRetrying ? 'กำลังลองใหม่…' : 'ลองใหม่'}
         </Button>

@@ -10,14 +10,11 @@ import { PetFilters } from '@/features/pets/PetFilters'
 import { PETS_PAGE_SIZE, usePetFilters } from '@/features/pets/use-pet-filters'
 import { usePetsList } from '@/features/pets/use-pets-list'
 
-// กริดการ์ด: มือถือ 2 / แท็บเล็ต 3 / เดสก์ท็อป 4 คอลัมน์ ระยะแนวตั้งมากกว่าแนวนอน
-// data-featured=true (หน้าแรก) → บนเดสก์ท็อปการ์ดใบแรกกิน 2x2 และรูปยืดเต็มพื้นที่ (CSS ล้วน ไม่แตะข้อมูล)
-const GRID_CLASS = [
-  'grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-6 md:gap-y-12 lg:grid-cols-4',
-  'lg:data-[featured=true]:*:first:col-span-2 lg:data-[featured=true]:*:first:row-span-2',
-  'lg:data-[featured=true]:[&>*:first-child_[data-slot=pet-photo]]:aspect-auto',
-  'lg:data-[featured=true]:[&>*:first-child_[data-slot=pet-photo]]:flex-1',
-].join(' ')
+// กริดการ์ด: 375px 1 คอลัมน์ / แท็บเล็ต 2 / จอใหญ่ 3 / จอกว้าง 4 · ระยะห่างเท่ากันทุกจอ · การ์ดสัดส่วนเดียวกันทุกใบ
+const GRID_CLASS = 'grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+
+// ปุ่มในสถานะว่าง: แคปซูลรองตาม DESIGN.md
+const PILL_OUTLINE = 'rounded-full border-field-border/50 bg-card px-6'
 
 // หน้า /pets: หัวข้อ + แถบตัวกรอง (sticky) + รายการสัตว์ที่รอบ้าน + pagination (state อยู่ใน URL)
 export function PetsListPage() {
@@ -32,11 +29,18 @@ export function PetsListPage() {
   const total = query.data?.meta.total ?? 0
   const totalPages = Math.max(1, Math.ceil(total / PETS_PAGE_SIZE))
   const pets = query.data?.data ?? []
+  const count = total.toLocaleString('th-TH')
+  // ไม่มีผลลัพธ์ → ไม่ต้องบอก "พบ 0 ตัว" ซ้ำกับสถานะว่างด้านล่าง
+  const resultLine = !query.isSuccess || total === 0
+    ? 'เลือกดูตามชนิดสัตว์และจังหวัดที่สะดวก'
+    : hasActiveFilters
+      ? `พบ ${count} ตัวที่ตรงกับตัวกรอง`
+      : `พบ ${count} ตัวที่เปิดรับคำขอ`
 
   let content
   if (query.isPending) {
     content = (
-      <div className={GRID_CLASS} data-featured={filters.page === 1} aria-busy="true" aria-label="กำลังโหลดรายการสัตว์">
+      <div className={GRID_CLASS} aria-busy="true" aria-label="กำลังโหลดรายการสัตว์">
         {Array.from({ length: 8 }, (_, i) => (
           <PetCardSkeleton key={i} />
         ))}
@@ -53,7 +57,7 @@ export function PetsListPage() {
           title="ไม่มีหน้านี้"
           description={`ตอนนี้มีทั้งหมด ${totalPages} หน้า`}
           action={
-            <Button variant="outline" onClick={() => setPage(1)}>
+            <Button variant="outline" className={PILL_OUTLINE} onClick={() => setPage(1)}>
               กลับไปหน้าแรก
             </Button>
           }
@@ -63,10 +67,10 @@ export function PetsListPage() {
       content = (
         <EmptyState
           icon={<SearchXIcon className="size-7" aria-hidden />}
-          title="ไม่พบสัตว์ตามตัวกรอง"
-          description="ลองเปลี่ยนชนิดสัตว์หรือจังหวัดดูนะ"
+          title="ยังไม่เจอน้องที่ตรงกับตัวกรองนี้"
+          description="ลองเปลี่ยนชนิดสัตว์หรือจังหวัดดูอีกครั้ง"
           action={
-            <Button variant="outline" onClick={clearFilters}>
+            <Button variant="outline" className={PILL_OUTLINE} onClick={clearFilters}>
               ล้างตัวกรอง
             </Button>
           }
@@ -78,7 +82,7 @@ export function PetsListPage() {
           title="ยังไม่มีน้องรอบ้านตอนนี้"
           description="ถ้าคุณมีน้องที่กำลังหาบ้านใหม่ ลงประกาศได้เลย"
           action={
-            <Button asChild>
+            <Button asChild className="rounded-full px-6">
               <Link to="/pets/new">
                 <PlusIcon aria-hidden />
                 ลงประกาศ
@@ -94,7 +98,6 @@ export function PetsListPage() {
         <div
           className={`${GRID_CLASS} transition-opacity data-[stale=true]:opacity-60`}
           data-stale={query.isPlaceholderData}
-          data-featured={filters.page === 1}
         >
           {pets.map((pet) => (
             <PetCard key={pet.id} pet={pet} hideAvailable showSave />
@@ -112,11 +115,10 @@ export function PetsListPage() {
 
   return (
     <div>
-      <div className="mb-6 space-y-1">
-        <h1 className="text-2xl font-bold sm:text-3xl">น้อง ๆ ที่กำลังรอบ้าน</h1>
-        <p className="text-muted-foreground">
-          {query.isSuccess && total > 0 ? `พบ ${total.toLocaleString('th-TH')} ตัวที่เปิดรับคำขอ` : 'เลือกดูตามชนิดสัตว์และจังหวัดที่สะดวก'}
-        </p>
+      {/* ส่วนหัวหน้าใช้งาน: หัวข้อขนาดเดียวกับหัวข้อส่วนของ landing + จำนวนผลลัพธ์จริงจาก meta.total */}
+      <div className="mb-6 space-y-2">
+        <h1 className="text-3xl font-bold sm:text-4xl">น้อง ๆ ที่กำลังรอบ้าน</h1>
+        <p className="text-muted-foreground">{resultLine}</p>
       </div>
 
       <PetFilters
