@@ -8,6 +8,7 @@ import { MyApplicationsPage } from '@/pages/MyApplicationsPage'
 import { MyPetsPage } from '@/pages/MyPetsPage'
 import { NotFoundPage } from '@/pages/NotFoundPage'
 import { PetDetailPage } from '@/pages/PetDetailPage'
+import { LandingPage } from '@/pages/LandingPage'
 import { PetsListPage } from '@/pages/PetsListPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { SavedPetsPage } from '@/pages/SavedPetsPage'
@@ -17,7 +18,8 @@ export const router = createBrowserRouter([
   {
     element: <AppLayout />,
     children: [
-      { index: true, element: <PetsListPage /> },
+      { index: true, element: <LandingPage /> },
+      { path: 'pets', element: <PetsListPage /> },
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
       // หน้าที่ต้อง login (react-router จับคู่แบบ ranked: pets/new ชนะ pets/:id เสมอ)

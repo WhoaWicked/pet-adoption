@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { AuthCard } from '@/features/auth/AuthCard'
 import { useAuth } from '@/features/auth/auth-context'
-import { safeRedirect } from '@/features/auth/redirect'
+import { DEFAULT_AFTER_AUTH, safeRedirect } from '@/features/auth/redirect'
 import { register, type RegisterInput } from '@/lib/api/endpoints'
 import { getErrorMessage, getValidationErrors } from '@/lib/api/errors'
 import { fieldAria, isValidEmail, PASSWORD_MIN_LENGTH } from '@/lib/form'
@@ -53,7 +53,7 @@ export function RegisterPage() {
       }
       // สมัครได้แต่ login อัตโนมัติไม่สำเร็จ → ให้ไป login เอง
       const params = new URLSearchParams({ registered: '1' })
-      if (redirectTo !== '/') params.set('redirect', redirectTo)
+      if (redirectTo !== DEFAULT_AFTER_AUTH) params.set('redirect', redirectTo)
       navigate(`/login?${params.toString()}`, { replace: true })
     },
     onError: (err) => {
@@ -83,7 +83,7 @@ export function RegisterPage() {
       (Object.keys(fieldErrors).length === 0 ? getErrorMessage(mutation.error, { overrides: { 409: 'อีเมลนี้ถูกใช้สมัครแล้ว ลองเข้าสู่ระบบหรือใช้อีเมลอื่น' } }) : undefined)
     : undefined
 
-  const loginLink = redirectTo !== '/' ? `/login?redirect=${encodeURIComponent(redirectTo)}` : '/login'
+  const loginLink = redirectTo !== DEFAULT_AFTER_AUTH ? `/login?redirect=${encodeURIComponent(redirectTo)}` : '/login'
 
   return (
     <AuthCard

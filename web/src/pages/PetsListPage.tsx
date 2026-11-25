@@ -19,7 +19,7 @@ const GRID_CLASS = [
   'lg:data-[featured=true]:[&>*:first-child_[data-slot=pet-photo]]:flex-1',
 ].join(' ')
 
-// หน้าแรก: ส่วนต้อนรับ + แถบตัวกรอง (sticky) + รายการสัตว์ที่รอบ้าน + pagination (state อยู่ใน URL)
+// หน้า /pets: หัวข้อ + แถบตัวกรอง (sticky) + รายการสัตว์ที่รอบ้าน + pagination (state อยู่ใน URL)
 export function PetsListPage() {
   const { filters, setFilter, setPage, clearFilters, hasActiveFilters } = usePetFilters()
   const query = usePetsList(filters)
@@ -112,24 +112,12 @@ export function PetsListPage() {
 
   return (
     <div>
-      {/* ส่วนต้อนรับ: เนื้อหาคงที่ ไม่ผูกข้อมูล · พื้นทรายอุ่นยืดเต็มความกว้างจอ (box-shadow + clip-path ไม่ทำให้หน้าล้น)
-          -mt ชดเชย padding บนของ <main> ให้แถบชนใต้ header พอดี */}
-      <section className="-mt-8 bg-hero py-14 shadow-[0_0_0_100vmax_var(--color-hero)] [clip-path:inset(0_-100vmax)] sm:-mt-10 sm:py-20 lg:py-24">
-        {/* ภาษาไทยไม่มีเว้นวรรค เบราว์เซอร์จึงตัดบรรทัดกลางวลีได้ ("กลับ / บ้าน") → แบ่งเป็นสองก้อน inline-block ให้ตัดตรงรอยต่อวลี */}
-        <h1 className="text-4xl leading-[1.15] font-bold sm:text-5xl lg:text-6xl">
-          <span className="inline-block">พาน้องสักตัว</span>
-          <span className="inline-block">กลับบ้านไปด้วยกัน</span>
-        </h1>
-        <p className="mt-5 max-w-xl text-lg text-muted-foreground sm:text-xl">
-          ดูโปรไฟล์น้องที่เจ้าของกำลังหาบ้านใหม่ให้ ถูกใจตัวไหนก็ยื่นขอรับเลี้ยงได้จากหน้าของน้องเลย
+      <div className="mb-6 space-y-1">
+        <h1 className="text-2xl font-bold sm:text-3xl">น้อง ๆ ที่กำลังรอบ้าน</h1>
+        <p className="text-muted-foreground">
+          {query.isSuccess && total > 0 ? `พบ ${total.toLocaleString('th-TH')} ตัวที่เปิดรับคำขอ` : 'เลือกดูตามชนิดสัตว์และจังหวัดที่สะดวก'}
         </p>
-        <Button asChild size="lg" className="mt-8">
-          <Link to="/pets/new">
-            <PlusIcon aria-hidden />
-            ลงประกาศหาบ้านให้น้อง
-          </Link>
-        </Button>
-      </section>
+      </div>
 
       <PetFilters
         filters={filters}
@@ -138,17 +126,9 @@ export function PetsListPage() {
         hasActiveFilters={hasActiveFilters}
       />
 
-      <section aria-labelledby="pets-heading" className="pt-10 sm:pt-12">
-        <div className="mb-8 space-y-1">
-          <h2 id="pets-heading" className="text-2xl font-bold sm:text-3xl">
-            น้อง ๆ ที่กำลังรอบ้าน
-          </h2>
-          <p className="text-muted-foreground">
-            {query.isSuccess && total > 0 ? `พบ ${total.toLocaleString('th-TH')} ตัวที่เปิดรับคำขอ` : 'เลือกดูตามชนิดสัตว์และจังหวัดที่สะดวก'}
-          </p>
-        </div>
+      <div className="pt-8 sm:pt-10">
         {content}
-      </section>
+      </div>
     </div>
   )
 }

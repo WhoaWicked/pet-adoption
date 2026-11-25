@@ -18,7 +18,7 @@ function BackLink() {
   // มีประวัติในแอป (เช่นมาจากหน้ารายการพร้อม filter) → ย้อนกลับเพื่อรักษา filter/หน้าเดิม, ไม่งั้นไปหน้าแรก
   const canGoBack = (window.history.state as { idx?: number } | null)?.idx ? true : false
   return (
-    <Button variant="ghost" size="sm" className="-ml-2 mb-4 px-2 text-muted-foreground" onClick={() => (canGoBack ? navigate(-1) : navigate('/'))}>
+    <Button variant="ghost" size="sm" className="-ml-2 mb-4 px-2 text-muted-foreground" onClick={() => (canGoBack ? navigate(-1) : navigate('/pets'))}>
       <ArrowLeftIcon aria-hidden />
       กลับไปดูน้อง ๆ
     </Button>
@@ -74,7 +74,7 @@ export function PetDetailPage() {
           description="ลิงก์อาจไม่ถูกต้อง หรือประกาศนี้ไม่มีอยู่แล้ว"
           action={
             <Button asChild variant="outline">
-              <Link to="/">กลับไปดูน้อง ๆ</Link>
+              <Link to="/pets">กลับไปดูน้อง ๆ</Link>
             </Button>
           }
         />

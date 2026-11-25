@@ -72,7 +72,7 @@ export function MyApplicationsPage() {
           description="เลือกน้องที่ถูกใจ แล้วยื่นคำขอได้จากหน้ารายละเอียด"
           action={
             <Button asChild>
-              <Link to="/">ไปดูน้อง ๆ</Link>
+              <Link to="/pets">ไปดูน้อง ๆ</Link>
             </Button>
           }
         />

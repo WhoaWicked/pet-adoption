@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { AuthCard } from '@/features/auth/AuthCard'
 import { useAuth } from '@/features/auth/auth-context'
-import { safeRedirect } from '@/features/auth/redirect'
+import { DEFAULT_AFTER_AUTH, safeRedirect } from '@/features/auth/redirect'
 import type { LoginInput } from '@/lib/api/endpoints'
 import { getErrorMessage } from '@/lib/api/errors'
 import { fieldAria, isValidEmail } from '@/lib/form'
@@ -52,7 +52,7 @@ export function LoginPage() {
     mutation.mutate({ email: values.email.trim(), password: values.password })
   }
 
-  const registerLink = redirectTo !== '/' ? `/register?redirect=${encodeURIComponent(redirectTo)}` : '/register'
+  const registerLink = redirectTo !== DEFAULT_AFTER_AUTH ? `/register?redirect=${encodeURIComponent(redirectTo)}` : '/register'
 
   return (
     <AuthCard

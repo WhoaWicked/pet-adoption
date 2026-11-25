@@ -32,7 +32,7 @@ export function SavedPetsPage() {
         description="กดปุ่ม “บันทึกน้อง” ในหน้ารายละเอียด เพื่อเก็บไว้ดูทีหลัง"
         action={
           <Button asChild>
-            <Link to="/">ไปดูน้อง ๆ</Link>
+            <Link to="/pets">ไปดูน้อง ๆ</Link>
           </Button>
         }
       />

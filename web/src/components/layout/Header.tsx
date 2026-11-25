@@ -15,7 +15,7 @@ interface NavItem {
 
 // ลิงก์หลัก — ที่ต้อง login จะซ่อนไว้จนกว่าจะ login ("ลงประกาศ" แยกเป็นปุ่ม primary แสดงเสมอ)
 const NAV_ITEMS: NavItem[] = [
-  { to: '/', label: 'หาบ้านให้น้อง', requiresAuth: false },
+  { to: '/pets', label: 'หาบ้านให้น้อง', requiresAuth: false },
   { to: '/my-applications', label: 'คำขอของฉัน', requiresAuth: true },
   { to: '/saved', label: 'ที่บันทึกไว้', requiresAuth: true },
   { to: '/my-pets', label: 'สัตว์ของฉัน', requiresAuth: true },
@@ -48,7 +48,7 @@ export function Header() {
         {/* เดสก์ท็อป */}
         <nav className="ml-8 hidden items-center gap-6 md:flex" aria-label="เมนูหลัก">
           {items.map((item) => (
-            <NavLink key={item.to} to={item.to} end={item.to === '/'} className={navLinkClass}>
+            <NavLink key={item.to} to={item.to} end={item.to === '/pets'} className={navLinkClass}>
               {item.label}
             </NavLink>
           ))}
@@ -96,7 +96,7 @@ export function Header() {
               </SheetHeader>
               <nav className="flex flex-col gap-3 px-4" aria-label="เมนูหลัก">
                 {items.map((item) => (
-                  <NavLink key={item.to} to={item.to} end={item.to === '/'} className={navLinkClass} onClick={closeMenu}>
+                  <NavLink key={item.to} to={item.to} end={item.to === '/pets'} className={navLinkClass} onClick={closeMenu}>
                     {item.label}
                   </NavLink>
                 ))}
