@@ -38,6 +38,10 @@ export interface PetListResult {
     total: number;
 }
 
+export interface FindByOwnerRow extends PetRow {
+    pending_count: number;
+}
+
 @Injectable()
 export class PetsRepository {
     constructor(@Inject(PG_POOL) private readonly pool: Pool) { }
@@ -108,9 +112,15 @@ export class PetsRepository {
         const result = await this.pool.query<PetRow>(query, [userId]);
         return result.rows;
     }
-    async findByOwner(ownerId: string): Promise<PetRow[]> {
-        const query = `SELECT * FROM pets WHERE owner_id = $1 ORDER BY created_at DESC;`;
-        const result = await this.pool.query<PetRow>(query, [ownerId]);
+    async findByOwner(ownerId: string): Promise<FindByOwnerRow[]> {
+        const query = `
+        SELECT p.*,
+            (SELECT COUNT(*) FROM adoption_applications a
+            WHERE a.pet_id = p.id AND a.status = 'pending')::int AS pending_count
+        FROM pets p
+        WHERE p.owner_id = $1
+        ORDER BY pending_count DESC, p.created_at DESC;`;
+        const result = await this.pool.query<FindByOwnerRow>(query, [ownerId]);
         return result.rows;
     }
 }
