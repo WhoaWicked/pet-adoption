@@ -148,4 +148,26 @@ describe('ApplicationsRepository.approve (integration)', () => {
         const pets = await pool.query<PetRow>('SELECT status FROM pets WHERE id = ANY($1::uuid[]);', [[petId, otherPetId]]);
         expect(pets.rows.map((r) => r.status)).toEqual(['available', 'available']);
     });
+
+    it('allows only one approval when two applications are approved at the same time', async () => {
+        // เรียกพร้อมกัน (ไม่ใช้ await ทีละอัน)
+        const results = await Promise.all([
+            repo.approve(applicationIds[0], petId),
+            repo.approve(applicationIds[1], petId),
+        ]);
+
+        // สำเร็จหนึ่ง ไม่สำเร็จหนึ่ง
+        expect(results.filter((r) => r !== undefined)).toHaveLength(1);
+
+        // ในฐานข้อมูล: คำขอที่ approved มีกี่แถว
+        const approved = await pool.query(
+            `SELECT id FROM adoption_applications WHERE pet_id = $1 AND status = 'approved';`,
+            [petId],
+        );
+        expect(approved.rows).toHaveLength(1);
+
+        // สัตว์เป็นสถานะอะไร
+        const pet = await pool.query('SELECT status FROM pets WHERE id = $1;', [petId]);
+        expect(pet.rows[0].status).toBe('adopted');
+    });
 })
