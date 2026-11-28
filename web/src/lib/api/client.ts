@@ -2,7 +2,10 @@ import { clearToken, getToken } from '@/features/auth/token-storage'
 
 // api client ตัวเดียวของแอป — ทุก request ไป API ต้องผ่าน apiRequest()
 
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL as string | undefined) || '/api'
+// ตัด / ท้ายออก เพราะ path ที่เรียกขึ้นต้นด้วย / อยู่แล้ว (กันได้ URL แบบ //pets)
+const BASE_URL = (
+  (import.meta.env.VITE_API_BASE_URL as string | undefined) || '/api'
+).replace(/\/+$/, '')
 
 /** error ที่ API ตอบกลับมา (shape เดียวกับ global exception filter ของ API) */
 export class ApiError extends Error {
