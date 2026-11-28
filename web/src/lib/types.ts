@@ -20,6 +20,11 @@ export interface Pet {
   updated_at: string
 }
 
+/** แถวจาก GET /pets/mine (เจ้าของดู) — มีจำนวนคำขอสถานะ pending ของสัตว์ตัวนั้น */
+export interface OwnerPet extends Pet {
+  pending_count: number
+}
+
 export interface PageMeta {
   total: number
   limit: number

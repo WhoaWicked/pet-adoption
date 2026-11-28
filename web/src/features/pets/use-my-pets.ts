@@ -7,5 +7,7 @@ export function useMyPets() {
   return useQuery({
     queryKey: queryKeys.pets.mine,
     queryFn: ({ signal }) => listMyPets(signal),
+    // pending_count เปลี่ยนได้จากคนอื่น (ยื่น/ถอนคำขอ) ซึ่ง invalidate ฝั่งเจ้าของไม่ได้ → โหลดใหม่ทุกครั้งที่เปิดหน้า
+    refetchOnMount: 'always',
   })
 }

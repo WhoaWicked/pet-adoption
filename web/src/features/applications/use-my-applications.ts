@@ -37,6 +37,11 @@ export function useWithdrawApplication(page: number) {
       // เช่น 409 คำขอถูกตัดสินไปแล้วระหว่างที่เปิดหน้าค้าง — แสดงเหตุผล แล้วโหลดสถานะจริง
       toast.error(getErrorMessage(err))
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: queryKeys.applications.all }),
+    // pets.mine มี pending_count ที่นับจากคำขอ — ให้ถือว่าเก่าเมื่อคำขอเปลี่ยน
+    onSettled: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: queryKeys.applications.all }),
+        queryClient.invalidateQueries({ queryKey: queryKeys.pets.mine }),
+      ]),
   })
 }

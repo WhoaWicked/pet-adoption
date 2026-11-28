@@ -3,6 +3,7 @@ import { PlusIcon } from 'lucide-react'
 import { EmptyState } from '@/components/common/EmptyState'
 import { ErrorState } from '@/components/common/ErrorState'
 import { PageHeader } from '@/components/common/PageHeader'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PetImage } from '@/features/pets/PetImage'
@@ -23,6 +24,17 @@ function NewPostButton() {
         ลงประกาศ
       </Link>
     </Button>
+  )
+}
+
+// ป้ายคำขอรอพิจารณา: พื้น primary ทึบ ให้เด่นกว่าชิปสถานะ · screen reader อ่านข้อความเต็มแทนข้อความย่อ
+function PendingCountBadge({ count }: { count: number }) {
+  const text = `รอพิจารณา ${count.toLocaleString('th-TH')}`
+  return (
+    <Badge className="h-6 px-2.5 font-semibold">
+      <span aria-hidden>{text}</span>
+      <span className="sr-only">{text} ใบสมัคร</span>
+    </Badge>
   )
 }
 
@@ -78,12 +90,15 @@ export function MyPetsPage() {
                 <PetImage src={pet.image_url} alt={pet.name} species={pet.species} />
               </div>
               <div className="min-w-0 space-y-0.5">
-                <Link
-                  to={`/my-pets/${pet.id}`}
-                  className="block truncate text-lg font-semibold underline-offset-4 hover:text-primary hover:underline"
-                >
-                  {pet.name}
-                </Link>
+                <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                  <Link
+                    to={`/my-pets/${pet.id}`}
+                    className="max-w-full truncate text-lg font-semibold underline-offset-4 hover:text-primary hover:underline"
+                  >
+                    {pet.name}
+                  </Link>
+                  {pet.pending_count > 0 && <PendingCountBadge count={pet.pending_count} />}
+                </div>
                 <p className="truncate text-sm text-muted-foreground">
                   {SPECIES_LABELS[pet.species]} · {formatAge(pet.age_months)} · {pet.province}
                 </p>

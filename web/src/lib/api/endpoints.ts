@@ -6,6 +6,7 @@ import type {
   Me,
   MyApplication,
   Notification,
+  OwnerPet,
   PetApplication,
   Paged,
   Pet,
@@ -157,9 +158,9 @@ export function withdrawApplication(id: string) {
 
 // ---------- owner ----------
 
-/** สัตว์ที่ผู้ใช้ลงประกาศ ทุกสถานะ ใหม่สุดก่อน (array ไม่มี meta) */
+/** สัตว์ที่ผู้ใช้ลงประกาศ ทุกสถานะ — API เรียงตัวที่มีคำขอรอพิจารณามากสุดก่อน แล้วใหม่สุดก่อน (array ไม่มี meta) */
 export function listMyPets(signal?: AbortSignal) {
-  return apiRequest<Pet[]>('/pets/mine', { signal })
+  return apiRequest<OwnerPet[]>('/pets/mine', { signal })
 }
 
 /** คำขอของสัตว์ตัวหนึ่ง (เฉพาะเจ้าของ — ไม่ใช่เจ้าของได้ 403) — API ห่อมาเป็น { data } */
