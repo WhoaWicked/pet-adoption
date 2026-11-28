@@ -27,11 +27,12 @@ function NewPostButton() {
   )
 }
 
-// ป้ายคำขอรอพิจารณา: พื้น primary ทึบ ให้เด่นกว่าชิปสถานะ · screen reader อ่านข้อความเต็มแทนข้อความย่อ
+// ป้ายคำขอรอพิจารณา: พื้น primary จาง · screen reader อ่านข้อความเต็มแทนข้อความย่อ
+// ตัวอักษรเป็น primary เข้มขึ้น 12% (เฉดเดียวกับ hover ของปุ่มหลัก) เพราะ primary ปกติบนพื้นนี้ได้ contrast ไม่ถึง 4.5:1
 function PendingCountBadge({ count }: { count: number }) {
   const text = `รอพิจารณา ${count.toLocaleString('th-TH')}`
   return (
-    <Badge className="h-6 px-2.5 font-semibold">
+    <Badge className="h-6 bg-primary/10 px-2.5 font-medium text-[color:color-mix(in_oklch,var(--primary),black_12%)]">
       <span aria-hidden>{text}</span>
       <span className="sr-only">{text} ใบสมัคร</span>
     </Badge>
