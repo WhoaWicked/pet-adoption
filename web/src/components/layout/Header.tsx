@@ -21,11 +21,29 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/my-pets', label: 'สัตว์ของฉัน', requiresAuth: true },
 ]
 
-// เมนู: หน้าปัจจุบัน = ตัวหนา + เส้นใต้สีหลัก 2px (ใช้ border-b แทน underline เพราะเส้นใต้ตัวอักษรชนสระล่างภาษาไทย)
+// เมนู: หน้าปัจจุบัน = ตัวหนา + เส้นใต้สีหลัก 2px
+// เส้นใต้วาดด้วย after: ชิดล่าง — ใช้ border-b ไม่ได้เพราะ rounded-sm ทำให้ปลายเส้นโค้งเรียว (underline ก็ชนสระล่างภาษาไทย)
+// เส้นขยายจากกึ่งกลาง: active = สีเต็ม · ชี้เมาส์ลิงก์อื่น = สีจาง · ไม่ใส่ motion-safe (เจ้าของโปรเจกต์ตัดสินใจ)
+// pb-2 = ระยะล่างเดิม 6px + ที่ว่าง 2px ของเส้น ความสูงลิงก์จึงเท่าเดิม
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return cn(
-    'w-fit rounded-sm border-b-2 py-1.5 text-[0.95rem] transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50',
-    isActive ? 'border-primary font-semibold text-foreground' : 'border-transparent text-muted-foreground',
+    'relative w-fit rounded-sm pt-1.5 pb-2 text-[0.95rem] transition-colors outline-none hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50',
+    'after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:origin-center after:transition-transform after:duration-200 after:ease-out',
+    isActive
+      ? 'font-semibold text-foreground after:scale-x-100 after:bg-primary'
+      : 'text-muted-foreground after:scale-x-0 after:bg-primary/40 hover:after:scale-x-100',
+  )
+}
+
+// ซ้อนข้อความตัวหนาแบบมองไม่เห็นไว้ ลิงก์จึงกว้างเท่ากันทั้งตอน active และไม่ active (เมนูข้าง ๆ ไม่ขยับ)
+function NavLabel({ text }: { text: string }) {
+  return (
+    <span className="grid justify-items-center">
+      <span className="col-start-1 row-start-1">{text}</span>
+      <span aria-hidden className="invisible col-start-1 row-start-1 font-semibold">
+        {text}
+      </span>
+    </span>
   )
 }
 
@@ -49,7 +67,7 @@ export function Header() {
         <nav className="ml-8 hidden items-center gap-6 md:flex" aria-label="เมนูหลัก">
           {items.map((item) => (
             <NavLink key={item.to} to={item.to} end={item.to === '/pets'} className={navLinkClass}>
-              {item.label}
+              <NavLabel text={item.label} />
             </NavLink>
           ))}
         </nav>
@@ -104,7 +122,7 @@ export function Header() {
                     className={(state) => cn(navLinkClass(state), 'flex min-h-11 items-center text-base')}
                     onClick={closeMenu}
                   >
-                    {item.label}
+                    <NavLabel text={item.label} />
                   </NavLink>
                 ))}
                 <Button asChild size="lg" className="mt-4 rounded-full">
