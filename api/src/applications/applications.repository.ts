@@ -134,7 +134,7 @@ export class ApplicationsRepository {
     async approve(applicationId: string, petId: string): Promise<ApplicationRow | undefined> {
         const queryPet = `SELECT * FROM pets WHERE id = $1 FOR UPDATE;`;
         const queryApproved = `UPDATE adoption_applications SET status = 'approved', decided_at = NOW()
-        WHERE id = $1 AND status = 'pending' RETURNING *;`;
+        WHERE id = $1 AND status = 'pending' AND pet_id = $2 RETURNING *;`;
         const queryRejected = `UPDATE adoption_applications SET status = 'rejected', decided_at = NOW()
         WHERE pet_id = $2 AND id <> $1 AND status = 'pending' RETURNING id, applicant_id;`;
         const queryAdopted = `UPDATE pets SET status = 'adopted', updated_at = NOW()
@@ -147,7 +147,7 @@ export class ApplicationsRepository {
                 await client.query('ROLLBACK');
                 return undefined;
             }
-            const approved = await client.query<ApplicationRow>(queryApproved, [applicationId]);
+            const approved = await client.query<ApplicationRow>(queryApproved, [applicationId, petId]);
             if (approved.rows.length === 0) {
                 await client.query('ROLLBACK');
                 return undefined;
