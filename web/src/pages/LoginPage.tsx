@@ -11,6 +11,7 @@ import { useAuth } from '@/features/auth/auth-context'
 import { DEFAULT_AFTER_AUTH, safeRedirect } from '@/features/auth/redirect'
 import type { LoginInput } from '@/lib/api/endpoints'
 import { getErrorMessage } from '@/lib/api/errors'
+import { DEMO_ACCOUNTS, type DemoAccount } from '@/lib/demo-accounts'
 import { fieldAria, isValidEmail } from '@/lib/form'
 
 type Field = 'email' | 'password'
@@ -42,6 +43,16 @@ export function LoginPage() {
   // login อยู่แล้ว (เช่นกด back กลับมา) ไม่ต้องเห็นฟอร์มอีก — แต่ระหว่าง mutation ให้ onSuccess เป็นคนพาไป
   if (status === 'authenticated' && !mutation.isPending && !mutation.isSuccess) {
     return <Navigate to={redirectTo} replace />
+  }
+
+  // ปุ่มบัญชีทดลองส่ง object ของบัญชีเข้า mutation ตรง ๆ จึงเทียบ variables เพื่อรู้ว่าปุ่มไหนกำลังเข้าสู่ระบบ
+  const pendingDemo = mutation.isPending ? DEMO_ACCOUNTS.find((account) => account === mutation.variables) : undefined
+  const isFormPending = mutation.isPending && !pendingDemo
+
+  const onDemoLogin = (account: DemoAccount) => {
+    if (mutation.isPending) return
+    setFieldErrors({})
+    mutation.mutate(account)
   }
 
   const onSubmit = (e: FormEvent) => {
@@ -110,10 +121,35 @@ export function LoginPage() {
 
         {/* ปุ่มหลักแคปซูลเต็มความกว้าง · ระหว่างส่ง: ไอคอนหมุน + ข้อความ "กำลัง…" และ disabled กันกดซ้ำ (เดิม) */}
         <Button type="submit" size="lg" className="w-full rounded-full" disabled={mutation.isPending}>
-          {mutation.isPending && <LoaderCircleIcon className="motion-safe:animate-spin" aria-hidden />}
-          {mutation.isPending ? 'กำลังเข้าสู่ระบบ…' : 'เข้าสู่ระบบ'}
+          {isFormPending && <LoaderCircleIcon className="motion-safe:animate-spin" aria-hidden />}
+          {isFormPending ? 'กำลังเข้าสู่ระบบ…' : 'เข้าสู่ระบบ'}
         </Button>
       </form>
+
+      {/* บัญชีทดลอง: แยกจากฟอร์มด้วยเส้นคั่น · ใช้ mutation เดียวกับฟอร์ม error จึงขึ้นที่กล่องแจ้งเตือนด้านบน */}
+      <section aria-labelledby="demo-accounts-heading" className="mt-8 border-t pt-6 text-center">
+        <h2 id="demo-accounts-heading" className="text-base font-semibold">
+          ลองใช้บัญชีทดลอง
+        </h2>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          {DEMO_ACCOUNTS.map((account) => (
+            <Button
+              key={account.email}
+              type="button"
+              variant="outline"
+              className="rounded-full border-field-border/50 bg-card"
+              disabled={mutation.isPending}
+              onClick={() => onDemoLogin(account)}
+            >
+              {pendingDemo === account && <LoaderCircleIcon className="motion-safe:animate-spin" aria-hidden />}
+              {pendingDemo === account ? 'กำลังเข้าสู่ระบบ…' : account.label}
+            </Button>
+          ))}
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">
+          บัญชีทดลองสำหรับดูตัวอย่าง ข้อมูลทั้งหมดเป็นข้อมูลปลอม ใครก็เข้าได้ อย่ากรอกข้อมูลจริง
+        </p>
+      </section>
     </AuthCard>
   )
 }
