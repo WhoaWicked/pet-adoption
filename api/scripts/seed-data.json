@@ -1,0 +1,208 @@
+{
+  "users": [
+    { "key": "owner", "email": "demo-owner@example.com", "displayName": "Demo Owner" },
+    { "key": "adopter", "email": "demo-adopter@example.com", "displayName": "Demo Adopter" },
+    { "key": "a1", "email": "applicant-1@example.com", "displayName": "มิ้นท์" },
+    { "key": "a2", "email": "applicant-2@example.com", "displayName": "ต้นกล้า" },
+    { "key": "a3", "email": "applicant-3@example.com", "displayName": "แพรวา" }
+  ],
+  "pets": [
+    {
+      "key": "p01", "ownerKey": "owner", "name": "ข้าวตู", "species": "dog", "ageMonths": 8,
+      "province": "กรุงเทพมหานคร", "status": "available", "daysAgo": 20,
+      "description": "ลูกหมาพันธุ์ผสม ร่าเริง ชอบวิ่งเล่น เข้ากับเด็กได้ดี ฉีดวัคซีนครบตามวัยแล้ว",
+      "requirements": "มีพื้นที่ให้วิ่งเล่น มีเวลาพาเดินเล่นทุกวัน"
+    },
+    {
+      "key": "p02", "ownerKey": "owner", "name": "ส้มจี๊ด", "species": "cat", "ageMonths": 14,
+      "province": "เชียงใหม่", "status": "available", "daysAgo": 18,
+      "description": "แมวส้มขี้อ้อน ชอบนอนตัก ใช้กระบะทรายเป็น ทำหมันแล้ว",
+      "requirements": "เลี้ยงระบบปิด ไม่ปล่อยออกนอกบ้าน"
+    },
+    {
+      "key": "p03", "ownerKey": "owner", "name": "บราวนี่", "species": "dog", "ageMonths": 36,
+      "province": "ขอนแก่น", "status": "available", "daysAgo": 16,
+      "description": "หมาโตนิสัยสุขุม เชื่อฟังคำสั่งพื้นฐาน เดินสายจูงเก่ง",
+      "requirements": "บ้านมีรั้วรอบ พาไปตรวจสุขภาพประจำปี"
+    },
+    {
+      "key": "p04", "ownerKey": "owner", "name": "มะลิ", "species": "cat", "ageMonths": 5,
+      "province": "นนทบุรี", "status": "available", "daysAgo": 15,
+      "description": "ลูกแมวขาวขี้เล่น กินเก่ง เลี้ยงง่าย ถ่ายพยาธิแล้ว",
+      "requirements": "พาไปทำหมันเมื่อถึงวัย ติดมุ้งลวดกันตก"
+    },
+    {
+      "key": "p05", "ownerKey": "owner", "name": "โกโก้", "species": "dog", "ageMonths": 24,
+      "province": "ชลบุรี", "status": "adopted", "daysAgo": 30,
+      "description": "หมาสีน้ำตาลเข้ม ขี้อ้อน ชอบเล่นน้ำ อยู่กับหมาตัวอื่นได้",
+      "requirements": "มีคนอยู่บ้านช่วงกลางวัน"
+    },
+    {
+      "key": "p06", "ownerKey": "owner", "name": "ถั่วแดง", "species": "cat", "ageMonths": 60,
+      "province": "ภูเก็ต", "status": "available", "daysAgo": 14,
+      "description": "แมวโตใจเย็น ชอบที่เงียบ ๆ เหมาะกับคนทำงานที่บ้าน",
+      "requirements": "บ้านที่ไม่มีเด็กเล็ก"
+    },
+    {
+      "key": "p07", "ownerKey": "owner", "name": "ลัคกี้", "species": "dog", "ageMonths": 18,
+      "province": "นครราชสีมา", "status": "available", "daysAgo": 12,
+      "description": "หมาไทยขนสั้น ตื่นตัว เฝ้าบ้านเก่ง รักเจ้าของมาก",
+      "requirements": "เคยเลี้ยงหมามาก่อน มีพื้นที่กว้าง"
+    },
+    {
+      "key": "p08", "ownerKey": "owner", "name": "ปุยฝ้าย", "species": "other", "ageMonths": 10,
+      "province": "กรุงเทพมหานคร", "status": "available", "daysAgo": 11,
+      "description": "กระต่ายขนฟู สีขาว ชอบกินหญ้าแห้ง ไม่กัด อุ้มได้",
+      "requirements": "มีกรงกว้างพอ และเปลี่ยนหญ้าแห้งทุกวัน"
+    },
+    {
+      "key": "p09", "ownerKey": "owner", "name": "ขนมปัง", "species": "cat", "ageMonths": 3,
+      "province": "ปทุมธานี", "status": "available", "daysAgo": 10,
+      "description": "ลูกแมวลายสลิด ซน ชอบของเล่นขนนก เริ่มกินอาหารเม็ดได้แล้ว",
+      "requirements": "พาไปฉีดวัคซีนเข็มถัดไปตามนัด"
+    },
+    {
+      "key": "p10", "ownerKey": "owner", "name": "ซูโม่", "species": "dog", "ageMonths": 84,
+      "province": "สงขลา", "status": "available", "daysAgo": 9,
+      "description": "หมาสูงวัยตัวใหญ่ ใจดี ชอบนอนกลางวัน เดินช้าลงตามวัย",
+      "requirements": "พร้อมดูแลหมาสูงวัย พาไปพบสัตวแพทย์สม่ำเสมอ"
+    },
+    {
+      "key": "p11", "ownerKey": "owner", "name": "เมฆ", "species": "cat", "ageMonths": 30,
+      "province": "เชียงราย", "status": "available", "daysAgo": 8,
+      "description": "แมวสีเทา ขี้อายในช่วงแรก แต่ติดคนเมื่อคุ้นเคยแล้ว",
+      "requirements": "ให้เวลาปรับตัว ไม่เร่งจับหรืออุ้ม"
+    },
+    {
+      "key": "p12", "ownerKey": "owner", "name": "ทองหยิบ", "species": "dog", "ageMonths": 6,
+      "province": "อุดรธานี", "status": "available", "daysAgo": 7,
+      "description": "ลูกหมาสีทอง ขี้เล่น กำลังฝึกขับถ่ายเป็นที่",
+      "requirements": "มีเวลาฝึกนิสัยพื้นฐาน"
+    },
+    {
+      "key": "p13", "ownerKey": "owner", "name": "ชาไทย", "species": "cat", "ageMonths": 20,
+      "province": "สมุทรปราการ", "status": "available", "daysAgo": 6,
+      "description": "แมวสามสี ช่างพูด ชอบตามเจ้าของไปทุกห้อง",
+      "requirements": "เลี้ยงในบ้าน มีที่ลับเล็บให้"
+    },
+    {
+      "key": "p14", "ownerKey": "owner", "name": "ภูผา", "species": "dog", "ageMonths": 48,
+      "province": "กาญจนบุรี", "status": "available", "daysAgo": 5,
+      "description": "หมาโตพลังเยอะ ชอบออกกำลังกาย เหมาะกับคนชอบวิ่งหรือเดินป่า",
+      "requirements": "พาออกกำลังกายวันละอย่างน้อย 1 ชั่วโมง"
+    },
+    {
+      "key": "p15", "ownerKey": "owner", "name": "ถั่วเหลือง", "species": "other", "ageMonths": 12,
+      "province": "นครปฐม", "status": "available", "daysAgo": 4,
+      "description": "หนูแกสบี้สีน้ำตาลอ่อน ชอบกินผักสด ส่งเสียงทักทายเวลาเห็นคน",
+      "requirements": "มีกรงที่อากาศถ่ายเท และให้ผักสดทุกวัน"
+    },
+    {
+      "key": "p16", "ownerKey": "a1", "name": "นมสด", "species": "cat", "ageMonths": 9,
+      "province": "พิษณุโลก", "status": "available", "daysAgo": 13,
+      "description": "แมวขาวตาสองสี นิสัยนิ่ง ชอบนอนริมหน้าต่าง",
+      "requirements": "เลี้ยงระบบปิด"
+    },
+    {
+      "key": "p17", "ownerKey": "a1", "name": "ดำดี", "species": "dog", "ageMonths": 40,
+      "province": "สุราษฎร์ธานี", "status": "available", "daysAgo": 3,
+      "description": "หมาดำขนเงา ทำหมันแล้ว อยู่กับแมวได้",
+      "requirements": "มีรั้วรอบบ้าน"
+    },
+    {
+      "key": "p18", "ownerKey": "a2", "name": "ไข่ตุ๋น", "species": "cat", "ageMonths": 16,
+      "province": "กรุงเทพมหานคร", "status": "adopted", "daysAgo": 25,
+      "description": "แมวสีครีม ขี้อ้อน ชอบนวดผ้าห่ม",
+      "requirements": "เลี้ยงในบ้าน ไม่ปล่อยออกนอกบ้าน"
+    },
+    {
+      "key": "p19", "ownerKey": "a2", "name": "หมูหยอง", "species": "dog", "ageMonths": 11,
+      "province": "ระยอง", "status": "available", "daysAgo": 2,
+      "description": "หมาตัวเล็กขนฟู ร่าเริง ชอบเล่นลูกบอล",
+      "requirements": "ไม่ขังกรงทั้งวัน"
+    },
+    {
+      "key": "p20", "ownerKey": "a3", "name": "วุ้นเส้น", "species": "cat", "ageMonths": 7,
+      "province": "ลำปาง", "status": "available", "daysAgo": 1,
+      "description": "ลูกแมวลายเสือ ซุกซน เข้ากับแมวตัวอื่นได้ดี",
+      "requirements": "พาไปทำหมันเมื่อถึงวัย"
+    }
+  ],
+  "applications": [
+    {
+      "key": "app-p01-a1", "petKey": "p01", "applicantKey": "a1", "status": "pending", "daysAgo": 6,
+      "answers": { "housingType": "house", "hasPetExperience": true, "note": "บ้านมีรั้วรอบ ทำงานที่บ้านเป็นส่วนใหญ่ เคยเลี้ยงหมามาประมาณ 10 ปี" }
+    },
+    {
+      "key": "app-p01-a2", "petKey": "p01", "applicantKey": "a2", "status": "pending", "daysAgo": 4,
+      "answers": { "housingType": "condo", "hasPetExperience": false, "note": "คอนโดอนุญาตให้เลี้ยงสัตว์ได้ ตั้งใจศึกษาวิธีเลี้ยงเพิ่มเติม" }
+    },
+    {
+      "key": "app-p01-a3", "petKey": "p01", "applicantKey": "a3", "status": "pending", "daysAgo": 2,
+      "answers": { "housingType": "house", "hasPetExperience": true }
+    },
+    {
+      "key": "app-p02-a2", "petKey": "p02", "applicantKey": "a2", "status": "pending", "daysAgo": 5,
+      "answers": { "housingType": "apartment", "hasPetExperience": true, "note": "เคยเลี้ยงแมวมาก่อน ติดมุ้งลวดทุกหน้าต่างแล้ว" }
+    },
+    {
+      "key": "app-p02-adopter", "petKey": "p02", "applicantKey": "adopter", "status": "pending", "daysAgo": 3,
+      "answers": { "housingType": "condo", "hasPetExperience": true, "note": "อยู่คนเดียว ทำงานแบบไฮบริด เลี้ยงแมวมา 3 ปี" }
+    },
+    {
+      "key": "app-p03-a3", "petKey": "p03", "applicantKey": "a3", "status": "pending", "daysAgo": 4,
+      "answers": { "housingType": "house", "hasPetExperience": false, "note": "ครอบครัวช่วยกันดูแล มีสนามหญ้าหลังบ้าน" }
+    },
+    {
+      "key": "app-p03-a1", "petKey": "p03", "applicantKey": "a1", "status": "pending", "daysAgo": 1,
+      "answers": { "housingType": "house", "hasPetExperience": true }
+    },
+    {
+      "key": "app-p04-adopter", "petKey": "p04", "applicantKey": "adopter", "status": "withdrawn", "daysAgo": 9,
+      "answers": { "housingType": "condo", "hasPetExperience": true }
+    },
+    {
+      "key": "app-p05-a1", "petKey": "p05", "applicantKey": "a1", "status": "approved", "daysAgo": 20, "decidedDaysAgo": 12,
+      "answers": { "housingType": "house", "hasPetExperience": true, "note": "มีหมาอยู่แล้ว 1 ตัว นิสัยเป็นมิตร" }
+    },
+    {
+      "key": "app-p05-adopter", "petKey": "p05", "applicantKey": "adopter", "status": "rejected", "daysAgo": 18, "decidedDaysAgo": 12,
+      "answers": { "housingType": "condo", "hasPetExperience": true }
+    },
+    {
+      "key": "app-p05-a2", "petKey": "p05", "applicantKey": "a2", "status": "rejected", "daysAgo": 17, "decidedDaysAgo": 12,
+      "answers": { "housingType": "apartment", "hasPetExperience": false }
+    },
+    {
+      "key": "app-p18-adopter", "petKey": "p18", "applicantKey": "adopter", "status": "approved", "daysAgo": 15, "decidedDaysAgo": 8,
+      "answers": { "housingType": "condo", "hasPetExperience": true, "note": "เตรียมคอนโดสำหรับแมวไว้แล้ว มีคอนโดแมวและที่ลับเล็บ" }
+    },
+    {
+      "key": "app-p18-a3", "petKey": "p18", "applicantKey": "a3", "status": "rejected", "daysAgo": 14, "decidedDaysAgo": 8,
+      "answers": { "housingType": "house", "hasPetExperience": false }
+    }
+  ],
+  "notifications": [
+    { "userKey": "owner", "type": "application.received", "applicationKey": "app-p01-a1", "read": true },
+    { "userKey": "owner", "type": "application.received", "applicationKey": "app-p02-a2", "read": true },
+    { "userKey": "owner", "type": "application.received", "applicationKey": "app-p01-a2", "read": false },
+    { "userKey": "owner", "type": "application.received", "applicationKey": "app-p02-adopter", "read": false },
+    { "userKey": "owner", "type": "application.received", "applicationKey": "app-p01-a3", "read": false },
+    { "userKey": "adopter", "type": "application.rejected", "applicationKey": "app-p05-adopter", "read": true },
+    { "userKey": "adopter", "type": "application.approved", "applicationKey": "app-p18-adopter", "read": false }
+  ],
+  "aiSummary": {
+    "applicationKey": "app-p01-a1",
+    "summary": {
+      "overview": "ผู้สมัครอาศัยอยู่บ้านที่มีรั้วรอบ ระบุว่าทำงานที่บ้านเป็นส่วนใหญ่ และเคยเลี้ยงสุนัขมาประมาณ 10 ปี",
+      "highlights": [
+        "อาศัยอยู่บ้าน มีรั้วรอบ",
+        "มีประสบการณ์เลี้ยงสัตว์ (เลี้ยงสุนัขประมาณ 10 ปี)",
+        "ทำงานที่บ้านเป็นส่วนใหญ่"
+      ],
+      "concerns": [
+        "ไม่ได้ระบุว่าตอนนี้มีสัตว์เลี้ยงตัวอื่นอยู่ด้วยหรือไม่"
+      ]
+    }
+  }
+}
