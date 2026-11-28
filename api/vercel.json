@@ -1,5 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nestjs",
-  "regions": ["sin1"]
+  "regions": ["sin1"],
+  "env": {
+    "NODE_OPTIONS": "--experimental-require-module"
+  }
 }

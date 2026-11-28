@@ -6,7 +6,8 @@
 ## สิ่งที่ตรวจพบ (เอกสาร Vercel/Neon ณ 2026-11-28 + build จำลองด้วย Vercel CLI 68.0.0)
 - NestJS บน Vercel เป็น zero-config: ตรวจเจอ `src/main.ts` เอง ใช้ `app.listen()` ได้ ทั้งแอปเป็น 1 function
 - `vercel.json` แบบ `functions["src/main.ts"]` ทำให้ build ล้ม (`unused_function`)
-  แต่ `export const config = { maxDuration: 60 }` ใน `main.ts` ใช้ได้ (ออกมาใน `.vc-config.json`)
+  ส่วน `export const config = { maxDuration: 60 }` ใน `main.ts` ผ่าน build แต่**ทำให้ล้มตอนรันจริง**
+  (`Invalid export found in module`) จึงเอาออกแล้ว ดู `_plans/vercel-esm-fix.md`
 - Hobby + Fluid compute: ค่าเริ่มต้นและสูงสุด 300 วินาที, region ได้ 1 แห่ง, ค่าเริ่มต้นคือ `iad1`
 - API ยังไม่เปิด CORS
 - `PORT` เป็นตัวแปรบังคับ และเอกสารไม่ได้ระบุว่า Vercel ตั้งให้
@@ -17,7 +18,7 @@
 |---|---|
 | `api/vercel.json` (ใหม่) | `framework: nestjs`, `regions: ["sin1"]` |
 | `api/.vercelignore` (ใหม่) | กันไฟล์ env และ build output ไม่ให้ถูกอัปโหลด |
-| `api/src/main.ts` | `maxDuration` 60 และเปิด CORS เมื่อมี `CORS_ORIGIN` |
+| `api/src/main.ts` | เปิด CORS เมื่อมี `CORS_ORIGIN` (ไฟล์นี้ห้าม export อะไร) |
 | `api/src/config/env.ts` | เพิ่ม `CORS_ORIGIN`, `DB_POOL_MAX`, `DB_CONNECTION_TIMEOUT_MS` (ไม่บังคับ), `PORT` มีค่าเริ่มต้น 3000 |
 | `api/src/config/env.spec.ts` | เทสต์ของตัวแปรใหม่ |
 | `api/src/database/database.module.ts` | อ่านขนาด pool และ timeout จาก env (ค่าเริ่มต้น 10 / 2000ms เท่าเดิม) |
@@ -27,8 +28,8 @@
 | `web/.env.example` | อธิบายวิธีตั้งบน Vercel |
 
 ## การตัดสินใจ
-- **maxDuration = 60**: ต้องครอบคลุม cold start + ต่อ DB (สูงสุด 10 วินาที) + AI 15 วินาที + บันทึกผล
-  ค่า 30 เหลือที่ว่างน้อย ส่วน 60 อยู่ในเพดาน Hobby และไม่ปล่อยให้ request ค้างถึง 300
+- **เวลาสูงสุดของ function**: ไม่ตั้งในโค้ด ใช้ค่าเริ่มต้นของ Fluid compute (Hobby 300 วินาที)
+  ซึ่งมากกว่า cold start + ต่อ DB + AI 15 วินาที ถ้าต้องการเพดาน 60 ให้ตั้งใน dashboard
 - **CORS**: ไม่ตั้ง = ปิด (เหมือนเดิม), ตั้งได้หลาย origin คั่นด้วย `,`, ปฏิเสธ `*` ตั้งแต่ตอนบูต
 - **pool บน Vercel**: แนะนำ `DB_POOL_MAX=5`, `DB_CONNECTION_TIMEOUT_MS=10000`
 - ยังไม่เพิ่ม `attachDatabasePool` (`@vercel/functions`) และไม่เปลี่ยน timeout 2000ms ของ `/health` — รายงานเป็นความเสี่ยง
@@ -41,8 +42,9 @@
 
 ## ผลตรวจ (2026-11-28)
 - unit 74/74, e2e 3/3, build ผ่านทั้งสองฝั่ง, lint เหลือแค่ warning เดิมนอกไฟล์ที่แก้
-- function ที่ build ได้: `maxDuration` 60, บูตได้แม้ไม่ตั้ง `PORT`, CORS อนุญาตเฉพาะ origin ที่ตั้ง,
-  `DB_CONNECTION_TIMEOUT_MS` มีผลจริง
+- function ที่ build ได้ (รันด้วย `node` ตรงๆ ไม่ผ่าน launcher): บูตได้แม้ไม่ตั้ง `PORT`,
+  CORS อนุญาตเฉพาะ origin ที่ตั้ง, `DB_CONNECTION_TIMEOUT_MS` มีผลจริง
+  การตรวจนี้ไม่เจอปัญหาสองข้อที่พบตอน deploy จริง (ดู `_plans/vercel-esm-fix.md`)
 - `start:dev` ด้วยค่าปลอม: บูตได้, CORS ปิด, timeout 2000ms เท่าเดิม
 - web: filesystem มาก่อน rewrite ไป `/index.html`; `localhost` ใน bundle มาจากโค้ดภายในของ library เท่านั้น
 - ยังพิสูจน์ในเครื่องไม่ได้: region `sin1`, refresh หน้าลึกบนโดเมนจริง, ต่อ Neon จากบน Vercel
