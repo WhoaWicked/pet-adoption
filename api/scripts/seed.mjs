@@ -71,6 +71,12 @@ const port = Number(process.env.DB_PORT);
 if (!problems.includes('DB_PORT') && !(Number.isInteger(port) && port >= 1 && port <= 65535)) {
   problems.push('DB_PORT');
 }
+// Optional; same rule as src/config/env.ts: unset means off.
+const dbSsl = process.env.DB_SSL?.trim() ?? '';
+if (!['', 'true', 'false'].includes(dbSsl)) {
+  problems.push('DB_SSL');
+}
+const useSsl = dbSsl === 'true';
 if (problems.length > 0) {
   fail(
     `missing or invalid environment variables: ${problems.join(', ')}.\n` +
@@ -216,7 +222,7 @@ const emails = data.users.map((u) => u.email);
 // ---------- 4. Guard ----------
 // Host, port and database name only; never the user, password or a URL.
 const { DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD } = process.env;
-console.log(`Target database: ${DB_NAME} on ${DB_HOST}:${DB_PORT}`);
+console.log(`Target database: ${DB_NAME} on ${DB_HOST}:${DB_PORT} (ssl ${useSsl ? 'on' : 'off'})`);
 
 if (!confirmed) {
   console.log(
@@ -248,6 +254,8 @@ const client = new pg.Client({
   database: DB_NAME,
   user: DB_USER,
   password: DB_PASSWORD,
+  // Added only when DB_SSL=true; the server certificate is verified.
+  ...(useSsl ? { ssl: { rejectUnauthorized: true } } : {}),
 });
 
 try {

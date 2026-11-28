@@ -5,6 +5,8 @@ export interface Env {
   DB_NAME: string;
   DB_USER: string;
   DB_PASSWORD: string;
+  // Optional: absent when DB_SSL is unset, which means no SSL.
+  DB_SSL?: boolean;
   JWT_SECRET: string;
   GEMINI_API_KEY: string;
   AI_MODEL: string;
@@ -52,6 +54,17 @@ export function validateEnv(raw: Record<string, unknown>): Env {
       problems.push(`${key} must be an integer between 1 and 65535`);
     } else {
       env[key] = port;
+    }
+  }
+
+  // Anything other than true/false is rejected, so a typo cannot silently
+  // leave SSL off.
+  const dbSsl = typeof raw.DB_SSL === 'string' ? raw.DB_SSL.trim() : raw.DB_SSL;
+  if (dbSsl !== undefined && dbSsl !== '') {
+    if (dbSsl === 'true' || dbSsl === 'false') {
+      env.DB_SSL = dbSsl === 'true';
+    } else {
+      problems.push('DB_SSL must be "true" or "false"');
     }
   }
 

@@ -25,6 +25,11 @@ import { PG_POOL } from './database.constants';
           user: config.get('DB_USER', { infer: true }),
           password: config.get('DB_PASSWORD', { infer: true }),
           connectionTimeoutMillis: 2000,
+          // Managed Postgres (e.g. Neon) requires SSL. The key is only added
+          // when DB_SSL=true, so otherwise pg behaves as it did without it.
+          ...(config.get('DB_SSL', { infer: true }) === true
+            ? { ssl: { rejectUnauthorized: true } }
+            : {}),
         });
         // An error on an idle client would otherwise crash the process.
         pool.on('error', (err) => {

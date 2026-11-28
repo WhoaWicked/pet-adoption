@@ -38,6 +38,11 @@ if (command === 'create') {
   if (!problems.includes('DB_PORT') && !(Number.isInteger(port) && port >= 1 && port <= 65535)) {
     problems.push('DB_PORT');
   }
+  // Optional; same rule as src/config/env.ts: unset means off.
+  const dbSsl = process.env.DB_SSL?.trim() ?? '';
+  if (!['', 'true', 'false'].includes(dbSsl)) {
+    problems.push('DB_SSL');
+  }
   if (problems.length > 0) {
     console.error(
       `Missing or invalid environment variables: ${problems.join(', ')}.\n` +
@@ -52,6 +57,12 @@ if (command === 'create') {
   process.env.DATABASE_URL =
     `postgres://${encodeURIComponent(DB_USER)}:${encodeURIComponent(DB_PASSWORD)}` +
     `@${DB_HOST}:${DB_PORT}/${encodeURIComponent(DB_NAME)}`;
+
+  // The CLI turns this flag into ssl: { rejectUnauthorized: true } for pg, so
+  // SSL is on and the server certificate is verified.
+  if (dbSsl === 'true') {
+    cliArgs.push('--reject-unauthorized');
+  }
 }
 
 // Run the CLI with the current Node binary instead of a .cmd shim (Windows-safe).
