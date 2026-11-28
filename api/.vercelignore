@@ -1,0 +1,10 @@
+# Used by CLI deploys (`vercel` run on this folder). By default the CLI only
+# skips .env.local and .env.*.local, so every env file has to be listed here.
+# Secrets belong in the Vercel dashboard, never in the upload.
+.env
+.env.*
+
+# Local build output; Vercel builds from source.
+dist
+coverage
+*.tsbuildinfo

@@ -10,6 +10,10 @@ import { Pool } from 'pg';
 import { Env } from '../config/env';
 import { PG_POOL } from './database.constants';
 
+// Used when the matching env variable is unset. 10 is pg's own default.
+const DEFAULT_POOL_MAX = 10;
+const DEFAULT_CONNECTION_TIMEOUT_MS = 2000;
+
 @Global()
 @Module({
   providers: [
@@ -24,7 +28,13 @@ import { PG_POOL } from './database.constants';
           database: config.get('DB_NAME', { infer: true }),
           user: config.get('DB_USER', { infer: true }),
           password: config.get('DB_PASSWORD', { infer: true }),
-          connectionTimeoutMillis: 2000,
+          // Each serverless instance has its own pool, so hosts like Vercel
+          // set a smaller max, and a longer timeout so a sleeping Neon
+          // database has time to wake up.
+          max: config.get('DB_POOL_MAX', { infer: true }) || DEFAULT_POOL_MAX,
+          connectionTimeoutMillis:
+            config.get('DB_CONNECTION_TIMEOUT_MS', { infer: true }) ||
+            DEFAULT_CONNECTION_TIMEOUT_MS,
           // Managed Postgres (e.g. Neon) requires SSL. The key is only added
           // when DB_SSL=true, so otherwise pg behaves as it did without it.
           ...(config.get('DB_SSL', { infer: true }) === true

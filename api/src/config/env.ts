@@ -7,6 +7,11 @@ export interface Env {
   DB_PASSWORD: string;
   // Optional: absent when DB_SSL is unset, which means no SSL.
   DB_SSL?: boolean;
+  // Optional pool tuning: DatabaseModule supplies the defaults when unset.
+  DB_POOL_MAX?: number;
+  DB_CONNECTION_TIMEOUT_MS?: number;
+  // Optional: absent when CORS_ORIGIN is unset, which leaves CORS off.
+  CORS_ORIGIN?: string[];
   JWT_SECRET: string;
   GEMINI_API_KEY: string;
   AI_MODEL: string;
@@ -22,13 +27,37 @@ const STRING_KEYS = [
   'AI_MODEL',
 ] as const;
 const PORT_KEYS = ['PORT', 'DB_PORT'] as const;
+// Used when PORT is unset. Hosts such as Vercel do not require us to set one.
+const DEFAULT_PORT = '3000';
+const POSITIVE_INTEGER_KEYS = [
+  'DB_POOL_MAX',
+  'DB_CONNECTION_TIMEOUT_MS',
+] as const;
 
-function parsePort(value: unknown): number | undefined {
+function isBlank(value: unknown): boolean {
+  return value === undefined || (typeof value === 'string' && !value.trim());
+}
+
+function parsePositiveInteger(value: unknown): number | undefined {
   if (typeof value !== 'string' || !/^\d+$/.test(value.trim())) {
     return undefined;
   }
-  const port = Number(value);
-  return port >= 1 && port <= 65535 ? port : undefined;
+  const number = Number(value);
+  return Number.isSafeInteger(number) && number >= 1 ? number : undefined;
+}
+
+function parsePort(value: unknown): number | undefined {
+  const port = parsePositiveInteger(value);
+  return port !== undefined && port <= 65535 ? port : undefined;
+}
+
+// Accepts exactly what a browser sends in the Origin header: scheme, host and
+// optional port. A trailing slash is tolerated; paths and wildcards are not.
+function parseOrigin(value: string): string | undefined {
+  if (value.includes('*') || !URL.canParse(value)) return undefined;
+  const url = new URL(value);
+  const isWeb = url.protocol === 'http:' || url.protocol === 'https:';
+  return isWeb && url.href === `${url.origin}/` ? url.origin : undefined;
 }
 
 // Validates raw environment variables once at startup. It collects every
@@ -49,11 +78,41 @@ export function validateEnv(raw: Record<string, unknown>): Env {
   }
 
   for (const key of PORT_KEYS) {
-    const port = parsePort(raw[key]);
+    const value = key === 'PORT' && isBlank(raw[key]) ? DEFAULT_PORT : raw[key];
+    const port = parsePort(value);
     if (port === undefined) {
       problems.push(`${key} must be an integer between 1 and 65535`);
     } else {
       env[key] = port;
+    }
+  }
+
+  for (const key of POSITIVE_INTEGER_KEYS) {
+    if (isBlank(raw[key])) continue;
+    const number = parsePositiveInteger(raw[key]);
+    if (number === undefined) {
+      problems.push(`${key} must be a positive integer`);
+    } else {
+      env[key] = number;
+    }
+  }
+
+  // Comma-separated list. "*" is rejected so production can never be opened to
+  // every website by accident.
+  if (!isBlank(raw.CORS_ORIGIN)) {
+    const items = String(raw.CORS_ORIGIN)
+      .split(',')
+      .map((item) => item.trim())
+      .filter((item) => item !== '');
+    const origins = items
+      .map(parseOrigin)
+      .filter((origin) => origin !== undefined);
+    if (items.length === 0 || origins.length !== items.length) {
+      problems.push(
+        'CORS_ORIGIN must be a comma-separated list of origins like https://host (no path, no "*")',
+      );
+    } else {
+      env.CORS_ORIGIN = origins;
     }
   }
 
